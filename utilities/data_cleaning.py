@@ -1,10 +1,10 @@
+import numpy as np
 import pandas as pd
 from pandas.api.types import is_categorical
 
 
 def convert_dtypes(data, data_name, description, logging="print"):
     """Convert and check dtypes to match between data and description.
-from pandas.api.types import is_categorica
     Args:
         data (pd.DataFrame): DataFrame with the survey data.
         data_name (str): name of the column containing the variable names in 
@@ -22,16 +22,23 @@ from pandas.api.types import is_categorica
     col_to_dtype = dict_data.T.to_dict()
     for col, col_dict in col_to_dtype.items():
         dtype = col_dict["type"]
-        if dtype != "Categorical": 
-            try:
-                data[col] = data[col].astype(dtype)
-            except:
-                print(col, dtype, data[col].unique())
-        else:
+        if dtype == "boolean":
+            if data[col].dtype.name == "category":
+               data[col] = data[col].replace({"Ja": True, "Nee": False})
+            else:
+                try:
+                    data[col] = data[col].astype(dtype)
+                except TypeError:
+                    print(col, data[col].dtype, data[col].unique())
+        elif dtype == "Categorical":
             pass
             # cats = col_dict["categories_english"]
             # ordered = col_dict["ordered"]
             # data[col] = pd.Categorical(values=data[col], categories=cats, ordered=ordered)
+        elif dtype == "str":
+            data[col].replace({"": np.nan}, inplace=True)
+        else: # Int or float
+            data[col] = data[col].astype(dtype)
     return data
 
 
@@ -49,7 +56,7 @@ def check_description(data, data_name, description, logging="print"):
     _check_types(types=description["type"], logging=logging)
     _check_var_overlap_btw_description_and_data(
         data_vars=data.columns,
-        covered=description[data_name],
+        covered=description[data_name].unique(),
         logging=logging,
     )
 
@@ -90,13 +97,13 @@ def _check_var_overlap_btw_description_and_data(data_vars, covered, logging):
     if len(missing_in_description) > 0:
         msg = "The following variables from the raw dataset are not " + \
             "covered by the description table: \n\t" + \
-            "\n\t".join(missing_in_description)
+            "\n\t".join(sorted(missing_in_description))
         _custom_logging(msg=msg, logging=logging)
-    missing_in_data = [x for x in covered if x not in data_vars]
+    missing_in_data = [str(x) for x in covered if x not in data_vars]
     if len(missing_in_data) > 0:
         msg = "The following variables from the description table are not " + \
             "in the raw dataset: \n\t" + \
-            "\n\t".join(missing_in_data)
+            "\n\t".join(sorted(missing_in_data))
         _custom_logging(msg=msg, logging=logging)
 
 
@@ -116,13 +123,17 @@ def _check_categorical_cols(description, data_name, logging):
 
 
 
-def _load_description(path):
+def _load_description(path, data_name):
     description = pd.read_csv(path)
     description.replace({"TRUE": True, "FALSE": False}, inplace=True)
     # use nullable pandas dtypes
     description["type"].replace({"int": "Int64", "bool": "boolean"}, inplace=True)
+    # drop empty rows and columns
     description.dropna(how='all', axis=0, inplace=True)
     description.dropna(how='all', axis=1, inplace=True)
+    # get relevant slice
+    description = description[description["new_name"].notnull()]
+    description = description[description["new_name"] != False]
     return description
 
 
