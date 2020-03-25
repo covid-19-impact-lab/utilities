@@ -7,14 +7,14 @@ def convert_dtypes(data, data_name, description, logging="print"):
     """Convert and check dtypes to match between data and description.
     Args:
         data (pd.DataFrame): DataFrame with the survey data.
-        data_name (str): name of the column containing the variable names in 
+        data_name (str): name of the column containing the variable names in
             the raw dataset.
         description (pd.DataFrame): DataFrame describing the finished DataFrame.
         logging (str, optional): Path to a text file, "print" or None
 
     Returns:
-        data (pd.DataFrame): DataFrame satisfying the 
-    
+        data (pd.DataFrame): DataFrame satisfying the
+
     """
     dict_data = description.set_index('new_name')[["type", "categories_english", "ordered"]]
     overlap = set(data.columns).intersection(dict_data.index)
@@ -65,10 +65,10 @@ def check_description(data, data_name, description, logging="print"):
 
 
 def _check_new_names(new_names, logging):
-    if new_names.duplicated().any(): 
+    if new_names.duplicated().any():
         msg = f"{new_names[new_names.duplicated()]} are duplicates in the new_name column."
         _custom_logging(msg=msg, logging=logging)
-    if new_names.isnull().any(): 
+    if new_names.isnull().any():
         msg = "The new name column should not contain NaNs"
         _custom_logging(msg=msg, logging=logging)
 
@@ -81,7 +81,7 @@ def _check_new_names(new_names, logging):
 
 
 def _check_types(types, logging):
-    if types.isnull().any(): 
+    if types.isnull().any():
         msg = "You should declare a type for every variable."
         _custom_logging(msg=msg, logging=logging)
 
@@ -124,7 +124,7 @@ def _check_categorical_cols(description, data_name, logging):
 
 
 def _load_description(path, data_name):
-    description = pd.read_csv(path)
+    description = pd.read_csv(path, sep=';')
     description.replace({"TRUE": True, "FALSE": False}, inplace=True)
     # use nullable pandas dtypes
     description["type"].replace({"int": "Int64", "bool": "boolean"}, inplace=True)
