@@ -21,7 +21,7 @@ project = 'COVID-19 Impact Lab Utilities'
 copyright = '2020, COVID-19 Impact Lab Team'
 author = 'COVID-19 Impact Lab Team'
 
-release = "0.0.1"
+release = "0.0.2"
 version = ".".join(release.split(".")[:2])
 
 
