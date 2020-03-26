@@ -1,6 +1,14 @@
+from pathlib import Path
+from shutil import copyfile
+
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_categorical
+
+
+def copy_description_to_path(dst_path):
+    src = Path(__file__).resolve().parent / "covid19_data_description.csv"
+    copyfile(src_path, dst_path)
 
 
 def convert_dtypes(data, data_name, description, logging="print"):
@@ -94,8 +102,13 @@ def check_description(data, data_name, description, logging="print"):
     _check_var_overlap_btw_description_and_data(
         data_vars=data.columns, covered=description[data_name].unique(), logging=logging
     )
+    labels = description.set_index("new_name")["label_english"]
+    if labels.isnull().any():
+        msg = "The following variables don't have a label:\n\t" + "\n\t".join(
+            labels[labels.isnull()].index
+        )
+        _custom_logging(msg=msg, logging=logging)
 
-    # warn if label missing
     # warn if topic missing
 
 
