@@ -7,7 +7,7 @@ from pandas.api.types import is_categorical
 
 
 def copy_description_to_path(dst_path):
-    src = Path(__file__).resolve().parent / "covid19_data_description.csv"
+    src_path = Path(__file__).resolve().parent / "covid19_data_description.csv"
     copyfile(src_path, dst_path)
 
 
