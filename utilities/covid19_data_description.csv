@@ -22,12 +22,12 @@ TRUE;q3__3;maintain_distance;Compliance;Social Distancing;;I have maintained phy
 TRUE;q3__4;adjust_school_work;Compliance;Social Distancing;;I have adjusted my school / work situation;bool;;
 TRUE;q3__5;quarantaine_symptoms;Compliance;Social Distancing;;I have quarantined myself because I had symptoms.;bool;;
 TRUE;q3__6;quarantaine_no_symptoms;Compliance;Social Distancing;;I have quarantined myself even though I have no symptoms.;bool;;
-TRUE;FALSE;wash_hands_more;Compliance;Health Behaviors;;I have washed my hands more often and longer.;bool;;
-TRUE;FALSE;use_desinfectant;Compliance;Health Behaviors;;I have used desinfectant.;bool;;
-TRUE;FALSE;stock_groceries;Compliance;Health Behaviors;;I have increased my stock of groceries and/or water;bool;;
-TRUE;FALSE;reduce_contacts;Compliance;Social Distancing;;I have reduced personal meetings and contacts;bool;;
-TRUE;FALSE;wear_mask;Compliance;Health Behaviors;;I have worn a face or mouth mask;bool;;
-TRUE;FALSE;other_behaviors;Skip;Skip;;Other: ;str;;
+TRUE;;wash_hands_more;Compliance;Health Behaviors;;I have washed my hands more often and longer.;bool;;
+TRUE;;use_desinfectant;Compliance;Health Behaviors;;I have used desinfectant.;bool;;
+TRUE;;stock_groceries;Compliance;Health Behaviors;;I have increased my stock of groceries and/or water;bool;;
+TRUE;;reduce_contacts;Compliance;Social Distancing;;I have reduced personal meetings and contacts;bool;;
+TRUE;;wear_mask;Compliance;Health Behaviors;;I have worn a face or mouth mask;bool;;
+TRUE;;other_behaviors;Skip;Skip;;Other: ;str;;
 TRUE;q3__7;no_health_behaviors;Compliance;Social Distancing;;I have done none of the above;bool;;
 ;;;;;;;;;
 TRUE;q6a;effect_close_schools;Policy;Subjective Effectiveness of Policies;;How effective do you think is it to close school and pre-ks to fight the spread of coronavirus?;Categorical;not effective at all, hardly effective, somewhat effective, effective, very effective;True
@@ -39,61 +39,61 @@ TRUE;q6f;effect_curfew_vulnerable;Policy;Subjective Effectiveness of Policies;;H
 TRUE;q6g;effect_curfew_for_most;Policy;Subjective Effectiveness of Policies;;How effective do you think is it to enact a curfew (except grocery shopping and necessary medical procedures) on everyone except people in critical professions to fight the spread of coronavirus?;Categorical;not effective at all, hardly effective, somewhat effective, effective, very effective;True
 ;;;;;;;;;
 TRUE;q10;comply_curfew_cat;Compliance;Compliance with Curfew;;Would you comply with a curfew?;Categorical;yes, no, critical occupation;False
-TRUE;FALSE;comply_bc_civic_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew because I see it as my civic duty.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;comply_bc_fear_punished_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew out of fear of being punished.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;comply_bc_protect_self_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect myself from being infected.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;comply_bc_protect_close_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect those close to me.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;comply_bc_protect_all_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect others in general.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;comply_bc_vulnerable_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect vulnerable groups.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;comply_bc_civic_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew because I see it as my civic duty.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;comply_bc_fear_punished_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew out of fear of being punished.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;comply_bc_protect_self_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect myself from being infected.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;comply_bc_protect_close_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect those close to me.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;comply_bc_protect_all_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect others in general.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;comply_bc_vulnerable_cat;Compliance;Reasons for Compliance with Curfew;;I would comply with a curfew to protect vulnerable groups.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
 ;;;;;;;;;
-TRUE;FALSE;disobey_bc_freedom_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t accept such drastic infringements of my liberties;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;disobey_bc_unjustified_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe such drastic infringements are justified to stop the spread of coronavirus.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;disobey_bc_obligations_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I have obligations because of which I cannot follow the recommendaitons.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;disobey_bc_ineffective_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe that a curfew will slow the spread of coronavirus.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;disobey_bc_unaffected_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe I will be affected by the outbreak.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;disobey_bc_bored_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because it would be too boring to stay home all the time.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
-TRUE;FALSE;disobey_bc_not_punish_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe that I would be punished.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;disobey_bc_freedom_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t accept such drastic infringements of my liberties;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;disobey_bc_unjustified_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe such drastic infringements are justified to stop the spread of coronavirus.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;disobey_bc_obligations_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I have obligations because of which I cannot follow the recommendaitons.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;disobey_bc_ineffective_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe that a curfew will slow the spread of coronavirus.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;disobey_bc_unaffected_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe I will be affected by the outbreak.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;disobey_bc_bored_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because it would be too boring to stay home all the time.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
+TRUE;;disobey_bc_not_punish_cat;Compliance;Reasons for Disobeying a Curfew;;I would disobey a curfew because I don’t believe that I would be punished.;Categorical;don’t agree at all, somewhat disagree, neither disagree nor agree, agree somewhat, agree fully;True
 ;;;;;;;;;
 TRUE;q33a;medical_meas_approp;Policy;Appropriateness of Policies;;Has the federal government taken enough action to safeguard medical coverage to fight the current epidemic?;Categorical;too few, rather too few, right amount, rather too many, too many ;True
 TRUE;q33b;restrict_public_life_approp;Policy;Appropriateness of Policies;;Has the federal government taken enough action restricting the public life to fight the current epidemic?;Categorical;too few, rather too few, right amount, rather too many, too many ;True
 TRUE;q33c;econ_mitigation_approp;Policy;Appropriateness of Policies;;Has the federal government taken enough action to mitigate the economic repercussions to fight the current epidemic?;Categorical;too few, rather too few, right amount, rather too many, too many ;True
 TRUE;q33d;communication_aprrop;Policy;Appropriateness of Policies;;Has the federal government taken enough action communicating with the general public to fight the current epidemic?;Categorical;too few, rather too few, right amount, rather too many, too many ;True
 ;;;;;;;;;
-TRUE;FALSE;trust_physician;Mental Health and Trust;Trust in Health System;;How much do you trust your family physician regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_local_health_auth;Mental Health and Trust;Trust in Health System;;How much do you trust your local health authority regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_municipality;Mental Health and Trust;Trust in Government;;How much do you trust your municipal administration regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_cdc;Mental Health and Trust;Trust in Health System;;How much do you trust your federal center for disease control and prevention regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_fed_gov;Mental Health and Trust;Trust in Government;;How much do you trust the federal government regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_head_of_state;Mental Health and Trust;Trust in Government;;How much do you trust your head of state regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_health_ministry;Mental Health and Trust;Trust in Government;;How much do you trust your health ministry regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_who;Mental Health and Trust;Trust in Health System;;How much do you trust the World Health Organization regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
-TRUE;FALSE;trust_scientists;Mental Health and Trust;Trust in Health System;;How much do you trust scientific experts regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_physician;Mental Health and Trust;Trust in Health System;;How much do you trust your family physician regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_local_health_auth;Mental Health and Trust;Trust in Health System;;How much do you trust your local health authority regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_municipality;Mental Health and Trust;Trust in Government;;How much do you trust your municipal administration regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_cdc;Mental Health and Trust;Trust in Health System;;How much do you trust your federal center for disease control and prevention regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_fed_gov;Mental Health and Trust;Trust in Government;;How much do you trust the federal government regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_head_of_state;Mental Health and Trust;Trust in Government;;How much do you trust your head of state regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_health_ministry;Mental Health and Trust;Trust in Government;;How much do you trust your health ministry regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_who;Mental Health and Trust;Trust in Health System;;How much do you trust the World Health Organization regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
+TRUE;;trust_scientists;Mental Health and Trust;Trust in Health System;;How much do you trust scientific experts regarding handling coronavirus?;Categorical;don’t trust at all, somewhat don’t trust, neutral, trust somewhat, trust fully, don’t know;True
 ;;;;;;;;;
 FALSE;TRUE;satisfac_gov;Mental Health and Trust;Trust in Government;;In general, how is your confidence in the government?;Categorical;1 no confidence at all, 2, 3, 4, 5 very confident;True
 ;;;;;;;;;
 TRUE;FALSE;labor_status_gesis;Background Variables;Background Variables;;Which of the following options describes your work situation at the beginning of March 2020 best?;Categorical;employed, self-emplyed, marginally employed, unemployed, retired, student or trainee, homemaker, other;False
 FALSE;q13;labor_status_liss;Background Variables;Background Variables;;Which of the following options describes your work situation at the beginning of March 2020 best?;Categorical;employed, self-emplyed, unemployed, retired, social assistance, student or trainee, homemaker;False
 ;;;;;;;;;
-TRUE;FALSE;empl_work_less;Economic Adjustments;Work Adjustments;;My working hours have declined.;bool;;
-TRUE;FALSE;empl_work_more;Economic Adjustments;Work Adjustments;;My working hours have increased.;bool;;
-TRUE;FALSE;empl_work_home;Economic Adjustments;Work Adjustments;;I am working more from home.;bool;;
-TRUE;FALSE;empl_exemp_pay;Economic Adjustments;Work Adjustments;;I am exempted from work with continued pay.;bool;;
-TRUE;FALSE;empl_exemp_no_pay;Economic Adjustments;Work Adjustments;;I am exempted from work without continued pay.;bool;;
-TRUE;FALSE;empl_lost_job;Economic Adjustments;Work Adjustments;;I have lost my job.;bool;;
-TRUE;FALSE;empl_no_change;Economic Adjustments;Work Adjustments;;No, nothing has changed;bool;;
+TRUE;;empl_work_less;Economic Adjustments;Work Adjustments;;My working hours have declined.;bool;;
+TRUE;;empl_work_more;Economic Adjustments;Work Adjustments;;My working hours have increased.;bool;;
+TRUE;;empl_work_home;Economic Adjustments;Work Adjustments;;I am working more from home.;bool;;
+TRUE;;empl_exemp_pay;Economic Adjustments;Work Adjustments;;I am exempted from work with continued pay.;bool;;
+TRUE;;empl_exemp_no_pay;Economic Adjustments;Work Adjustments;;I am exempted from work without continued pay.;bool;;
+TRUE;;empl_lost_job;Economic Adjustments;Work Adjustments;;I have lost my job.;bool;;
+TRUE;;empl_no_change;Economic Adjustments;Work Adjustments;;No, nothing has changed;bool;;
 ;;;;;;;;;
-TRUE;FALSE;selfempl_work_less;Economic Adjustments;Work Adjustments;;My working hours have declined.;bool;;
-TRUE;FALSE;selfempl_work_more;Economic Adjustments;Work Adjustments;;My working hours have increased.;bool;;
-TRUE;FALSE;selfempl_work_home;Economic Adjustments;Work Adjustments;;I am working more from home.;bool;;
-TRUE;FALSE;selfempl_lower_rev;Economic Adjustments;Work Adjustments;;My revenue has fallen.;bool;;
-TRUE;FALSE;selfempl_higher_rev;Economic Adjustments;Work Adjustments;;My revenue has increased.;bool;;
-TRUE;FALSE;selfempl_must_close;Economic Adjustments;Work Adjustments;;I have closed my business due to an administrative order;bool;;
-TRUE;FALSE;selfempl_free_close;Economic Adjustments;Work Adjustments;;I have voluntarily closed my business temporarily;bool;;
-TRUE;FALSE;selfempl_finance_distress;Economic Adjustments;Work Adjustments;;My business is in financial distress because of the current crisis.;bool;;
-TRUE;FALSE;selfempl_give_up;Economic Adjustments;Work Adjustments;;I had to permanently close my business or file for bancruptcy.;bool;;
-TRUE;FALSE;selfempl_no_change;Economic Adjustments;Work Adjustments;;No, nothing has changed;bool;;
+TRUE;;selfempl_work_less;Economic Adjustments;Work Adjustments;;My working hours have declined.;bool;;
+TRUE;;selfempl_work_more;Economic Adjustments;Work Adjustments;;My working hours have increased.;bool;;
+TRUE;;selfempl_work_home;Economic Adjustments;Work Adjustments;;I am working more from home.;bool;;
+TRUE;;selfempl_lower_rev;Economic Adjustments;Work Adjustments;;My revenue has fallen.;bool;;
+TRUE;;selfempl_higher_rev;Economic Adjustments;Work Adjustments;;My revenue has increased.;bool;;
+TRUE;;selfempl_must_close;Economic Adjustments;Work Adjustments;;I have closed my business due to an administrative order;bool;;
+TRUE;;selfempl_free_close;Economic Adjustments;Work Adjustments;;I have voluntarily closed my business temporarily;bool;;
+TRUE;;selfempl_finance_distress;Economic Adjustments;Work Adjustments;;My business is in financial distress because of the current crisis.;bool;;
+TRUE;;selfempl_give_up;Economic Adjustments;Work Adjustments;;I had to permanently close my business or file for bancruptcy.;bool;;
+TRUE;;selfempl_no_change;Economic Adjustments;Work Adjustments;;No, nothing has changed;bool;;
 ;;;;;;;;;
-TRUE;FALSE;has_children;Background Variables;Background Variables;;Are there children below 12 years of age in your household;bool;;
+TRUE;;has_children;Background Variables;Background Variables;;Are there children below 12 years of age in your household;bool;;
 FALSE;q22;nr_children;Background Variables;Background Variables;;How many children under 12 are in your household?;int;;
 TRUE;q23__1;cc_self_home;Economic Adjustments;Childcare Adjustments;;I stay at home.;bool;;
 TRUE;q23__2;cc_partner_home;Economic Adjustments;Childcare Adjustments;;My partner stays at home.;bool;;
@@ -109,21 +109,21 @@ TRUE;;cc_no_change;Economic Adjustments;Childcare Adjustments;;Nothing has chang
 FALSE;q24;cc_emergency_help;Economic Adjustments;Childcare Adjustments;;Are you well helped with this emergency (child) care?;Categorical;1 no not at all, 2, 3, 4, 5 yes very good;TRUE
 FALSE;q25open;cc_comment;Skip;Skip;;If you want to say something about this emergency (child) care, maybe about what you think could be improved, you can put it here;str;;
 ;;;;;;;;;
-TRUE;FALSE;national_public_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from national public TV or radio;bool;;
-TRUE;FALSE;national_private_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from national private TV or radio;bool;;
-TRUE;FALSE;national_newspaper;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from national newspaper;bool;;
-TRUE;FALSE;local_public_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from local public TV or radio;bool;;
-TRUE;FALSE;local_private_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from local private TV or radio;bool;;
-TRUE;FALSE;facebook;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from local newspaper;bool;;
-TRUE;FALSE;other_social_media;Media and Health Beliefs;Media Diet;;Receive information on coronavirus from facebook;bool;;
-TRUE;FALSE;acquaintances;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from friends and family;bool;;
-TRUE;FALSE;other_source;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from other source;str;;
-TRUE;FALSE;not_informed;Media and Health Beliefs;Media Diet;;I do not seek out information on this topic.;bool;;
+TRUE;;national_public_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from national public TV or radio;bool;;
+TRUE;;national_private_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from national private TV or radio;bool;;
+TRUE;;national_newspaper;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from national newspaper;bool;;
+TRUE;;local_public_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from local public TV or radio;bool;;
+TRUE;;local_private_tv;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from local private TV or radio;bool;;
+TRUE;;facebook;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from local newspaper;bool;;
+TRUE;;other_social_media;Media and Health Beliefs;Media Diet;;Receive information on coronavirus from facebook;bool;;
+TRUE;;acquaintances;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from friends and family;bool;;
+TRUE;;other_source;Media and Health Beliefs;Media Diet;;Receive information on coronavirus (online or offline) from other source;str;;
+TRUE;;not_informed;Media and Health Beliefs;Media Diet;;I do not seek out information on this topic.;bool;;
 ;;;;;;;;;
-TRUE;FALSE;fb_use_intensity;Media and Health Beliefs;Facebook Usage;;how often do you use facebook?;Categorical;less often, several times per month, several times per week, daily;True
-TRUE;FALSE;fb_local_page;Media and Health Beliefs;Facebook Usage;;Have you obtained information on coronavirus from a facebook page?;bool;;
-TRUE;FALSE;fb_local_group;Media and Health Beliefs;Facebook Usage;;Have you obtained information on coronavirus from a facebook group?;bool;;
-TRUE;FALSE;no_info_from_page_or_group;Media and Health Beliefs;Facebook Usage;;No.;bool;;
+TRUE;;fb_use_intensity;Media and Health Beliefs;Facebook Usage;;how often do you use facebook?;Categorical;less often, several times per month, several times per week, daily;True
+TRUE;;fb_local_page;Media and Health Beliefs;Facebook Usage;;Have you obtained information on coronavirus from a facebook page?;bool;;
+TRUE;;fb_local_group;Media and Health Beliefs;Facebook Usage;;Have you obtained information on coronavirus from a facebook group?;bool;;
+TRUE;;no_info_from_page_or_group;Media and Health Beliefs;Facebook Usage;;No.;bool;;
 ;;;;;;;;;
 TRUE;eva2h;liked_survey;Skip;Skip;;How did you like this survey overall?;Categorical;not at all, not very much, average, good, very good;True
 TRUE;;liked_that_survey_on_topic;Skip;Skip;;How did you like that we invited you to a special survey on this topic?;Categorical;not at all, not very much, average, good, very good;True

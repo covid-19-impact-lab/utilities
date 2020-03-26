@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="utilities",
-    version="0.0.5",
+    version="0.0.6",
     description=(
         "Package with code that has to be shared across repos of covid-19-impact-lab"
     ),
