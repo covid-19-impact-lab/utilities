@@ -72,8 +72,7 @@ def convert_dtypes(data, data_name, description, logging="print"):
                                     + f"\n\nThey should be: \n\t{should_cats}."
                                 )
             except TypeError:
-                print(f"{col} raises the type error. its type is {is_type}")
-
+                msg = f"{col} raises the type error. its type is {is_type}"
                 _custom_logging(msg=msg, logging=logging)
         elif should_type == "str":
             data[col].replace({"": np.nan}, inplace=True)
