@@ -5,6 +5,10 @@ from pandas.api.types import is_categorical
 
 def convert_dtypes(data, data_name, description, logging="print"):
     """Convert and check dtypes to match between data and description.
+
+    For categorical dtypes this only checks that categories match and ordered variables
+    are ordered.
+
     Args:
         data (pd.DataFrame): DataFrame with the survey data.
         data_name (str): name of the column containing the variable names in
@@ -16,29 +20,62 @@ def convert_dtypes(data, data_name, description, logging="print"):
         data (pd.DataFrame): DataFrame satisfying the
 
     """
-    dict_data = description.set_index('new_name')[["type", "categories_english", "ordered"]]
+    dict_data = description.set_index("new_name")[
+        ["type", "categories_english", "ordered"]
+    ]
     overlap = set(data.columns).intersection(dict_data.index)
     dict_data = dict_data.loc[overlap]
     col_to_dtype = dict_data.T.to_dict()
     for col, col_dict in col_to_dtype.items():
-        dtype = col_dict["type"]
-        if dtype == "boolean":
+        should_type = col_dict["type"]
+        if should_type == "boolean":
             if data[col].dtype.name == "category":
-               data[col] = data[col].replace({"Ja": True, "Nee": False})
+                data[col] = data[col].replace({"Ja": True, "Nee": False})
             else:
                 try:
-                    data[col] = data[col].astype(dtype)
+                    data[col] = data[col].astype(should_type)
                 except TypeError:
                     print(col, data[col].dtype, data[col].unique())
-        elif dtype == "Categorical":
-            pass
-            # cats = col_dict["categories_english"]
-            # ordered = col_dict["ordered"]
-            # data[col] = pd.Categorical(values=data[col], categories=cats, ordered=ordered)
-        elif dtype == "str":
+
+        elif should_type == "Categorical":
+            is_type = data[col].dtype
+            try:
+                if is_type != "category":
+                    msg = f"{col} is not a Categorical variable but {is_type}"  # noqa
+                    _custom_logging(msg=msg, logging=logging)
+                else:
+                    should_cats = col_dict["categories_english"].split(", ")
+                    if set(should_cats) != set(is_type.categories):
+                        msg = (
+                            f"{col} does not have the categories it should have. \n\t"
+                            + f"It has: {is_type.categories.tolist()}\n\t"
+                            + f"It shoud have: {should_cats}"
+                        )
+                    should_be_ordered = col_dict["ordered"]
+                    if should_be_ordered:
+                        if not is_type.ordered:
+                            msg = f"{col} is not ordered though it should be."
+                            _custom_logging(msg=msg, logging=logging)
+                        else:
+                            if is_type.categories.tolist() != list(should_cats):
+                                msg = (
+                                    f"{col}'s categories are not in the right order."
+                                    + f"They are: \n\t{is_type.categories.tolist()}"
+                                    + f"\n\nThey should be: \n\t{should_cats}."
+                                )
+            except TypeError:
+                print(f"{col} raises the type error. its type is {is_type}")
+
+                _custom_logging(msg=msg, logging=logging)
+        elif should_type == "str":
             data[col].replace({"": np.nan}, inplace=True)
-        else: # Int or float
-            data[col] = data[col].astype(dtype)
+        else:  # Int or float
+            try:
+                data[col] = data[col].astype(should_type)
+            except:
+                print(
+                    f"{col} should be {should_type} but can't be converted from {data[col].dtype}"
+                )
     return data
 
 
@@ -55,9 +92,7 @@ def check_description(data, data_name, description, logging="print"):
     _check_new_names(new_names=description["new_name"], logging=logging)
     _check_types(types=description["type"], logging=logging)
     _check_var_overlap_btw_description_and_data(
-        data_vars=data.columns,
-        covered=description[data_name].unique(),
-        logging=logging,
+        data_vars=data.columns, covered=description[data_name].unique(), logging=logging
     )
 
     # warn if label missing
@@ -75,8 +110,9 @@ def _check_new_names(new_names, logging):
     lengths = new_names.str.len()
     too_long = new_names[lengths > 31]
     if len(too_long) > 0:
-        msg = "The following new names are too long for STATA:\n\t" + \
-            "\n\t".join(too_long)
+        msg = "The following new names are too long for STATA:\n\t" + "\n\t".join(
+            too_long
+        )
         _custom_logging(msg=msg, logging=logging)
 
 
@@ -95,15 +131,19 @@ def _check_types(types, logging):
 def _check_var_overlap_btw_description_and_data(data_vars, covered, logging):
     missing_in_description = [x for x in data_vars if x not in covered]
     if len(missing_in_description) > 0:
-        msg = "The following variables from the raw dataset are not " + \
-            "covered by the description table: \n\t" + \
-            "\n\t".join(sorted(missing_in_description))
+        msg = (
+            "The following variables from the raw dataset are not "
+            + "covered by the description table: \n\t"
+            + "\n\t".join(sorted(missing_in_description))
+        )
         _custom_logging(msg=msg, logging=logging)
     missing_in_data = [str(x) for x in covered if x not in data_vars]
     if len(missing_in_data) > 0:
-        msg = "The following variables from the description table are not " + \
-            "in the raw dataset: \n\t" + \
-            "\n\t".join(sorted(missing_in_data))
+        msg = (
+            "The following variables from the description table are not "
+            + "in the raw dataset: \n\t"
+            + "\n\t".join(sorted(missing_in_data))
+        )
         _custom_logging(msg=msg, logging=logging)
 
 
@@ -112,25 +152,27 @@ def _check_categorical_cols(description, data_name, logging):
     no_categories = cat_df["categories_english"].isnull()
     if no_categories.any():
         msg = "English category labels are missing for: \n\t" + "\n\t".join(
-            cat_df[no_categories]["new_name"])
+            cat_df[no_categories]["new_name"]
+        )
         _custom_logging(msg=msg, logging=logging)
     ordered_bool = cat_df["ordered"].isin([True, False])
     if not ordered_bool.all():
-        msg = "The ordered column must be boolean but is not for: \n\t" + \
-            "\n\t".join(cat_df[~ordered_bool]["new_name"])
+        msg = "The ordered column must be boolean but is not for: \n\t" + "\n\t".join(
+            cat_df[~ordered_bool]["new_name"]
+        )
+        _custom_logging(msg=msg, logging=logging)
 
     # if categories and old_categories are given they must have same length
 
 
-
-def _load_description(path, data_name):
-    description = pd.read_csv(path, sep=';')
+def load_description(path, data_name):
+    description = pd.read_csv(path, sep=";")
     description.replace({"TRUE": True, "FALSE": False}, inplace=True)
     # use nullable pandas dtypes
     description["type"].replace({"int": "Int64", "bool": "boolean"}, inplace=True)
     # drop empty rows and columns
-    description.dropna(how='all', axis=0, inplace=True)
-    description.dropna(how='all', axis=1, inplace=True)
+    description.dropna(how="all", axis=0, inplace=True)
+    description.dropna(how="all", axis=1, inplace=True)
     # get relevant slice
     description = description[description["new_name"].notnull()]
     description = description[description["new_name"] != False]
@@ -139,11 +181,11 @@ def _load_description(path, data_name):
 
 def _custom_logging(msg, logging):
     """Print or write msg to a file."""
-    padded = '\n\n' + msg + '\n\n'
+    padded = "\n\n" + msg + "\n\n"
     if logging == "print":
         print(padded)
     elif logging is not None:
-        with open(logging, 'a') as f:
+        with open(logging, "a") as f:
             f.write(padded)
 
 
