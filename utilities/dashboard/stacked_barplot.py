@@ -61,6 +61,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
             )
             df.rename(columns={bg_var: "label"}, inplace=True)
             df["variable"] = nice_names[var]
+            df["Question"] = labels[var]
             df["label"] = df["label"].astype(str)
             to_concat.append(df)
 
@@ -132,7 +133,11 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
         plot_height=get_plot_height(selectors, bg_var),
         toolbar_location=None,
         tools="hover",
-        tooltips="$name: @$name{%0f}",
+        tooltips=[
+            ("Question", "@Question"),
+            ("Reply", "$name"),
+            ("Share", "@$name{%0f}"),
+        ],
     )
 
     p.hbar_stack(
@@ -187,12 +192,8 @@ def make_layout(plot, selectors, bg_var, categories, colors, title):
 
     legend_text = Row(*legend_entries, align="end", margin=25)
 
-    title_text = Row(
-        Div(
-            text=as_html(title),
-            style={"font-size": "200%", "color": "#696969"},
-            width=500,
-        )
+    title_text = Div(
+        text=as_html(title), style={"font-size": "200%", "color": "#696969"}, width=500,
     )
 
     layout = Column(title_text, legend_text, plot)
