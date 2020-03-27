@@ -12,7 +12,7 @@ from pandas.api.types import is_integer_dtype
 from utilities.colors import get_colors
 
 
-def prepare_data(data, variables, bg_vars=None):
+def prepare_data(data, variables, bg_vars, nice_names):
     """Calculate shares of a categorical variable, conditional on bg_vars.
 
     This data can be used for histograms, stacked barplots, etc.
@@ -21,6 +21,7 @@ def prepare_data(data, variables, bg_vars=None):
         data (pd.DataFrame): The dataset that contains variable and background_variables.
         variables (list): Names of apd.Categorical variables of which the shares are calculated.
         bg_vars (list): pd.Categorical variables with background characteristics.
+        nice_names (dict): Maps variables to nice names
 
     Returns:
         dict: Dictionary containing shares and selectors.
@@ -45,7 +46,7 @@ def prepare_data(data, variables, bg_vars=None):
         df = pd.concat([data[var].value_counts(normalize=True).to_frame().T] * 2)
         df.columns = df.columns.tolist()
         df.reset_index(drop=True, inplace=True)
-        df["variable"] = var
+        df["variable"] = nice_names[var]
         df["label"] = ["", "all"]
         to_concat.append(df)
         # conditional shares
@@ -57,11 +58,11 @@ def prepare_data(data, variables, bg_vars=None):
                 .reset_index()
             )
             df.rename(columns={bg_var: "label"}, inplace=True)
-            df["variable"] = var
-            df["label"] = bg_var + ": " + df["label"].astype(str)
+            df["variable"] = nice_names[var]
+            df["label"] = df["label"].astype(str)
             to_concat.append(df)
 
-    share_data = pd.concat(to_concat)
+    share_data = pd.concat(to_concat).fillna(0)
 
     share_dict = {}
     share_dict["label"] = list(zip(share_data["variable"], share_data["label"]))
@@ -72,12 +73,11 @@ def prepare_data(data, variables, bg_vars=None):
         share_dict[var] = share_data[var].tolist()
 
     selectors = {}
-    selectors["all"] = [(var, "") for var in variables][::-1]
+    selectors["all"] = [(nice_names[var], "") for var in variables][::-1]
     for bg_var in bg_vars:
-        selectors[bg_var] = [
-            lab
-            for lab in share_dict["label"]
-            if lab[1].startswith(f"{bg_var}: ") or lab[1] == "all"
+        selected = ["all"] + pd.Series(data[bg_var].unique()).dropna().tolist()
+        selectors[nice_names[bg_var]] = [
+            lab for lab in share_dict["label"] if lab[1] in selected
         ][::-1]
 
     return {"shares": share_dict, "selectors": selectors}
@@ -180,7 +180,7 @@ def _make_layout(plot, selectors, bg_var, categories, colors, title):
         label_entry = Div(text=_as_html(x), style=style_dict, width=legend_width)
         legend_entries.append(label_entry)
 
-    legend_text = Row(*legend_entries, align="end", margin=15)
+    legend_text = Row(*legend_entries, align="end", margin=25)
 
     title_text = Row(
         Div(

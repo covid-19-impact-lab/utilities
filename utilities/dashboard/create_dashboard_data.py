@@ -40,13 +40,14 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
         f"header_{language}"
     ].to_dict()
 
+    # maybe we don't have to return this
     res["group_to_variables"] = _dict_of_uniques_from_df(
         data_desc, f"group_{language}", "new_name"
     )
-    res["background_variables"] = res["group_to_variables"].pop("Background Variables")
-    res["variable_to_nice_name"] = data_desc.set_index("new_name")[
-        f"nice_name_{language}"
-    ].to_dict()
+    internal_bg_vars = res["group_to_variables"].pop("Background Variables")
+    nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
+    res["variable_to_nice_name"] = nice_names
+    res["background_variables"] = [nice_names[var] for var in internal_bg_vars]
     res["variable_to_label"] = data_desc.set_index("new_name")[
         f"label_{language}"
     ].to_dict()
@@ -62,7 +63,8 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
         plot_data[g] = prepare_data(
             data=data,
             variables=res["group_to_variables"][g],
-            bg_vars=res["background_variables"],
+            bg_vars=internal_bg_vars,
+            nice_names=res["variable_to_nice_name"],
         )
 
     res["plot_data"] = plot_data
