@@ -12,7 +12,7 @@ from pandas.api.types import is_integer_dtype
 from utilities.colors import get_colors
 
 
-def prepare_data(data, variables, bg_vars, nice_names):
+def prepare_data(data, variables, bg_vars, nice_names, labels):
     """Calculate shares of a categorical variable, conditional on bg_vars.
 
     This data can be used for histograms, stacked barplots, etc.
@@ -22,6 +22,7 @@ def prepare_data(data, variables, bg_vars, nice_names):
         variables (list): Names of apd.Categorical variables of which the shares are calculated.
         bg_vars (list): pd.Categorical variables with background characteristics.
         nice_names (dict): Maps variables to nice names
+        labels (dict): Maps variables to labels
 
     Returns:
         dict: Dictionary containing shares and selectors.
@@ -47,6 +48,7 @@ def prepare_data(data, variables, bg_vars, nice_names):
         df.columns = df.columns.tolist()
         df.reset_index(drop=True, inplace=True)
         df["variable"] = nice_names[var]
+        df["Question"] = labels[var]
         df["label"] = ["", "all"]
         to_concat.append(df)
         # conditional shares
@@ -66,6 +68,7 @@ def prepare_data(data, variables, bg_vars, nice_names):
 
     share_dict = {}
     share_dict["label"] = list(zip(share_data["variable"], share_data["label"]))
+    share_dict["Question"] = share_data["Question"]
 
     order = data[variables[0]].dtype.categories.tolist()
 
@@ -90,10 +93,10 @@ def setup_plot(shares, selectors, title, bg_var="all"):
         shares (list):
     """
     cds = ColumnDataSource(shares)
-    categories = [cat for cat in shares if cat != "label"]
+    categories = [cat for cat in shares if cat not in ("label", "Question")]
     colors = colors = get_colors("ordered", len(categories))
 
-    p = _setup_basic_plot(
+    p = setup_basic_plot(
         cds=cds,
         categories=categories,
         selectors=selectors,
@@ -101,32 +104,32 @@ def setup_plot(shares, selectors, title, bg_var="all"):
         colors=colors,
     )
 
-    p = _specific_styling(p)
+    p = specific_styling(p)
 
-    p = _unclutter(p)
+    p = unclutter(p)
 
-    layout = _make_layout(p, selectors, bg_var, categories, colors, title)
+    layout = make_layout(p, selectors, bg_var, categories, colors, title)
 
     return layout
 
 
 def condition_plot(layout, selectors, bg_var, n_categories):
     title, legend, plot = layout.children
-    legend_width = _get_legend_width(plot.plot_width, selectors, bg_var, n_categories)
+    legend_width = get_legend_width(plot.plot_width, selectors, bg_var, n_categories)
     for entry in legend.children:
         entry.width = legend_width
     plot.y_range.factors = selectors[bg_var]
-    plot.plot_height = _get_plot_height(selectors, bg_var)
+    plot.plot_height = get_plot_height(selectors, bg_var)
     if bg_var == "all":
         plot.yaxis.group_label_orientation = "horizontal"
     else:
         plot.yaxis.group_label_orientation = "vertical"
 
 
-def _setup_basic_plot(cds, categories, selectors, bg_var, colors):
+def setup_basic_plot(cds, categories, selectors, bg_var, colors):
     p = figure(
         y_range=FactorRange(*selectors[bg_var]),
-        plot_height=_get_plot_height(selectors, bg_var),
+        plot_height=get_plot_height(selectors, bg_var),
         toolbar_location=None,
         tools="hover",
         tooltips="$name: @$name{%0f}",
@@ -138,7 +141,7 @@ def _setup_basic_plot(cds, categories, selectors, bg_var, colors):
     return p
 
 
-def _specific_styling(p):
+def specific_styling(p):
     #
     p.y_range.range_padding = 0.1
     p.ygrid.grid_line_color = None
@@ -162,7 +165,7 @@ def _specific_styling(p):
     return p
 
 
-def _unclutter(p, remove_grid=True, remove_ticks=True):
+def unclutter(p, remove_grid=True, remove_ticks=True):
     if remove_grid:
         p.xgrid.visible = False
         p.ygrid.visible = False
@@ -173,22 +176,20 @@ def _unclutter(p, remove_grid=True, remove_ticks=True):
     return p
 
 
-def _make_layout(plot, selectors, bg_var, categories, colors, title):
+def make_layout(plot, selectors, bg_var, categories, colors, title):
     legend_entries = []
     style_dict = {"text-align": "center", "vertical-align": "middle"}
-    legend_width = _get_legend_width(
-        plot.plot_width, selectors, bg_var, len(categories)
-    )
+    legend_width = get_legend_width(plot.plot_width, selectors, bg_var, len(categories))
     for x, c in zip(categories, colors):
         style_dict["color"] = c
-        label_entry = Div(text=_as_html(x), style=style_dict, width=legend_width)
+        label_entry = Div(text=as_html(x), style=style_dict, width=legend_width)
         legend_entries.append(label_entry)
 
     legend_text = Row(*legend_entries, align="end", margin=25)
 
     title_text = Row(
         Div(
-            text=_as_html(title),
+            text=as_html(title),
             style={"font-size": "200%", "color": "#696969"},
             width=500,
         )
@@ -198,11 +199,11 @@ def _make_layout(plot, selectors, bg_var, categories, colors, title):
     return layout
 
 
-def _as_html(text):
+def as_html(text):
     return f"<b> {text} <b>"
 
 
-def _get_legend_width(plot_width, selectors, bg_var, n_categories):
+def get_legend_width(plot_width, selectors, bg_var, n_categories):
     if bg_var == "all":
         longest = max([len(lab[0]) for lab in selectors[bg_var]])
         combined_width = plot_width * 0.84 - longest * 5.5
@@ -213,7 +214,7 @@ def _get_legend_width(plot_width, selectors, bg_var, n_categories):
     return int(combined_width / n_categories)
 
 
-def _get_plot_height(selectors, bg_var):
+def get_plot_height(selectors, bg_var):
     n_vars = len(selectors["all"])
     n_bars = len(selectors[bg_var])
     return int(35 * n_vars + 30 * n_bars)

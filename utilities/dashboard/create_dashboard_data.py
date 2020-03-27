@@ -66,6 +66,7 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
             variables=res["group_to_variables"][g],
             bg_vars=internal_bg_vars,
             nice_names=res["variable_to_nice_name"],
+            labels=res["variable_to_label"],
         )
 
     res["plot_data"] = plot_data
