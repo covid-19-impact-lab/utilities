@@ -1,0 +1,93 @@
+topic_english;subtopic_english;liss-data-set;import_name;nice_name;label_english;type;categories_english;ordered
+background;health;health;dum_angina;dum_angina;angina, pain in the chest;bool;;
+background;health;health;dum_attack;dum_attack;a heart attack including infarction or coronary thrombosis or another heart prob;bool;;
+background;health;health;dum_pressure;dum_pressure;high blood pressure or hypertension;bool;;
+background;health;health;dum_cholestrol;dum_cholestrol;high cholesterol content in blood;bool;;
+background;health;health;dum_stroke;dum_stroke;a stroke or brain infarction or a disease affecting the blood vessels;bool;;
+background;health;health;dum_diabetes;dum_diabetes;diabetes or a too high blood sugar level;bool;;
+background;health;health;dum_lung;dum_lung;chronic lung disease such as chronic bronchitis or emphysema;bool;;
+background;health;health;dum_asthma;dum_asthma;asthma;bool;;
+background;health;health;dum_arthitis;dum_arthitis;arthritis, including osteoarthritis, or rheumatism, bone decalcification;bool;;
+background;health;health;dum_cancer;dum_cancer;cancer or malignant tumor, including leukemia or lymphoma;bool;;
+background;health;health;dum_ulcer;dum_ulcer;a gastric ulcer or duodenal ulcer;bool;;
+background;health;health;dum_parkinson;dum_parkinson;Parkinson's disease;bool;;
+background;health;health;dum_cataract;dum_cataract;cataract;bool;;
+background;health;health;dum_hip;dum_hip;a broken hip or thigh bone;bool;;
+background;health;health;dum_fracture;dum_fracture;another fracture;bool;;
+background;health;health;dum_alzheimer;dum_alzheimer;Alzheimer,  organic brain syndrome,  senility ;bool;;
+background;health;health;dum_benign_tumor;dum_benign_tumor;benign tumor (skin tumor, polyps,  angioma) ;bool;;
+background;health;health;dum_other;dum_other;other afflictions not yet mentioned;bool;;
+background;health;health;dum_no_diseases;dum_no_diseases;no diseases / problems;bool;;
+background;mental_health;health;feel_anxious;nervous_back;;float;;
+background;mental_health;health;feel_calm;calm_back;;float;;
+background;mental_health;health;feel_down;gloomy_back;;float;;
+background;mental_health;health;feel_depressed;depressed_back;;float;;
+background;mental_health;health;feel_happy;happy_back;;float;;
+background;mental_health;;mhi5_back;mhi5_back;Mhi 5 score in November 2019;float;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+background;financial_situation;housing;home_ownership_status;home_ownership_status;Are you a tenant, subtenant, or (co-)owner of your current dwelling?;category;tenant, subtenant, (co-)owner, other:  for instance cost-free accommodation or anti-squatting accommodation;TRUE
+background;financial_situation;housing;home_has_mortgage;home_has_mortgage;do you have a mortgage or loan (or bridging loan);bool;no,yes;TRUE
+background;financial_situation;housing;home_paid_interest_on_mortgage;home_paid_interest_on_mortgage;Did you pay any interest in the current period!;bool;;
+background;financial_situation;housing;home_pays_rent;home_pays_rent;Do you currently pay rent?;bool;no,yes;TRUE
+background;financial_situation;housing;home_rent_amount;home_rent_amount;How much rent do you pay?;float;;
+background;housing;housing;home_nr_of_rooms;home_nr_of_rooms;How many rooms does your dwelling contain?;float;                 ;
+background;housing;housing;home_problem_small;home_problem_small;Does your dwelling have one or more of the following problems?;category;no,yes;TRUE
+background;housing;housing;home_problem_dark;home_problem_dark;Does your dwelling have one or more of the following problems?;category;no,yes;TRUE
+background;housing;housing;home_problem_cold;home_problem_cold;Does your dwelling have one or more of the following problems?;category;no,yes;TRUE
+background;housing;housing;home_problem_rotten;home_problem_rotten;Does your dwelling have one or more of the following problems?;category;no,yes;TRUE
+background;housing;housing;home_problem_noisy;home_problem_noisy;Does your dwelling have one or more of the following problems?;category;no,yes;TRUE
+background;housing;housing;home_problem_leaking_roof;home_problem_leaking_roof;Does your dwelling have one or more of the following problems?;category;no,yes;TRUE
+background;housing;housing;home_problem_damp;home_problem_damp;Does your dwelling have one or more of the following problems?;category;no,yes;TRUE
+background;work;work_schooling;paid_work;paid_work;Does the respondent have paid work?;bool;;
+background;work;work_schooling;sector;sector;In what sector do you work? (/In what sector did you work in your last job)?;object;;
+background;work;work_schooling;primary_occupation;primary_occupation;primary occupation;object;;
+background;work;work_schooling;job_social;job_social;Do (/did) you need to be able to relate well to other people?;category;often,sometimes, never;TRUE
+background;work;work_schooling;profession_firstjob;profession_firstjob;What profession did you exercise in your first job?;category;higher_academic, higher_supervisory, intermediate_academic, intermediate_supervisory, other_mental, skilled_manual, semiskilled_manual, unskilled_manual, agricultural_work;TRUE
+background;work;work_schooling;work_actual_hours;work_actual_hours;Hours of work a week;float;;
+background;work;work_schooling;work_contract_hours;work_contract_hours;Hours of work a week as written in the contract;float;;
+background;work;work_schooling;work_home;work_home;Do you have work at home days? ;category;;
+background;household;background;hh_members;hh_members;Number of Household Members.;float;;
+background;household;background;dom_situation;dom_situation;What is your domestic situation? ;category;single_no_children,  single_children, rel_children, rel_no_children, other;FALSE
+background;individual;background;female;female;Female;category;male, female;FALSE
+background;individual;background;age;age;Age ;float;;
+background;income;background;net_income;net_income;Net income;float;;
+background;income;background;gross_income;gross_income;Gross income;float;;
+background;individual;background;edu;education;Education;category;hs_and_less, jun_college, college, uni;TRUE
+background;household;background;net_income_hh;net_income_hh;Net income household;float;;
+background;household;background;gross_income_hh;gross_income_hh;Gross income household;float;;
+background;household;background;location_urban;location_urban;;category;;
+background;individual;background;origin;origin;;category;;
+background;individual;background;hh_position;hh_position;;category;;
+background;hosuehold;background;dwelling_type;dwelling_type;;category;;
+background;individual;background;occupation;occupation;;category;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+background;childcare;family;raising_playing;raising_playing;Distribution of playing childcare;category;;
+background;childcare;family;raising_outings;raising_outings;Distribution outings childcare;category;;
+background;childcare;family;raising_behaviour;raising_behaviour;Distribution behaviour childcare;category;;
+background;childcare;family;raising_logistic;raising_logistic;Distribution logistics childcare;category;;
+background;childcare;family;division_children;division_children;Do you feel that childcare work is fairly distributed between you and your partner?;category;;
+background;childcare;family;childcare_young_days;childcare_young_days;How many part days do you make use of professional childcare?;float;;
+background;childcare;family;childcare_young_hours;childcare_young_hours;How many hours a week do you make use of professional childcare? ;float;;
+background;financial_situation;assets;banking;banking;Total amount of money on bank account;float;;
+background;financial_situation;assets;mortgage;mortgage;Total remaining mortgage debt;float;;
+background;financial_situation;assets;risky_financial_assets;risky_financial_assets;Total value of risky financial assets;float;;
+background;financial_situation;assets;total_financial_assets;total_financial_assets;Total value of total financial assets;float;;
+background;financial_situation;income;net_wages;net_wages;Amount of net wages;float;;
+background;financial_situation;income;gross_wages;gross_wages;;float;;
+background;social_interaction;leisure;evening_freinds;evening_freinds;How often a week do you spend an evening outside with friends;category;;
+;;;;;;;;
+Economic Adjustments;childcare;;cc_multiple;cc_multiple;Family uses multiple was to care for children;bool;;
+Economic Adjustments;childcare;;cc_number;cc_number;Numbe rof different arrangements that families use!;float;;
+Economic Adjustments;childcare;;cc_nuclear_family;cc_nuclear_family;Indicator making use of nuclear family;bool;;
+Economic Adjustments;childcare;;cc_family;cc_family;Indicator making use of family;bool;;
