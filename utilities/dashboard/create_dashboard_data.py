@@ -1,7 +1,8 @@
+from utilities.dashboard import barplot
 from utilities.dashboard import stacked_barplot
 
 
-plot_modules = {"stacked_barplot": stacked_barplot}
+plot_modules = {"stacked_barplot": stacked_barplot, "barplot": barplot}
 
 
 def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7):

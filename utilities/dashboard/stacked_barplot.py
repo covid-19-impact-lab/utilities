@@ -117,6 +117,10 @@ def condition_plot(layout, selectors, bg_var, n_categories):
         entry.width = legend_width
     plot.y_range.factors = selectors[bg_var]
     plot.plot_height = _get_plot_height(selectors, bg_var)
+    if bg_var == "all":
+        plot.yaxis.group_label_orientation = "horizontal"
+    else:
+        plot.yaxis.group_label_orientation = "vertical"
 
 
 def _setup_basic_plot(cds, categories, selectors, bg_var, colors):
@@ -199,8 +203,13 @@ def _as_html(text):
 
 
 def _get_legend_width(plot_width, selectors, bg_var, n_categories):
-    longest = max([len(lab[0]) + len(lab[1]) for lab in selectors[bg_var]])
-    combined_width = plot_width * 0.84 - longest * 5.5
+    if bg_var == "all":
+        longest = max([len(lab[0]) for lab in selectors[bg_var]])
+        combined_width = plot_width * 0.84 - longest * 5.5
+    else:
+        longest = max([len(lab[1]) for lab in selectors[bg_var]])
+        combined_width = plot_width * 0.84 - longest * 5.2 - 20
+
     return int(combined_width / n_categories)
 
 
