@@ -18,7 +18,7 @@ with open(overview_tab_data_path, "rb") as f:
 timeline_tab_data = None
 
 doc = curdoc()
-doc.title = "Hello, let's look at some data :-)"
+doc.title = "The LISS Dataset"
 
 overview_tab = create_overview_tab(**overview_tab_data)
 timeline_tab = create_timeline_tab(timeline_tab_data)

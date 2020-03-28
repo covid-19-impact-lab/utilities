@@ -7,11 +7,12 @@ from bokeh.models import Panel
 from bokeh.models.widgets import Div
 
 
-# HIER DICT MAGIE ...
+from utilities.dashboard import barplot
+from utilities.dashboard import stacked_barplot
 
-from utilities.dashboard.stacked_barplot import setup_plot, condition_plot, as_html
+plot_modules = {"stacked_barplot": stacked_barplot, "barplot": barplot}
 
-
+from utilities.dashboard.stacked_barplot import as_html
 
 
 def create_overview_tab(
@@ -48,6 +49,7 @@ def create_overview_tab(
     topic = topics[0]
     subtopics = topic_to_groups[topic]
     group = subtopics[0]
+    plot_type = group_to_plot_type[group]
 
     topic_selector, subtopic_selector, background_selector = create_selection_menus(
         topics=topics, subtopics=subtopics, topic=topic, group=group,
@@ -56,6 +58,7 @@ def create_overview_tab(
     title = Div(text=as_html(group), style=title_style, width=500)
     header = Div(text=group_to_header[group], name="header")
     selection_menues = Row(topic_selector, subtopic_selector, background_selector)
+    setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     plot = setup_plot(**plot_data[group])
 
     page = Column(selection_menues, title, header, plot)
@@ -67,6 +70,7 @@ def create_overview_tab(
         subtopic_selector=subtopic_selector,
     )
     topic_selector.on_change("value", topic_callback)
+
     subtopic_callback = partial(
         set_subtopic,
         header=header,
@@ -74,13 +78,16 @@ def create_overview_tab(
         plot_data=plot_data,
         page=page,
         background_selector=background_selector,
+        group_to_plot_type=group_to_plot_type
     )
     subtopic_selector.on_change("value", subtopic_callback)
+
     background_var_callback = partial(
         condition_on_background_var,
         subtopic_selector=subtopic_selector,
         plot_data=plot_data,
         page=page,
+        group_to_plot_type=group_to_plot_type,
     )
     background_selector.on_change("value", background_var_callback)
 
@@ -111,25 +118,25 @@ def set_topic(attr, old, new, topic_to_groups, topic_selector, subtopic_selector
     subtopic_selector.value = new_groups[0]
 
 
-def set_subtopic(attr, old, new, header, group_to_header, plot_data, page, background_selector):
+def set_subtopic(attr, old, new, header, group_to_header, group_to_plot_type, plot_data, page, background_selector):
     """Adjust title, header and plot to new subtopic."""
     header.text = group_to_header[new]
+    plot_type = group_to_plot_type[new]
+    setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     new_p = setup_plot(**plot_data[new])
-    background_selector.value = "all"
+
     page.children[-1] = new_p
+    background_selector.value = "all"
 
 
-def condition_on_background_var(attr, old, new, subtopic_selector, plot_data, page):
+def condition_on_background_var(attr, old, new, subtopic_selector, plot_data, page, group_to_plot_type):
     plot = page.children[-1]
     page.children = page.children[:-1]
-
     group = subtopic_selector.value
     shares = plot_data[group]["shares"]
     categories = [cat for cat in shares if cat not in ("label", "Question")]
-
-
-    # condition_plot = getattr(plot_modules[plot_type], "condition_plot")
-
+    plot_type = group_to_plot_type[group]
+    condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
     condition_plot(
         plot=plot,
