@@ -113,13 +113,9 @@ def create_selection_menus(topics, subtopics, topic, group, background_variables
 def set_topic(attr, old, new, topic_to_groups, topic_selector, subtopic_selector):
     """Adjust subtopic select menu according to new topic."""
     topic_selector.value = new
-    print("0")
     new_groups = topic_to_groups[new]
-    print("1")
     subtopic_selector.options = new_groups
-    print(2)
     subtopic_selector.value = new_groups[0]
-    print(3)
 
 
 def set_subtopic(attr, old, new, header, group_to_header, group_to_plot_type, plot_data, page, background_selector):
