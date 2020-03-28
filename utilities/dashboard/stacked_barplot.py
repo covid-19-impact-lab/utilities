@@ -106,7 +106,6 @@ def setup_plot(shares, selectors, title, bg_var="all"):
     )
 
     p = specific_styling(p)
-
     p = unclutter(p)
 
     layout = make_layout(p, selectors, bg_var, categories, colors, title)
@@ -141,7 +140,7 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
     )
 
     p.hbar_stack(
-        categories, y="label", height=0.8, source=cds, color=colors,
+        categories, y="label", height=0.8, source=cds, color=colors
     )
     return p
 

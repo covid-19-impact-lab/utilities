@@ -1,12 +1,13 @@
 from functools import partial
 
-from auxiliary import create_standard_figure
 from bokeh.layouts import Column
 from bokeh.layouts import Row
 from bokeh.models import Select
 from bokeh.models import Panel
-from bokeh.models import RadioButtonGroup
 from bokeh.models.widgets import Div
+from bokeh.plotting import figure
+
+from utilities.dashboard.stacked_barplot import setup_plot
 
 
 def create_overview_tab(
@@ -39,22 +40,29 @@ def create_overview_tab(
         tab (bokeh.models.Tab)
 
     """
-    title = Div(text="Plot Title", style={"font-size": "200%"})
-
-    # setup the elements
     topic = topics[0]
     topic_selector = Select(title="Topic:", options=topics, value=topic, name="topic_selector")
     subtopics = topic_to_groups[topic]
+    group = subtopics[0]
     subtopic_selector = Select(
-        title="Subtopic:", options=subtopics, value=subtopics[0], name="subtopic_selector",
+        title="Subtopic:", options=subtopics, value=group, name="subtopic_selector",
     )
-    background_selector = RadioButtonGroup(labels=background_variables, active=0)
+    background_selector = Select(
+        title="Condition On:",
+        options=background_variables,
+        value="all"
+    )
     widgets = Row(topic_selector, subtopic_selector, background_selector)
 
-    header = Div(text="Choose a topic and subtopic to start!", name="header")
-    canvas = create_standard_figure(title="", name="canvas")
+    header = Div(text=group_to_header[group], name="header")
 
-    # # add the callbacks
+    # import pdb; pdb.set_trace()
+
+    lower_part = setup_plot(**plot_data[group], title=group)
+    lower_part.children[-1] = figure()
+    plot = lower_part.children[-1]
+
+    # add the callbacks
     topic_callback = partial(
         topic_handler,
         topic_selector=topic_selector,
@@ -64,7 +72,7 @@ def create_overview_tab(
     topic_selector.on_change("value", topic_callback)
     subtopic_callback = partial(
         subtopic_handler,
-        canvas=canvas,
+        plot=plot,
         group_to_plot_type=group_to_plot_type,
         plot_data=plot_data,
         header=header,
@@ -74,10 +82,11 @@ def create_overview_tab(
     background_var_callback = partial(
         background_var_handler, background_variables=background_variables
     )
-    background_selector.on_click(background_var_callback)
+    background_selector.on_change("value", background_var_callback)
 
-    col = Column(title, widgets, header, canvas)
+    col = Column(widgets, header, lower_part)
     tab = Panel(child=col, title="Overview", name="overview_panel")
+
     return tab
 
 
@@ -91,16 +100,15 @@ def topic_handler(attr, old, new, topic_to_groups, topic_selector, subtopic_sele
 
 
 def subtopic_handler(
-    attr, old, new, canvas, group_to_header, group_to_plot_type, plot_data, header
+    attr, old, new, plot, group_to_header, group_to_plot_type, plot_data, header
 ):
     header.text = group_to_header[new]
-    old_glyph = canvas.select_one({"name": "glyph"})
+    old_glyph = plot.select_one({"name": "glyph"})
     if old_glyph is not None:
-        canvas.renderers.remove(old_glyph)
+        plot.renderers.remove(old_glyph)
 
-    canvas.line(x=[1, 2, 3], y=[4, 5, 6], name="glyph")
+    plot.line(x=[1, 2, 3], y=[4, 5, 6], name="glyph")
 
 
-def background_var_handler(new, background_variables):
-    new_var = background_variables[new]
-    print(f"\n\nNew background variable: {new_var}\n\n")
+def background_var_handler(attr, old, new, background_variables):
+    print(f"\n\nNew background variable: {new}\n\n")
