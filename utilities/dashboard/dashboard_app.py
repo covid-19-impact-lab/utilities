@@ -1,8 +1,8 @@
 """
-usage: bokeh serve run_dashboard.py --show --args path/to/overview_tab_data_dict.json
+usage: bokeh serve run_dashboard.py --show --args path/to/overview_tab_data_dict.pickle
 
 """
-import json
+import pickle
 import sys
 
 from bokeh.models import Tabs
@@ -12,8 +12,8 @@ from create_timeline_tab import create_timeline_tab
 
 
 overview_tab_data_path = sys.argv[1]
-with open(overview_tab_data_path, "r") as f:
-    overview_tab_data = json.load(f)
+with open(overview_tab_data_path, "rb") as f:
+    overview_tab_data = pickle.load(f)
 
 timeline_tab_data = None
 
