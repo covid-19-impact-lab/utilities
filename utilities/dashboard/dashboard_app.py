@@ -7,8 +7,8 @@ import sys
 
 from bokeh.models import Tabs
 from bokeh.plotting import curdoc
-from create_overview_tab import create_overview_tab
-from create_timeline_tab import create_timeline_tab
+from utilities.dashboard.create_overview_tab import create_overview_tab
+from utilities.dashboard.create_timeline_tab import create_timeline_tab
 
 
 overview_tab_data_path = sys.argv[1]

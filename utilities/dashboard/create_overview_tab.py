@@ -88,6 +88,7 @@ def create_overview_tab(
         page=page,
         background_selector=background_selector,
         group_to_plot_type=group_to_plot_type,
+        title=title,
     )
     subtopic_selector.on_change("value", subtopic_callback)
 
@@ -136,8 +137,10 @@ def set_subtopic(
     plot_data,
     page,
     background_selector,
+    title
 ):
     """Adjust title, header and plot to new subtopic."""
+    title.text = as_html(new.title())
     header.text = group_to_header[new]
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
