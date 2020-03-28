@@ -37,7 +37,7 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
         group_info, f"topic_{language}", f"group_{language}"
     )
 
-    res["topic_to_header"] = group_info.set_index(f"topic_{language}")[
+    res["group_to_header"] = group_info.set_index(f"group_{language}")[
         f"header_{language}"
     ].to_dict()
 

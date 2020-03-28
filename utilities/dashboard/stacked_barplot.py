@@ -48,7 +48,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         df.columns = df.columns.tolist()
         df.reset_index(drop=True, inplace=True)
         df["variable"] = nice_names[var]
-        df["Question"] = labels[var]
+        df["Question"] = labels[var].tolist()
         df["label"] = ["", "all"]
         to_concat.append(df)
         # conditional shares
