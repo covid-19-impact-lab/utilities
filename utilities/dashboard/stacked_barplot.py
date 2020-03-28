@@ -4,6 +4,8 @@ from bokeh.layouts import Row
 from bokeh.models import ColumnDataSource
 from bokeh.models import Div
 from bokeh.models import FactorRange
+from bokeh.models import HoverTool
+
 from bokeh.plotting import figure
 from pandas.api.types import is_bool_dtype
 from pandas.api.types import is_categorical_dtype
@@ -131,17 +133,19 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
         y_range=f_range,
         plot_height=get_plot_height(selectors, bg_var),
         toolbar_location=None,
-        tools="hover",
-        tooltips=[
-            ("Question", "@Question"),
-            ("Reply", "$name"),
-            ("Share", "@$name{%0f}"),
-        ],
     )
 
-    p.hbar_stack(
-        categories, y="label", height=0.8, source=cds, color=colors, name="glyph"
+    renderers = p.hbar_stack(
+        stackers=categories, y="label", height=0.8, source=cds, color=colors
     )
+
+    if not isinstance(renderers, list):
+        renderers = [renderers]
+
+    tooltips = [("Question", "@Question"), ("Reply", "$name"), ("Share", "@$name{%0f}")]
+    hover = HoverTool(renderers=renderers, tooltips=tooltips)
+    p.tools.append(hover)
+
     return p
 
 
