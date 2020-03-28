@@ -45,7 +45,15 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     to_concat = []
     for var in variables:
         # unconditional shares. Repeated. Once with empty label once with label=all
-        df = pd.concat([data[var].value_counts(normalize=True).to_frame().T] * 2)
+        try:
+            vc = data[var].value_counts(normalize=True)
+            vc_df = vc.to_frame().T
+            df = pd.concat([vc_df] * 2)
+        except AttributeError:
+            import pdb
+
+            pdb.set_trace()
+
         df.columns = df.columns.tolist()
         df.reset_index(drop=True, inplace=True)
         df["variable"] = nice_names[var]
@@ -81,9 +89,9 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     selectors["all"] = tuple([(nice_names[var], "") for var in variables][::-1])
     for bg_var in bg_vars:
         selected = ["all"] + pd.Series(data[bg_var].unique()).dropna().tolist()
-        selectors[nice_names[bg_var]] = tuple([
-            tuple(lab) for lab in share_dict["label"] if lab[1] in selected
-        ][::-1])
+        selectors[nice_names[bg_var]] = tuple(
+            [tuple(lab) for lab in share_dict["label"] if lab[1] in selected][::-1]
+        )
 
     return {"shares": share_dict, "selectors": selectors}
 
@@ -230,6 +238,9 @@ def _check_variables_have_same_dtype(data, variables):
         variables (list):
 
     """
+    first_var = variables[0]
+    sr = data[first_var]
+
     dtype = data[variables[0]].dtype
     for var in variables:
         if data[var].dtype != dtype:

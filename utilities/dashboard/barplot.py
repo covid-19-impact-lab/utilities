@@ -10,8 +10,10 @@ from utilities.dashboard.stacked_barplot import get_plot_height
 
 
 def prepare_data(data, variables, bg_vars, nice_names, labels):
-    for var in variables:
-        assert is_bool_dtype(data[var])
+    problems = [var for var in variables if not is_bool_dtype(var)]
+    assert (
+        len(problems) == 0
+    ), "The following variables don't have boolean dtype:\n\t" + "\n\t".join(problems)
 
     plot_data = prepare_stacked_data(data, variables, bg_vars, nice_names, labels)
     del plot_data["shares"]["False"]
