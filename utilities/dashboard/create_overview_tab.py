@@ -55,45 +55,45 @@ def create_overview_tab(
     canvas = create_standard_figure(title="", name="canvas")
 
     # # add the callbacks
-    # topic_callback = partial(
-    #     topic_handler,
-    #     topic_selector=topic_selector,
-    #     topic_to_groups=topic_to_groups,
-    #     subtopic_selector=subtopic_selector,
-    # )
-    # topic_selector.on_click(topic_callback)
-    # subtopic_callback = partial(
-    #     subtopic_handler,
-    #     canvas=canvas,
-    #     group_to_plot_type=group_to_plot_type,
-    #     plot_data=plot_data,
-    #     header=header,
-    #     group_to_header=group_to_header,
-    # )
-    # subtopic_selector.on_click(subtopic_callback)
-    # background_var_callback = partial(
-    #     background_var_handler, background_variables=background_variables
-    # )
-    # background_selector.on_click(background_var_callback)
+    topic_callback = partial(
+        topic_handler,
+        topic_selector=topic_selector,
+        topic_to_groups=topic_to_groups,
+        subtopic_selector=subtopic_selector,
+    )
+    topic_selector.on_change("value", topic_callback)
+    subtopic_callback = partial(
+        subtopic_handler,
+        canvas=canvas,
+        group_to_plot_type=group_to_plot_type,
+        plot_data=plot_data,
+        header=header,
+        group_to_header=group_to_header,
+    )
+    subtopic_selector.on_change("value", subtopic_callback)
+    background_var_callback = partial(
+        background_var_handler, background_variables=background_variables
+    )
+    background_selector.on_click(background_var_callback)
 
     col = Column(title, widgets, header, canvas)
     tab = Panel(child=col, title="Overview", name="overview_panel")
     return tab
 
 
-def topic_handler(new, topic_to_groups, topic_selector, subtopic_selector):
-    new_topic = new.item
-    topic_selector.label = new_topic
-    new_groups = topic_to_groups[new_topic]
-    subtopic_selector.menu = new_groups
-    subtopic_selector.label = "Choose a subtopic"
+def topic_handler(attr, old, new, topic_to_groups, topic_selector, subtopic_selector):
+    # new_topic = new.item
+    print(attr, old, new)
+    topic_selector.value = new
+    new_groups = topic_to_groups[new]
+    subtopic_selector.options = new_groups
+    subtopic_selector.value = new_groups[0]
 
 
 def subtopic_handler(
-    new, canvas, group_to_header, group_to_plot_type, plot_data, header
+    attr, old, new, canvas, group_to_header, group_to_plot_type, plot_data, header
 ):
-    new_group = new.item
-    header.text = group_to_header[new_group]
+    header.text = group_to_header[new]
     old_glyph = canvas.select_one({"name": "glyph"})
     if old_glyph is not None:
         canvas.renderers.remove(old_glyph)
