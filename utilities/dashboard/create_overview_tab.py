@@ -145,8 +145,8 @@ def set_subtopic(
     header.text = group_to_header[new]
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
-    if new == "Reasons for Working Less":
-        import pdb; pdb.set_trace()
+    # if new == "Reasons for Working Less":
+    #     import pdb; pdb.set_trace()
     new_p = setup_plot(**plot_data[new])
 
     page.children[-1] = new_p
