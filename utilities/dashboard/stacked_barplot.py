@@ -251,12 +251,19 @@ def _convert_variables_to_categorical(data, variables):
     data = data.copy()
     for var in variables:
         if is_bool_dtype(data[var]):
-            data[var] = pd.Categorical(data[var], categories=[False, True], ordered=True)
+            data[var] = pd.Categorical(
+                data[var], categories=[False, True], ordered=True
+            )
             data[var] = data[var].cat.rename_categories({False: "False", True: "True"})
         elif is_integer_dtype(data[var]):
             # data[var] = pd.Categorical(data[var], categories=sorted(data[var].unique()), ordered=True)
             pass
-        elif not is_categorical_dtype(data[var]):
+        elif is_categorical_dtype(data[var]):
+            cat_index = data[var].dtype.categories
+            if is_integer_dtype(cat_index):
+                to_str = {cat: str(cat) for cat in cat_index}
+                data[var] = data[var].cat.rename_categories(to_str)
+        else:
             raise ValueError(f"{var}: {data[var].dtype} is not supported.")
 
     return data

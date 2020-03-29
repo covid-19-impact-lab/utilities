@@ -51,6 +51,7 @@ def create_overview_tab(
 
     """
     # start values
+    topics = [t for t in topics if t != "Background Variables"]
     topic = topics[0]
     subtopics = topic_to_groups[topic]
     group = subtopics[0]
@@ -137,13 +138,15 @@ def set_subtopic(
     plot_data,
     page,
     background_selector,
-    title
+    title,
 ):
     """Adjust title, header and plot to new subtopic."""
     title.text = as_html(new.title())
     header.text = group_to_header[new]
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
+    if new == "Reasons for Working Less":
+        import pdb; pdb.set_trace()
     new_p = setup_plot(**plot_data[new])
 
     page.children[-1] = new_p

@@ -60,7 +60,9 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
         f"label_{language}"
     ].to_dict()
 
-    res["group_to_plot_type"] = group_info.set_index(f"group_{language}")["plot_type"].to_dict()
+    res["group_to_plot_type"] = group_info.set_index(f"group_{language}")[
+        "plot_type"
+    ].to_dict()
 
     plot_data = {}
     for g in res["groups"]:
