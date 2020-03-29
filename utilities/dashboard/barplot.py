@@ -10,17 +10,16 @@ from utilities.dashboard.stacked_barplot import get_plot_height
 
 
 def prepare_data(data, variables, bg_vars, nice_names, labels):
-    problems = [var for var in variables if not is_bool_dtype(var)]
+    problems = [var for var in variables if not is_bool_dtype(data[var])]
     assert (
         len(problems) == 0
     ), "The following variables don't have boolean dtype:\n\t" + "\n\t".join(problems)
-
     plot_data = prepare_stacked_data(data, variables, bg_vars, nice_names, labels)
     del plot_data["shares"]["False"]
     return plot_data
 
 
-def setup_plot(shares, selectors, bg_var="all"):
+def setup_plot(shares, selectors, bg_var="Nothing"):
     """Create a horizontal barplot for a categorical variable.
 
     Args:
@@ -47,7 +46,7 @@ def setup_plot(shares, selectors, bg_var="all"):
 def condition_plot(plot, selectors, bg_var, n_categories):
     plot.y_range.factors = selectors[bg_var]
     plot.plot_height = get_plot_height(selectors, bg_var)
-    if bg_var == "all":
+    if bg_var == "Nothing":
         plot.yaxis.group_label_orientation = "horizontal"
     else:
         plot.yaxis.group_label_orientation = "vertical"

@@ -114,7 +114,7 @@ def create_selection_menus(topics, subtopics, topic, group, background_variables
         title="Subtopic:", options=subtopics, value=group, name="subtopic_selector",
     )
     background_selector = Select(
-        title="Condition On:", options=["all"] + background_variables, value="all"
+        title="Split By:", options=["Nothing"] + background_variables, value="Nothing"
     )
     return topic_selector, subtopic_selector, background_selector
 
@@ -147,7 +147,7 @@ def set_subtopic(
     new_p = setup_plot(**plot_data[new])
 
     page.children[-1] = new_p
-    background_selector.value = "all"
+    background_selector.value = "Nothing"
 
 
 def condition_on_background_var(

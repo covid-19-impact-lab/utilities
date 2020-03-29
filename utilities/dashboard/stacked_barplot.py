@@ -44,21 +44,16 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
 
     to_concat = []
     for var in variables:
-        # unconditional shares. Repeated. Once with empty label once with label=all
-        try:
-            vc = data[var].value_counts(normalize=True)
-            vc_df = vc.to_frame().T
-            df = pd.concat([vc_df] * 2)
-        except AttributeError:
-            import pdb
-
-            pdb.set_trace()
+        # unconditional shares. Repeated. Once with empty label once with label=Nothing
+        vc = data[var].value_counts(normalize=True)
+        vc_df = vc.to_frame().T
+        df = pd.concat([vc_df] * 2)
 
         df.columns = df.columns.tolist()
         df.reset_index(drop=True, inplace=True)
         df["variable"] = nice_names[var]
         df["Question"] = labels[var]
-        df["label"] = ("", "all")
+        df["label"] = ("", "Nothing")
         to_concat.append(df)
         # conditional shares
         for bg_var in bg_vars:
@@ -86,9 +81,9 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         share_dict[var] = share_data[var].tolist()
 
     selectors = {}
-    selectors["all"] = tuple([(nice_names[var], "") for var in variables][::-1])
+    selectors["Nothing"] = tuple([(nice_names[var], "") for var in variables][::-1])
     for bg_var in bg_vars:
-        selected = ["all"] + pd.Series(data[bg_var].unique()).dropna().tolist()
+        selected = ["Nothing"] + pd.Series(data[bg_var].unique()).dropna().tolist()
         selectors[nice_names[bg_var]] = tuple(
             [tuple(lab) for lab in share_dict["label"] if lab[1] in selected][::-1]
         )
@@ -96,7 +91,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     return {"shares": share_dict, "selectors": selectors}
 
 
-def setup_plot(shares, selectors, bg_var="all"):
+def setup_plot(shares, selectors, bg_var="Nothing"):
     """Create a stacked horizontal barplot for a categorical variable.
 
     Args:
@@ -129,7 +124,7 @@ def condition_plot(plot, selectors, bg_var, n_categories):
         entry.width = legend_width
     p.y_range.factors = selectors[bg_var]
     p.plot_height = get_plot_height(selectors, bg_var)
-    if bg_var == "all":
+    if bg_var == "Nothing":
         p.yaxis.group_label_orientation = "horizontal"
     else:
         p.yaxis.group_label_orientation = "vertical"
@@ -211,7 +206,7 @@ def as_html(text):
 
 
 def get_legend_width(plot_width, selectors, bg_var, n_categories):
-    if bg_var == "all":
+    if bg_var == "Nothing":
         longest = max([len(lab[0]) for lab in selectors[bg_var]])
         combined_width = plot_width * 0.84 - longest * 5.5
     else:
@@ -222,7 +217,7 @@ def get_legend_width(plot_width, selectors, bg_var, n_categories):
 
 
 def get_plot_height(selectors, bg_var):
-    n_vars = len(selectors["all"])
+    n_vars = len(selectors["Nothing"])
     n_bars = len(selectors[bg_var])
     return int(35 * n_vars + 30 * n_bars)
 
@@ -256,10 +251,8 @@ def _convert_variables_to_categorical(data, variables):
     data = data.copy()
     for var in variables:
         if is_bool_dtype(data[var]):
-            data[var] = data[var].replace({True: "True", False: "False"})
-            data[var] = pd.Categorical(
-                data[var], categories=["False", "True"], ordered=True
-            )
+            data[var] = pd.Categorical(data[var], categories=[False, True], ordered=True)
+            data[var] = data[var].cat.rename_categories({False: "False", True: "True"})
         elif is_integer_dtype(data[var]):
             # data[var] = pd.Categorical(data[var], categories=sorted(data[var].unique()), ordered=True)
             pass

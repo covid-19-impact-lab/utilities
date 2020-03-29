@@ -35,13 +35,9 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
 
     """
     res = {}
-    all_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
-    skip_groups = ["Background Variables", "Skip"]
-    relevant_groups = [g for g in all_groups if g not in skip_groups]
-    res["groups"] = relevant_groups
-    res["topics"] = [
-        x for x in group_info[f"topic_{language}"].unique() if x not in skip_groups
-    ]
+    raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
+    res["groups"] = [group for group in raw_groups if group != "Background Variables"]
+    res["topics"] = group_info[f"topic_{language}"].unique().tolist()  # noqa
 
     res["topic_to_groups"] = _dict_of_uniques_from_df(
         group_info, f"topic_{language}", f"group_{language}"
@@ -64,7 +60,7 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
         f"label_{language}"
     ].to_dict()
 
-    res["group_to_plot_type"] = _determine_plot_types(desc=data_desc)
+    res["group_to_plot_type"] = group_info.set_index(f"group_{language}")["plot_type"].to_dict()
 
     plot_data = {}
     for g in res["groups"]:
@@ -87,30 +83,3 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
 def _dict_of_uniques_from_df(df, key_col, val_col):
     raw = df.groupby(key_col)[val_col].unique().to_dict()
     return {k: val.tolist() for k, val in raw.items()}
-
-
-def _determine_plot_types(desc):
-    by_group = desc.groupby("group_english")
-    group_to_len_types = by_group["type"].apply(lambda x: len(x.unique()))
-    group_cat_info = group_to_len_types.to_frame(name="len type")
-    group_cat_info["type"] = by_group["type"].apply(lambda x: x.unique()[0])
-    group_cat_info["nr_categories"] = by_group["categories_english"].apply(
-        lambda x: len(x.str.split(", "))
-    )
-    group_cat_info["nr_categories"] = group_cat_info["nr_categories"].where(
-        group_cat_info["type"] != "bool", 2
-    )
-
-    group_cat_info["plot_type"] = group_cat_info["type"].replace(
-        {"Categorical": "stacked_barplot", "bool": "barplot"}
-    )
-    group_cat_info["plot_type"] = group_cat_info["plot_type"].where(
-        group_cat_info["len type"] == 1
-    )
-    group_cat_info["plot_type"] = group_cat_info["plot_type"].where(
-        group_cat_info["nr_categories"] < 8
-    )
-    group_cat_info["plot_type"] = group_cat_info["plot_type"].fillna("no_plot")
-
-    group_to_plot_types = group_cat_info["plot_type"].to_dict()
-    return group_to_plot_types
