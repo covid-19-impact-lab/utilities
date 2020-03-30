@@ -52,6 +52,8 @@ def dashboard_data_description(desc, group_info, data):
 
     _check_groups_unique(desc)
 
+    _check_nice_names_unique(desc)
+
     _check_data_types_do_not_vary_within_groups(desc=desc, data=data)
 
     return desc.reset_index()  # , data
@@ -106,6 +108,18 @@ def _check_groups_unique(desc):
     problems = nr_topics[nr_topics != 1].index
     if len(problems) > 0:
         msg = f"The groups {problems} appear in more than one topic."
+        raise AssertionError(msg)
+
+
+def _check_nice_names_unique(desc):
+    gb = desc.groupby("group_english")["nice_name_english"]
+    nn_by_group = gb.apply(lambda x: x.tolist())
+    dup_by_group = nn_by_group.apply(lambda x: pd.Series(x).duplicated().any())
+    dups = nn_by_group.apply(lambda x: pd.Series(x)[pd.Series(x).duplicated()])
+    problems = dups[dup_by_group]
+    if len(problems) > 0:
+        msg = f"There are duplicates in the nice names of the groups:\n\t"
+        msg += "\n\t".join(problems.index.tolist())
         raise AssertionError(msg)
 
 
@@ -248,7 +262,7 @@ def add_background_vars_to_desc(desc):
 if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
-    current_desc = pd.read_csv(dir_to_data + "covid19_data_description.csv", sep=";")
+    current_desc = pd.read_csv(dir_to_data + "covid19_data_description_changed.csv", sep=";")
     group_info = pd.read_csv(dir_to_data + "group_info.csv", sep=";")
     data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
@@ -268,7 +282,7 @@ if __name__ == "__main__":
         data=data, data_desc=dashboard_description, group_info=group_info, language=lang
     )
 
-    out_path = "overview_tab_data.pickle"
+    out_path = "overview_tab_data_current.pickle"
     with open(out_path, "wb") as f:
         pickle.dump(overview_tab_data, f)
 
