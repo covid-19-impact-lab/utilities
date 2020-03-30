@@ -124,12 +124,14 @@ def condition_plot(plot, selectors, bg_var, n_categories):
     p.plot_height = get_plot_height(selectors, bg_var)
     if bg_var == "Nothing":
         p.yaxis.group_label_orientation = "horizontal"
+        p.y_range.group_padding = 0.5
     else:
         p.yaxis.group_label_orientation = "vertical"
+        p.y_range.group_padding = 1.2
 
 
 def setup_basic_plot(cds, categories, selectors, bg_var, colors):
-    f_range = FactorRange(*selectors[bg_var])
+    f_range = FactorRange(*selectors[bg_var], factor_padding=0.5)
     p = figure(
         y_range=f_range,
         plot_height=get_plot_height(selectors, bg_var),
@@ -153,6 +155,8 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
 def specific_styling(p):
     #
     p.y_range.range_padding = 0.0
+    p.y_range.factor_padding = -0.2
+    p.y_range.group_padding = 0.5
     p.ygrid.grid_line_color = None
     p.outline_line_color = None
 
@@ -194,7 +198,7 @@ def make_layout(plot, selectors, bg_var, categories, colors):
         label_entry = Div(text=as_html(x), style=style_dict, width=legend_width)
         legend_entries.append(label_entry)
 
-    legend_text = Row(*legend_entries, align="end", margin=(0, 0, 0, 25))
+    legend_text = Row(*legend_entries, align="end", margin=(0, 25, 0, 0))
     layout = Column(legend_text, plot)
     return layout
 
@@ -217,7 +221,11 @@ def get_legend_width(plot_width, selectors, bg_var, n_categories):
 def get_plot_height(selectors, bg_var):
     n_vars = len(selectors["Nothing"])
     n_bars = len(selectors[bg_var])
-    return int(35 * n_vars + 30 * n_bars)
+    if bg_var == "Nothing":
+        height = int(15 + 41 * n_vars)
+    else:
+        height = int(15 + 25 * n_vars + 22 * n_bars)
+    return height
 
 
 def _check_variables_have_same_dtype(data, variables):

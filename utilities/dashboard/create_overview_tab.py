@@ -64,8 +64,17 @@ def create_overview_tab(
         background_variables=background_variables,
     )
     title_style = {"font-size": "200%", "color": "#696969"}
-    title = Div(text=as_html(group), style=title_style, width=500)
-    header = Div(text=group_to_header[group], name="header")
+    title = Div(
+        text=as_html(group), style=title_style, width=600, margin=(25, 0, 25, 0)
+    )
+
+    header_style = {"color": "grey"}
+    header = Div(
+        text=group_to_header[group],
+        name="header",
+        margin=(0, 0, 25, 0),
+        style=header_style,
+    )
     selection_menues = Row(topic_selector, subtopic_selector, background_selector)
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     plot = setup_plot(**plot_data[group])
