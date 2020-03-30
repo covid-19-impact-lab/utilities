@@ -17,7 +17,11 @@ setup(
     packages=p,
     zip_safe=False,
     package_data={
-        "utilities": ["dashboard/_static/css/*.css", "dashboard/_static/js/*.js"]
+        "utilities": [
+        "dashboard/_static/css/*.css",
+        "dashboard/_static/js/*.js",
+        "index.html",
+    ]
     },
     include_package_data=True,
 )
