@@ -121,6 +121,7 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
 
 
 def condition_plot(plot, selectors, bg_var, n_categories):
+    # import pdb; pdb.set_trace()
     legend, p = plot.children
     legend_width = get_legend_width(p.plot_width, selectors, bg_var, n_categories)
     for entry in legend.children:
@@ -130,9 +131,11 @@ def condition_plot(plot, selectors, bg_var, n_categories):
     if bg_var == "Nothing":
         p.yaxis.group_label_orientation = "horizontal"
         p.y_range.group_padding = 0.5
+        p.yaxis.separator_line_alpha = 0
     else:
         p.yaxis.group_label_orientation = "vertical"
         p.y_range.group_padding = 1.2
+        p.yaxis.separator_line_alpha = 1
 
 
 def setup_basic_plot(cds, categories, selectors, bg_var, colors):
@@ -158,11 +161,12 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
 
 
 def specific_styling(p):
-    #
+    # make the range nicer
     p.y_range.range_padding = 0.0
     p.y_range.factor_padding = -0.2
     p.y_range.group_padding = 0.5
     p.ygrid.grid_line_color = None
+
     p.outline_line_color = None
 
     # spacing between labels and plot; must be int
@@ -180,6 +184,9 @@ def specific_styling(p):
     p.xaxis.axis_line_alpha = 0.2
     p.yaxis.axis_line_width = 1.5
     p.xaxis.axis_line_width = 1.5
+
+    # remove separator line between groups
+    p.yaxis.separator_line_alpha = 0
     return p
 
 
