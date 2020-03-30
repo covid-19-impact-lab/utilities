@@ -68,5 +68,7 @@ def condition_plot(plot, selectors, bg_var, n_categories):
     plot.plot_height = get_plot_height(selectors, bg_var)
     if bg_var == "Nothing":
         plot.yaxis.group_label_orientation = "horizontal"
+        plot.yaxis.separator_line_alpha = 0
     else:
         plot.yaxis.group_label_orientation = "vertical"
+        plot.yaxis.separator_line_alpha = 1
