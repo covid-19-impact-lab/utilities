@@ -137,7 +137,7 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
     )
 
     renderers = p.hbar_stack(
-        stackers=categories, y="label", height=0.8, source=cds, color=colors
+        stackers=categories, y="label", height=0.6, source=cds, color=colors
     )
 
     if not isinstance(renderers, list):
@@ -152,7 +152,7 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
 
 def specific_styling(p):
     #
-    p.y_range.range_padding = 0.1
+    p.y_range.range_padding = 0.0
     p.ygrid.grid_line_color = None
     p.outline_line_color = None
 
@@ -194,7 +194,7 @@ def make_layout(plot, selectors, bg_var, categories, colors):
         label_entry = Div(text=as_html(x), style=style_dict, width=legend_width)
         legend_entries.append(label_entry)
 
-    legend_text = Row(*legend_entries, align="end", margin=25)
+    legend_text = Row(*legend_entries, align="end", margin=(0, 0, 0, 25))
     layout = Column(legend_text, plot)
     return layout
 
