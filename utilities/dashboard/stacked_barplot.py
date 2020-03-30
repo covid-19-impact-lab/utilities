@@ -42,7 +42,9 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     bg_vars = [] if bg_vars is None else bg_vars
 
     to_concat = []
-    for var in variables:
+
+    colors = get_colors("categorical", len(variables))
+    for c, var in zip(colors, variables):
         # unconditional shares. Repeated. Once with empty label once with label=Nothing
         vc = data[var].value_counts(normalize=True)
         df = vc.to_frame().T
@@ -52,6 +54,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         df["variable"] = nice_names[var]
         df["Question"] = labels[var]
         df["label"] = ""
+        df["color"] = c
         to_concat.append(df)
         # conditional shares
         for bg_var in bg_vars:
@@ -65,6 +68,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
             df["variable"] = nice_names[var]
             df["Question"] = labels[var]
             df["label"] = df["label"].astype(str)
+            df["color"] = c
             to_concat.append(df)
 
     share_data = pd.concat(to_concat).fillna(0)
@@ -72,6 +76,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     share_dict = {}
     share_dict["label"] = list(zip(share_data["variable"], share_data["label"]))
     share_dict["Question"] = share_data["Question"].tolist()
+    share_dict["color"] = share_data["color"].tolist()
 
     order = data[variables[0]].dtype.categories.tolist()
 
@@ -96,8 +101,8 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
         shares (list):
     """
     cds = ColumnDataSource(shares)
-    categories = [cat for cat in shares if cat not in ("label", "Question")]
-    colors = colors = get_colors("ordered", len(categories))
+    categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
+    colors = get_colors("ordered", len(categories))
 
     p = setup_basic_plot(
         cds=cds,
