@@ -21,6 +21,7 @@ setup(
         "dashboard/_static/css/*.css",
         "dashboard/_static/js/*.js",
         "dashboard/index.html",
+        "dashboard/styles.css",
     ]
     },
     include_package_data=True,
