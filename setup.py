@@ -20,7 +20,7 @@ setup(
         "utilities": [
         "dashboard/_static/css/*.css",
         "dashboard/_static/js/*.js",
-        "index.html",
+        "dashboard/index.html",
     ]
     },
     include_package_data=True,
