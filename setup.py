@@ -17,11 +17,7 @@ setup(
     packages=p,
     zip_safe=False,
     package_data={
-        "utilities": [
-            "covid19_data_description.csv",
-            "test_data_cleaning.ipynb",
-            "dashboard/_static/",
-        ]
+        "utilities": ["dashboard/_static/css/*.css", "dashboard/_static/js/*.js"]
     },
     include_package_data=True,
 )
