@@ -2,14 +2,13 @@ from functools import partial
 
 from bokeh.layouts import Column
 from bokeh.layouts import Row
-from bokeh.models import Select
 from bokeh.models import Panel
+from bokeh.models import Select
 from bokeh.models.widgets import Div
 
-
 from utilities.dashboard import barplot
-from utilities.dashboard import stacked_barplot
 from utilities.dashboard import no_plot
+from utilities.dashboard import stacked_barplot
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -109,13 +108,16 @@ def create_overview_tab(
 
 def create_selection_menus(topics, subtopics, topic, group, background_variables):
     topic_selector = Select(
-        title="Topic:", options=topics, value=topic, name="topic_selector"
+        title="Topic:", options=topics, value=topic, name="topic_selector", width=180
     )
     subtopic_selector = Select(
         title="Subtopic:", options=subtopics, value=group, name="subtopic_selector",
     )
     background_selector = Select(
-        title="Split By:", options=["Nothing"] + background_variables, value="Nothing"
+        title="Split By:",
+        options=["Nothing"] + background_variables,
+        value="Nothing",
+        width=120,
     )
     return topic_selector, subtopic_selector, background_selector
 
