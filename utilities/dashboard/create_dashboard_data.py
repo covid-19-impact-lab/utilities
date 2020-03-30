@@ -37,7 +37,8 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
     res = {}
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     res["groups"] = [group for group in raw_groups if group != "Background Variables"]
-    res["topics"] = group_info[f"topic_{language}"].unique().tolist()  # noqa
+    raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
+    res["topics"] = [topic for topic in raw_topics if topic != "Background Variables"]
 
     res["topic_to_groups"] = _dict_of_uniques_from_df(
         group_info, f"topic_{language}", f"group_{language}"

@@ -50,7 +50,6 @@ def create_overview_tab(
 
     """
     # start values
-    topics = [t for t in topics if t != "Background Variables"]
     topic = topics[0]
     subtopics = topic_to_groups[topic]
     group = subtopics[0]
@@ -110,7 +109,7 @@ def create_overview_tab(
     )
     background_selector.on_change("value", background_var_callback)
 
-    tab = Panel(child=page, title="Overview", name="overview_panel")
+    tab = Panel(child=page, title="LISS Data", name="overview_panel")
 
     return tab
 

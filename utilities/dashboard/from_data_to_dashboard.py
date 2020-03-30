@@ -265,7 +265,7 @@ if __name__ == "__main__":
     current_desc = pd.read_csv(
         dir_to_data + "covid19_data_description_changed.csv", sep=";"
     )
-    group_info = pd.read_csv(dir_to_data + "group_info.csv", sep=";")
+    group_info = pd.read_csv("group_info.csv", sep=";")
     data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
     dashboard_description = dashboard_data_description(
