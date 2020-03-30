@@ -5,7 +5,6 @@ from bokeh.models import ColumnDataSource
 from bokeh.models import Div
 from bokeh.models import FactorRange
 from bokeh.models import HoverTool
-
 from bokeh.plotting import figure
 from pandas.api.types import is_bool_dtype
 from pandas.api.types import is_categorical_dtype
@@ -46,14 +45,13 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     for var in variables:
         # unconditional shares. Repeated. Once with empty label once with label=Nothing
         vc = data[var].value_counts(normalize=True)
-        vc_df = vc.to_frame().T
-        df = pd.concat([vc_df] * 2)
+        df = vc.to_frame().T
 
         df.columns = df.columns.tolist()
         df.reset_index(drop=True, inplace=True)
         df["variable"] = nice_names[var]
         df["Question"] = labels[var]
-        df["label"] = ("", "Nothing")
+        df["label"] = ""
         to_concat.append(df)
         # conditional shares
         for bg_var in bg_vars:
@@ -83,7 +81,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     selectors = {}
     selectors["Nothing"] = tuple([(nice_names[var], "") for var in variables][::-1])
     for bg_var in bg_vars:
-        selected = ["Nothing"] + pd.Series(data[bg_var].unique()).dropna().tolist()
+        selected = pd.Series(data[bg_var].unique()).dropna().tolist()
         selectors[nice_names[bg_var]] = tuple(
             [tuple(lab) for lab in share_dict["label"] if lab[1] in selected][::-1]
         )

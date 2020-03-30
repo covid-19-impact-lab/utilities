@@ -1,16 +1,16 @@
-import pandas as pd
-import numpy as np
+import os
 import pickle
 import sys
-import os
-from pandas.api.types import (
-    is_bool_dtype,
-    is_categorical_dtype,
-    is_integer_dtype,
-    is_float_dtype,
-)
-import utilities
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from pandas.api.types import is_bool_dtype
+from pandas.api.types import is_categorical_dtype
+from pandas.api.types import is_float_dtype
+from pandas.api.types import is_integer_dtype
+
+import utilities
 from utilities.dashboard.create_dashboard_data import create_overview_tab_data
 
 
@@ -262,7 +262,9 @@ def add_background_vars_to_desc(desc):
 if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
-    current_desc = pd.read_csv(dir_to_data + "covid19_data_description_changed.csv", sep=";")
+    current_desc = pd.read_csv(
+        dir_to_data + "covid19_data_description_changed.csv", sep=";"
+    )
     group_info = pd.read_csv(dir_to_data + "group_info.csv", sep=";")
     data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
@@ -286,6 +288,6 @@ if __name__ == "__main__":
     with open(out_path, "wb") as f:
         pickle.dump(overview_tab_data, f)
 
-    path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
-    command = f"bokeh serve --show {path_to_app} --args {out_path}"
-    os.system(command)
+    # path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
+    # command = f"bokeh serve --show {path_to_app} --args {out_path}"
+    # os.system(command)
