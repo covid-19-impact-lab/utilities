@@ -9,6 +9,7 @@ from bokeh.plotting import figure
 from pandas.api.types import is_bool_dtype
 from pandas.api.types import is_categorical_dtype
 from pandas.api.types import is_integer_dtype
+from bokeh.models import NumeralTickFormatter
 
 from utilities.colors import get_colors
 
@@ -144,6 +145,7 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
         y_range=f_range,
         plot_height=get_plot_height(selectors, bg_var),
         toolbar_location=None,
+        x_range=(-0.05, 1.05)
     )
 
     renderers = p.hbar_stack(
@@ -184,6 +186,7 @@ def specific_styling(p):
     p.xaxis.axis_line_alpha = 0.2
     p.yaxis.axis_line_width = 1.5
     p.xaxis.axis_line_width = 1.5
+    p.xaxis.formatter = NumeralTickFormatter(format='0 %')
 
     # remove separator line between groups
     p.yaxis.separator_line_alpha = 0
