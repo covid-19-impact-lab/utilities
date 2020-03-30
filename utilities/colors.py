@@ -8,25 +8,42 @@ def get_colors(palette, number, as_cmap=False):
 
     Args:
         palette (str): One of ["categorical", "ordered", "blue", "red", "yellow",
-            "green", "orange", "purple"]
-        number (int): Number of colors needed. Between 1 and 12.
+            "green", "orange", "purple"] or combinations of two colors, e.g.
+            "red-green".
+        number (int): Number of colors needed. Between 1 and 12 for non combined
+            color scales and between 1 and 24 for combined color scales.
 
     Returns:
         list or cmap: List of hex codes or cmap.
 
     """
-    if as_cmap and palette in ["categorical", "ordered"]:
-        raise ValueError("cmap can only be returned for monochrome palettes.")
-    if palette == "categorical":
-        triangle = {i + 1: CAT_LIST[: i + 1] for i in range(12)}
-    elif palette == "ordered":
-        triangle = ORDERED
-    elif palette in ["blue", "red", "green", "yellow", "orange", "purple"]:
-        triangle = _mono_list_to_triangle(MONO_COLORS[palette])
-    else:
-        raise NotImplementedError(f"{palette} is not implemented.")
+    number = int(number)
+    if "-" in palette:
+        if number > 24:
+            raise ValueError("At most 24 colors are supported.")
+        pal1, pal2 = palette.split("-")
+        triangle1 = _mono_list_to_triangle(MONO_COLORS[pal1])
+        triangle2 = _mono_list_to_triangle(MONO_COLORS[pal2])
+        num1 = np.ceil(number / 2)
+        num2 = np.floor(number / 2)
+        res = triangle1[num1] + triangle2[num2][::-1]
 
-    res = triangle[number]
+    else:
+        if number > 12:
+            raise ValueError("At most 12 colors are supported.")
+        if as_cmap and palette in ["categorical", "ordered"]:
+            raise ValueError("cmap can only be returned for monochrome palettes.")
+        if palette == "categorical":
+            triangle = {i + 1: CAT_LIST[: i + 1] for i in range(12)}
+        elif palette == "ordered":
+            triangle = ORDERED
+        elif palette in ["blue", "red", "green", "yellow", "orange", "purple"]:
+            triangle = _mono_list_to_triangle(MONO_COLORS[palette])
+        else:
+            raise NotImplementedError(f"{palette} is not implemented.")
+
+        res = triangle[number]
+
     if as_cmap:
         res = LinearSegmentedColormap.from_list(palette, res)
     return res
