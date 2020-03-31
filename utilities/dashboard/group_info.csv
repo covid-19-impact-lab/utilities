@@ -29,7 +29,7 @@ Economic Adjustments;Consumption Plans;Here will be a header.;barplot
 Economic Expectations;Employment;Here will be a header.;distplot
 Economic Expectations;House Prices;Here will be a header.;stacked_barplot
 Economic Expectations;Duration of the Economic Crisis;Here will be a header.;stacked_barplot
-Economic Expectations;Probability of No Or Low Income;Here will be a header.;distplot
+Economic Expectations;Probability of No Or Insufficient Income;Here will be a header.;distplot
 Economic Expectations;Probabilities of Economic Repercussions;Here will be a header.;stacked_barplot
 Economic Expectations;Economic Coping Strategies;Here will be a header.;barplot
 Economic Expectations;Consumption Plans Next 12 Months;Here will be a header.;stacked_barplot

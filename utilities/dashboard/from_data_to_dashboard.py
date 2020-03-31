@@ -43,13 +43,6 @@ def dashboard_data_description(desc, group_info, data):
     desc = desc.loc[keep_vars]
     len_after_var_drop = len(desc)
     print(f"{old_len - len_after_var_drop} variables dropped because no data.") # noqa
-
-    _check_groups_unique(desc)
-
-    _check_nice_names_unique(desc)
-
-    _check_data_types_do_not_vary_within_groups(desc=desc, data=data)
-
     return desc.reset_index()
 
 
@@ -105,28 +98,6 @@ def _check_groups_unique(desc):
         raise AssertionError(msg)
 
 
-def _check_nice_names_unique(desc):
-    gb = desc.groupby("group_english")["nice_name_english"]
-    nn_by_group = gb.apply(lambda x: x.tolist())
-    dup_by_group = nn_by_group.apply(lambda x: pd.Series(x).duplicated().any())
-    dups = nn_by_group.apply(lambda x: pd.Series(x)[pd.Series(x).duplicated()])
-    problems = dups[dup_by_group]
-    if len(problems) > 0:
-        msg = f"There are duplicates in the nice names of the groups:\n\t"
-        msg += "\n\t".join(problems.index.tolist())
-        raise AssertionError(msg)
-
-
-def _check_data_types_do_not_vary_within_groups(desc, data):
-    to_check = [
-        x for x in desc["group_english"].unique() if x != "Background Variables"
-    ]
-    for group in to_check:
-        vars_in_group = desc[desc["group_english"] == group].index
-        dtypes = data[vars_in_group].dtypes
-        assert len(set(dtypes)) == 1, f"Mixed dtypes in {group} \n {dtypes}"
-
-
 def drop_groups_with_no_vars_yet(desc, group_info, data):
     groups_without_vars = [
         "Duration of the Economic Crisis",
@@ -139,133 +110,44 @@ def drop_groups_with_no_vars_yet(desc, group_info, data):
     return desc, group_info
 
 
-def fix_numeric_variables(data):
-    data = data.copy()
-    data["trust_gov"] = pd.Categorical(data["trust_gov"], [1, 2, 3, 4, 5], ordered=True)
-
-    data["trust_gov"] = data["trust_gov"].cat.rename_categories(
-        {1: "1 no confidence at all", 2: "2", 3: "3", 4: "4", 5: "5 very confident"}
-    )
-
-    mood_vars = [
-        "nervous",
-        "depressed",
-        "calm",
-        "gloomy",
-        "happy",
-    ]
-    for var in mood_vars:
-        data[var] = pd.Categorical(data[var], ordered=True)
-        data[var] = data[var].cat.rename_categories(
-            {
-                1.0: "never",
-                2.0: "rarely",
-                3.0: "sometimes",
-                4.0: "often",
-                5.0: "mostly",
-                6.0: "constantly",
-            }
-        )
-
-    concern_vars = [
-        "nervous",
-        "depressed",
-        "calm",
-        "gloomy",
-        "happy",
-    ]
-    for var in concern_vars:
-        data[var] = pd.Categorical(data[var], ordered=True)
-        data[var] = data[var].cat.rename_categories(
-            {
-                1.0: "1 not concerned at all",
-                2.0: "2",
-                3.0: "3",
-                4.0: "4",
-                5.0: "5 very concerned",
-            }
-        )
-
-    # get kdeplot for some variables
-    convert_to_float = [
-        "comply_curfew_others",
-        "workplace_h_before", "workplace_h_after", "home_h_before", "home_h_after",
-        "p_employed_keep", "p_employed_keep_gov", "p_employed_lost", "p_employed_other",
-        "p_severe_financial_distress", "eur_1k_basic_needs", "eur_1k_expenses",
-        "eur_1k_durables", "eur_1k_savings", "eur_1k_support_others",
-        "p_selfempl_as_normal", "p_selfempl_fewer", "p_selfempl_shutdown_gov",
-        "p_selfempl_shutdown_no_gov", "p_selfempl_other",
-    ]
-    for var in convert_to_float:
-        data[var] = data[var].astype(float)
-
-    return data
-
 
 def add_background_variables(data, desc):
     data = data.copy()
-    data["age_group"] = pd.cut(
-        data["age"], [0, 40, 65, 150], labels=["<40", "40 to 65", ">65"]
-    )
-
-    data["educ"] = data["edu"].replace(
-        {
-            "hs_and_less": "High School",
-            "jun_college": "Some College",
-            "college": "College",
-            "uni": "College",
-        }
-    )
-    data["educ"] = pd.Categorical(
-        data["educ"], ["High School", "Some College", "College"]
-    )
-
-    data["our_inc_group"] = pd.qcut(
-        data["net_income_hh"], 3, ["low income", "middle income", "high income"]
-    )
-
-    data["health_group"] = data["health_general"].replace(
-        {"poor": "moderate", "excellent": "very good"}
-    )
-    data["health_group"] = pd.Categorical(
-        data["health_group"], ["moderate", "good", "very good"], ordered=True
-    )
-
-    bg_desc = pd.read_excel("background_var_description.xlsx")
-    desc = pd.concat([desc, bg_desc])
     return data, desc
 
 
 if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
-    current_desc = pd.read_csv(
+
+    desc = pd.read_csv(
         dir_to_data + "covid19_data_description.csv", sep=";"
     )
-    group_info = pd.read_csv("group_info.csv", sep=";")
-    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
+    bg_desc = pd.read_excel("background_var_description.xlsx")
+    desc = pd.concat([desc, bg_desc])
 
-    dashboard_description = dashboard_data_description(
-        desc=current_desc, group_info=group_info, data=data
+    group_info = pd.read_csv("group_info.csv", sep=";")
+    data = pd.read_pickle(dir_to_data + "corona.pickle")
+
+    desc = dashboard_data_description(
+        desc=desc, group_info=group_info, data=data
     )
 
     # HOT FIXES
-    dashboard_description, group_info = drop_groups_with_no_vars_yet(
-        desc=dashboard_description, group_info=group_info, data=data
+    desc, group_info = drop_groups_with_no_vars_yet(
+        desc=desc, group_info=group_info, data=data
     )
-    data = fix_numeric_variables(data)
 
-
-    data, dashboard_description = add_background_variables(data, desc=dashboard_description)
+    _check_groups_unique(desc)
 
     overview_tab_data = create_overview_tab_data(
-        data=data, data_desc=dashboard_description, group_info=group_info, language=lang
+        data=data, data_desc=desc, group_info=group_info, language=lang
     )
 
     out_path = "overview_tab_data_current.pickle"
     with open(out_path, "wb") as f:
         pickle.dump(overview_tab_data, f)
 
-    # path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
-    # command = f"bokeh serve --show {path_to_app} --args {out_path}"
-    # os.system(command)
+    path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
+    command = f"bokeh serve --show {path_to_app} --args {out_path}"
+    os.system(command)
