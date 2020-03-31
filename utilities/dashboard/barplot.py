@@ -4,10 +4,8 @@ from bokeh.models import HoverTool
 from bokeh.plotting import figure
 from pandas.api.types import is_bool_dtype
 
-from utilities.colors import get_colors
 from utilities.dashboard.stacked_barplot import get_plot_height
 from utilities.dashboard.stacked_barplot import prepare_data as prepare_stacked_data
-from utilities.dashboard.stacked_barplot import setup_basic_plot
 from utilities.dashboard.stacked_barplot import specific_styling
 from utilities.dashboard.stacked_barplot import unclutter
 
@@ -63,7 +61,8 @@ def setup_basic_plot(cds, categories, selectors, bg_var):
     return p
 
 
-def condition_plot(plot, selectors, bg_var, n_categories):
+def condition_plot(plot, shares, selectors, bg_var):
+
     plot.y_range.factors = selectors[bg_var]
     plot.plot_height = get_plot_height(selectors, bg_var)
     if bg_var == "Nothing":
