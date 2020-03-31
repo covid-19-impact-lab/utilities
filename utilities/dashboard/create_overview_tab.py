@@ -7,6 +7,7 @@ from bokeh.models import Select
 from bokeh.models.widgets import Div
 
 from utilities.dashboard import barplot
+from utilities.dashboard import distplot
 from utilities.dashboard import no_plot
 from utilities.dashboard import stacked_barplot
 
@@ -14,6 +15,7 @@ plot_modules = {
     "stacked_barplot": stacked_barplot,
     "barplot": barplot,
     "no_plot": no_plot,
+    "distplot": distplot,
 }
 
 from utilities.dashboard.stacked_barplot import as_html
@@ -167,15 +169,10 @@ def condition_on_background_var(
     plot = page.children[-1]
     page.children = page.children[:-1]
     group = subtopic_selector.value
-    shares = plot_data[group]["shares"]
-    categories = [cat for cat in shares if cat not in ("label", "Question")]
     plot_type = group_to_plot_type[group]
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
     condition_plot(
-        plot=plot,
-        selectors=plot_data[group]["selectors"],
-        bg_var=new,
-        n_categories=len(categories),
+        plot, **plot_data[group], bg_var=new,
     )
     page.children.append(plot)

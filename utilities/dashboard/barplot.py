@@ -61,7 +61,8 @@ def setup_basic_plot(cds, categories, selectors, bg_var):
     return p
 
 
-def condition_plot(plot, selectors, bg_var, n_categories):
+def condition_plot(plot, shares, selectors, bg_var):
+
     plot.y_range.factors = selectors[bg_var]
     plot.plot_height = get_plot_height(selectors, bg_var)
     if bg_var == "Nothing":

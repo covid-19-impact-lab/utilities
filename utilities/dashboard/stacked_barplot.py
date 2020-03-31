@@ -121,9 +121,11 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
     return layout
 
 
-def condition_plot(plot, selectors, bg_var, n_categories):
-    # import pdb; pdb.set_trace()
+def condition_plot(plot, shares, selectors, bg_var):
+
     legend, p = plot.children
+    categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
+    n_categories = len(categories)
     legend_width = get_legend_width(p.plot_width, selectors, bg_var, n_categories)
     for entry in legend.children:
         entry.width = legend_width

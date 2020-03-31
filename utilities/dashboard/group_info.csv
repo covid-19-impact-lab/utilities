@@ -1,8 +1,8 @@
 topic_english;group_english;header_english;plot_type
 Background Variables;Background Variables;Here will be a header.;stacked_barplot
-Health Beliefs;Subjective Risk of Getting or Spreading;Here will be a header.;stacked_barplot
-Health Beliefs;Subjective Risk of Hospitalization;Here will be a header.;stacked_barplot
-Health Beliefs;Subjective Risk of Death;Here will be a header.;stacked_barplot
+Health Beliefs;Subjective Risk of Getting or Spreading;Here will be a header.;distplot
+Health Beliefs;Subjective Risk of Hospitalization;Here will be a header.;distplot
+Health Beliefs;Subjective Risk of Death;Here will be a header.;distplot
 Health Beliefs;Subjective Effectiveness of Health Behaviors;Here will be a header.;stacked_barplot
 Health Beliefs;Subjective Effectiveness of Social Distancing;Here will be a header.;stacked_barplot
 Compliance;Social Distancing;Here will be a header.;barplot
@@ -14,7 +14,7 @@ Compliance;Reasons for Complying with Curfew;Here will be a header.;barplot
 Compliance;Reasons for Disobeying a Curfew;Here will be a header.;barplot
 Policy;Support for Policies;Here will be a header.;stacked_barplot
 Policy;Appropriateness of Policies;Here will be a header.;stacked_barplot
-Policy;Expected Duration of Restrictions;Here will be a header.;stacked_barplot
+Policy;Expected Duration of Restrictions;Here will be a header.;distplot
 Policy;Subjective Effectiveness of Policies;Here will be a header.;stacked_barplot
 Mental Health and Trust;Trust in Government;Here will be a header.;stacked_barplot
 Mental Health and Trust;Mood in the Last Week;Here will be a header.;stacked_barplot
