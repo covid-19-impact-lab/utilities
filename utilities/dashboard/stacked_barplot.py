@@ -122,7 +122,6 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
 
 
 def condition_plot(plot, shares, selectors, bg_var):
-
     legend, p = plot.children
     categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
     n_categories = len(categories)

@@ -66,7 +66,6 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
 
     ext_x_min = x_min - 0.05 * x_range
     ext_x_max = x_max + 0.05 * x_range
-    ext_x_range = ext_x_max - ext_x_min
 
     if vartype == "float":
         x = np.linspace(ext_x_min, ext_x_max, 100).tolist()
@@ -88,7 +87,8 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
 
     if vartype == "float":
         for var in variables:
-            raw_dist_data[(nice_names[var], "")] = gaussian_kde(data[var].dropna())(x).tolist()
+            kde = gaussian_kde(data[var].dropna())(x).clip(0, np.inf)
+            raw_dist_data[(nice_names[var], "")] = kde.tolist()
             for bg_var in bg_vars:
                 bg_values = data[bg_var].cat.categories
                 for val in bg_values:
@@ -123,9 +123,9 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     selectors["Nothing"] = tuple([(nice_names[var], "") for var in variables][::-1])
     for bg_var in bg_vars:
         selected = data[bg_var].cat.categories.tolist()
-
+        col_list = [col for col in raw_dist_data.keys() if col != "x"]
         selectors[nice_names[bg_var]] = [
-            col for col in df.columns if col[1] in selected
+            col for col in col_list if col[1] in selected
         ][::-1]
 
     dist_data = _prepare_dist_data_for_bokeh_patch(raw_dist_data, selectors)
@@ -173,9 +173,6 @@ def _check_variables_have_same_dtype(data, variables):
         variables (list):
 
     """
-    first_var = variables[0]
-    sr = data[first_var]
-
     dtype = data[variables[0]].dtype
     for var in variables:
         if data[var].dtype != dtype:
@@ -262,14 +259,14 @@ def _unclutter(p, remove_grid=True, remove_ticks=True):
 
 
 def _get_plot_height(selectors, bg_var):
-    n_vars = len(selectors["Nothing"])
-    n_bars = len(selectors[bg_var])
+    n_groups = len(selectors["Nothing"])
+    n_densities = len(selectors[bg_var])
     if bg_var == "Nothing":
-        height = int(15 + n_vars * 50)
+        height = int(30 + n_groups * 50)
     else:
-        height = int(15 + n_vars * 10 + n_bars * 40)
+        height = int(30 + n_groups * 10 + n_densities * 40)
 
-    return height
+    return int(1.2 * height)
 
 
 def condition_plot(plot, dist_data, selectors, questions, x_info, bg_var):

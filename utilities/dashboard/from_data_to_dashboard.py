@@ -186,18 +186,18 @@ def fix_numeric_variables(data):
             }
         )
 
-    # # get kdeplot for some variables
-    # convert_to_float = [
-    #     "comply_curfew_others",
-    #     "workplace_h_before", "workplace_h_after", "home_h_before", "home_h_after",
-    #     "p_employed_keep", "p_employed_keep_gov", "p_employed_lost", "p_employed_other",
-    #     "p_severe_financial_distress", "eur_1k_basic_needs", "eur_1k_expenses",
-    #     "eur_1k_durables", "eur_1k_savings", "eur_1k_support_others",
-    #     "p_selfempl_as_normal", "p_selfempl_fewer", "p_selfempl_shutdown_gov",
-    #     "p_selfempl_shutdown_no_gov", "p_selfempl_other",
-    # ]
-    # for var in convert_to_float:
-    #     data[var] = data[var].astype(float)
+    # get kdeplot for some variables
+    convert_to_float = [
+        "comply_curfew_others",
+        "workplace_h_before", "workplace_h_after", "home_h_before", "home_h_after",
+        "p_employed_keep", "p_employed_keep_gov", "p_employed_lost", "p_employed_other",
+        "p_severe_financial_distress", "eur_1k_basic_needs", "eur_1k_expenses",
+        "eur_1k_durables", "eur_1k_savings", "eur_1k_support_others",
+        "p_selfempl_as_normal", "p_selfempl_fewer", "p_selfempl_shutdown_gov",
+        "p_selfempl_shutdown_no_gov", "p_selfempl_other",
+    ]
+    for var in convert_to_float:
+        data[var] = data[var].astype(float)
 
     return data
 
