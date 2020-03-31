@@ -9,7 +9,7 @@ Compliance;Social Distancing;Here will be a header.;barplot
 Compliance;Contact with Workers or Students;Here will be a header.;stacked_barplot
 Compliance;Contact with the Elderly;Here will be a header.;stacked_barplot
 Compliance;Compliance with Curfew;Here will be a header.;stacked_barplot
-Compliance;Expected Compliance of Others;Here will be a header.;no_plot
+Compliance;Expected Compliance of Others;Here will be a header.;distplot
 Compliance;Reasons for Complying with Curfew;Here will be a header.;barplot
 Compliance;Reasons for Disobeying a Curfew;Here will be a header.;barplot
 Policy;Support for Policies;Here will be a header.;stacked_barplot
@@ -20,18 +20,18 @@ Mental Health and Trust;Trust in Government;Here will be a header.;stacked_barpl
 Mental Health and Trust;Mood in the Last Week;Here will be a header.;stacked_barplot
 Mental Health and Trust;Health Concerns;Here will be a header.;stacked_barplot
 Mental Health and Trust;Economic Concerns;Here will be a header.;stacked_barplot
-Economic Adjustments;Working Hours;Here will be a header.;no_plot
+Economic Adjustments;Working Hours;Here will be a header.;distplot
 Economic Adjustments;Reasons for Working Less Among Employees;Here will be a header.;barplot
 Economic Adjustments;Reasons for Working Less Among the Self-Employed;Here will be a header.;barplot
 Economic Adjustments;Reasons for Not Working Among Employees;Here will be a header.;barplot
 Economic Adjustments;Childcare Adjustments;Here will be a header.;barplot
 Economic Adjustments;Consumption Plans;Here will be a header.;barplot
-Economic Expectations;Employment;Here will be a header.;no_plot
+Economic Expectations;Employment;Here will be a header.;distplot
 Economic Expectations;House Prices;Here will be a header.;stacked_barplot
 Economic Expectations;Duration of the Economic Crisis;Here will be a header.;stacked_barplot
-Economic Expectations;Probability of Severe Financial Distress;Here will be a header.;no_plot
+Economic Expectations;Probability of Severe Financial Distress;Here will be a header.;distplot
 Economic Expectations;Probabilities of Economic Repercussions;Here will be a header.;stacked_barplot
 Economic Expectations;Economic Coping Strategies;Here will be a header.;barplot
 Economic Expectations;Consumption Plans Next 12 Months;Here will be a header.;stacked_barplot
-Economic Expectations;Use of One-Time Allowance;Here will be a header.;no_plot
-Economic Expectations;Employer Prospects;Here will be a header.;no_plot
+Economic Expectations;Use of One-Time Allowance;Here will be a header.;distplot
+Economic Expectations;Employer Prospects;Here will be a header.;distplot
