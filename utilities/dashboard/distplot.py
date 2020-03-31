@@ -1,15 +1,8 @@
 import numpy as np
 import pandas as pd
-from bokeh.io import output_notebook
-from bokeh.io import show
-from bokeh.models import ColumnDataSource
 from bokeh.models import FactorRange
-from bokeh.models import FixedTicker
 from bokeh.models import HoverTool
-from bokeh.models import PrintfTickFormatter
 from bokeh.plotting import figure
-from bokeh.sampledata.perceptions import probly
-from numpy import linspace
 from pandas.api.types import is_categorical_dtype
 from pandas.api.types import is_integer_dtype
 from pandas.api.types import is_numeric_dtype
@@ -95,7 +88,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
 
     if vartype == "float":
         for var in variables:
-            raw_dist_data[(nice_names[var], "")] = gaussian_kde(data[var])(x).tolist()
+            raw_dist_data[(nice_names[var], "")] = gaussian_kde(data[var].dropna())(x).tolist()
             for bg_var in bg_vars:
                 bg_values = data[bg_var].cat.categories
                 for val in bg_values:

@@ -1,8 +1,8 @@
 topic_english;group_english;header_english;plot_type
 Background Variables;Background Variables;Here will be a header.;stacked_barplot
-Health Beliefs;Subjective Risk of Getting or Spreading;Here will be a header.;distplot
-Health Beliefs;Subjective Risk of Hospitalization;Here will be a header.;distplot
-Health Beliefs;Subjective Risk of Death;Here will be a header.;distplot
+Health Beliefs;Subjective Risks;Here will be a header.;distplot
+Health Beliefs;Vignettes: Risk of Hospitalization;Here will be a header.;distplot
+Health Beliefs;Vignettes: Risk of Death;Here will be a header.;distplot
 Health Beliefs;Subjective Effectiveness of Health Behaviors;Here will be a header.;stacked_barplot
 Health Beliefs;Subjective Effectiveness of Social Distancing;Here will be a header.;stacked_barplot
 Compliance;Social Distancing;Here will be a header.;barplot
@@ -17,7 +17,7 @@ Policy;Appropriateness of Policies;Here will be a header.;stacked_barplot
 Policy;Expected Duration of Restrictions;Here will be a header.;distplot
 Policy;Subjective Effectiveness of Policies;Here will be a header.;stacked_barplot
 Mental Health and Trust;Trust in Government;Here will be a header.;stacked_barplot
-Mental Health and Trust;Mood in the Last Week;Here will be a header.;stacked_barplot
+Mental Health and Trust;Mental Health in the Past Week;Here will be a header.;stacked_barplot
 Mental Health and Trust;Health Concerns;Here will be a header.;stacked_barplot
 Mental Health and Trust;Economic Concerns;Here will be a header.;stacked_barplot
 Economic Adjustments;Working Hours;Here will be a header.;distplot
@@ -29,7 +29,7 @@ Economic Adjustments;Consumption Plans;Here will be a header.;barplot
 Economic Expectations;Employment;Here will be a header.;distplot
 Economic Expectations;House Prices;Here will be a header.;stacked_barplot
 Economic Expectations;Duration of the Economic Crisis;Here will be a header.;stacked_barplot
-Economic Expectations;Probability of Severe Financial Distress;Here will be a header.;distplot
+Economic Expectations;Probability of No Or Low Income;Here will be a header.;distplot
 Economic Expectations;Probabilities of Economic Repercussions;Here will be a header.;stacked_barplot
 Economic Expectations;Economic Coping Strategies;Here will be a header.;barplot
 Economic Expectations;Consumption Plans Next 12 Months;Here will be a header.;stacked_barplot

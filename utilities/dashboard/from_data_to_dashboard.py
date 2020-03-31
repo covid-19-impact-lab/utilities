@@ -15,10 +15,7 @@ from utilities.dashboard.create_dashboard_data import create_overview_tab_data
 
 
 def dashboard_data_description(desc, group_info, data):
-    # check_no_variables_lost(current_desc=desc)
-
-    # only LISS variables
-    desc = desc[desc["xyx-corona-questionnaire.dta"].notnull()]
+    # _check_no_variables_lost(current_desc=desc)
 
     # drop columns the dashboard does not use
     keep_cols = ["new_name", "group_english", "label_english", "nice_name_english"]
@@ -42,13 +39,10 @@ def dashboard_data_description(desc, group_info, data):
     to_drop = [x for x in expected_vars if x not in data.columns]
     keep_vars = [x for x in expected_vars if x in data.columns]
     all_cols = len(data.columns)
-    # data = data[keep_vars]
-    # cols_after = len(data.columns)
-    # print(f"{all_cols - cols_after} variables dropped from data.") # noqa
     old_len = len(desc)
     desc = desc.loc[keep_vars]
     len_after_var_drop = len(desc)
-    print(f"{old_len - len_after_var_drop} variables dropped", "because no data.")
+    print(f"{old_len - len_after_var_drop} variables dropped because no data.") # noqa
 
     _check_groups_unique(desc)
 
@@ -56,10 +50,10 @@ def dashboard_data_description(desc, group_info, data):
 
     _check_data_types_do_not_vary_within_groups(desc=desc, data=data)
 
-    return desc.reset_index()  # , data
+    return desc.reset_index()
 
 
-def check_no_variables_lost(current_desc):
+def _check_no_variables_lost(current_desc):
     original_desc = pd.read_excel(
         "/home/klara/Dropbox/Desktop/original_covid19_data_description.xlsx"
     )
@@ -133,7 +127,7 @@ def _check_data_types_do_not_vary_within_groups(desc, data):
         assert len(set(dtypes)) == 1, f"Mixed dtypes in {group} \n {dtypes}"
 
 
-def drop_groups_with_no_vars_yet(desc, group_info):
+def drop_groups_with_no_vars_yet(desc, group_info, data):
     groups_without_vars = [
         "Duration of the Economic Crisis",
         "Probabilities of Economic Repercussions",
@@ -191,10 +185,24 @@ def fix_numeric_variables(data):
                 5.0: "5 very concerned",
             }
         )
+
+    # # get kdeplot for some variables
+    # convert_to_float = [
+    #     "comply_curfew_others",
+    #     "workplace_h_before", "workplace_h_after", "home_h_before", "home_h_after",
+    #     "p_employed_keep", "p_employed_keep_gov", "p_employed_lost", "p_employed_other",
+    #     "p_severe_financial_distress", "eur_1k_basic_needs", "eur_1k_expenses",
+    #     "eur_1k_durables", "eur_1k_savings", "eur_1k_support_others",
+    #     "p_selfempl_as_normal", "p_selfempl_fewer", "p_selfempl_shutdown_gov",
+    #     "p_selfempl_shutdown_no_gov", "p_selfempl_other",
+    # ]
+    # for var in convert_to_float:
+    #     data[var] = data[var].astype(float)
+
     return data
 
 
-def create_background_variables(data):
+def add_background_variables(data, desc):
     data = data.copy()
     data["age_group"] = pd.cut(
         data["age"], [0, 40, 65, 150], labels=["<40", "40 to 65", ">65"]
@@ -223,47 +231,16 @@ def create_background_variables(data):
         data["health_group"], ["moderate", "good", "very good"], ordered=True
     )
 
-    return data
-
-
-def add_background_vars_to_desc(desc):
-    desc = desc.copy()
-    desc.loc[len(desc) + 1] = {
-        "new_name": "age_group",
-        "group_english": "Background Variables",
-        "label_english": "Age Group",
-        "nice_name_english": "Age",
-        "topic_english": "Background Variables",
-    }
-    desc.loc[len(desc) + 1] = {
-        "new_name": "educ",
-        "group_english": "Background Variables",
-        "label_english": "Education Level",
-        "nice_name_english": "Education",
-        "topic_english": "Background Variables",
-    }
-    desc.loc[len(desc) + 1] = {
-        "new_name": "our_inc_group",
-        "group_english": "Background Variables",
-        "label_english": "Income Tercile",
-        "nice_name_english": "Income",
-        "topic_english": "Background Variables",
-    }
-    desc.loc[len(desc) + 1] = {
-        "new_name": "health_group",
-        "group_english": "Background Variables",
-        "label_english": "Health Status",
-        "nice_name_english": "Health",
-        "topic_english": "Background Variables",
-    }
-    return desc
+    bg_desc = pd.read_excel("background_var_description.xlsx")
+    desc = pd.concat([desc, bg_desc])
+    return data, desc
 
 
 if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
     current_desc = pd.read_csv(
-        dir_to_data + "covid19_data_description_changed.csv", sep=";"
+        dir_to_data + "covid19_data_description.csv", sep=";"
     )
     group_info = pd.read_csv("group_info.csv", sep=";")
     data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
@@ -272,13 +249,14 @@ if __name__ == "__main__":
         desc=current_desc, group_info=group_info, data=data
     )
 
+    # HOT FIXES
     dashboard_description, group_info = drop_groups_with_no_vars_yet(
-        desc=dashboard_description, group_info=group_info
+        desc=dashboard_description, group_info=group_info, data=data
     )
-
     data = fix_numeric_variables(data)
-    data = create_background_variables(data)
-    dashboard_description = add_background_vars_to_desc(dashboard_description)
+
+
+    data, dashboard_description = add_background_variables(data, desc=dashboard_description)
 
     overview_tab_data = create_overview_tab_data(
         data=data, data_desc=dashboard_description, group_info=group_info, language=lang
