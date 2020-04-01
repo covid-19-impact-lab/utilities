@@ -147,6 +147,8 @@ def _prepare_dist_data_for_bokeh_patch(raw_dist_data, selectors):
         scaling_factor = 0.8 / max_entry
         for sel in selector:
             scaled = (np.array(raw_dist_data[sel]) * scaling_factor).tolist()
+            scaled[0] = 0
+            scaled[-1] = 0
             dist_data[sel] = [(sel[0], sel[1], d) for d in scaled]
 
     dist_data["x"] = raw_dist_data["x"]
@@ -194,11 +196,17 @@ def setup_plot(dist_data, selectors, questions, x_info, bg_var="Nothing"):
         var = cat[0]
         p.line(dist_data["x"], dist_data[cat], color=var_to_color[var], line_width=3)
         tooltips = [("Question", questions[var])]
+        zero_vals = [(item[0], item[1], 0) for item in dist_data[cat]]
         renderer = p.patches(
-            [dist_data["x"]], [dist_data[cat]], color=var_to_color[var], alpha=0.15
+            [dist_data["x"], dist_data["x"]], [zero_vals, dist_data[cat]],
+
+            color=var_to_color[var], alpha=0.15
         )
         hover = HoverTool(tooltips=tooltips, renderers=[renderer])
         p.tools.append(hover)
+
+        p.line(dist_data["x"], zero_vals, color="red", line_width=0.5)
+
 
     _specific_styling(p, x_info)
     _unclutter(p)
