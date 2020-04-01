@@ -31,8 +31,6 @@ def get_colors(palette, number, as_cmap=False):
     else:
         if number > 12:
             raise ValueError("At most 12 colors are supported.")
-        if as_cmap and palette in ["categorical", "ordered"]:
-            raise ValueError("cmap can only be returned for monochrome palettes.")
         if palette == "categorical":
             triangle = {i + 1: CAT_LIST[: i + 1] for i in range(12)}
         elif palette == "ordered":
