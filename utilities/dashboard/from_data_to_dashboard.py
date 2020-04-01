@@ -1,14 +1,7 @@
 import os
 import pickle
 import sys
-from pathlib import Path
-
-import numpy as np
 import pandas as pd
-from pandas.api.types import is_bool_dtype
-from pandas.api.types import is_categorical_dtype
-from pandas.api.types import is_float_dtype
-from pandas.api.types import is_integer_dtype
 
 import utilities
 from utilities.dashboard.create_dashboard_data import create_overview_tab_data
@@ -37,13 +30,11 @@ def dashboard_data_description(desc, group_info, data):
 
     # drop variables not in the final dataset
     expected_vars = desc.index
-    to_drop = [x for x in expected_vars if x not in data.columns]
     keep_vars = [x for x in expected_vars if x in data.columns]
-    all_cols = len(data.columns)
     old_len = len(desc)
     desc = desc.loc[keep_vars]
     len_after_var_drop = len(desc)
-    print(f"{old_len - len_after_var_drop} variables dropped because no data.") # noqa
+    print(f"{old_len - len_after_var_drop} variables dropped because no data.")  # noqa
     return desc.reset_index()
 
 
@@ -89,7 +80,6 @@ def _check_no_variables_lost(current_desc):
 
 
 def _check_groups_unique(desc):
-    gb = desc.groupby("group_english")
     grouped_topics = desc.groupby("group_english")["topic_english"]
     group_to_topics = grouped_topics.unique()
     nr_topics = group_to_topics.apply(len)
@@ -115,9 +105,7 @@ if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
 
-    desc = pd.read_csv(
-        dir_to_data + "covid19_data_description.csv", sep=";"
-    )
+    desc = pd.read_csv(dir_to_data + "covid19_data_description.csv", sep=";")
     group_info = pd.read_csv("group_info.csv", sep=";")
     data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
@@ -140,7 +128,6 @@ if __name__ == "__main__":
             values=data[col], categories=[en for nl, en in aprop_cats], ordered=True
         )
 
-
     # handle trouble with duplicates
     dup_names = desc[desc["new_name"].duplicated()]["new_name"].tolist()
     if len(dup_names) > 0:
@@ -151,22 +138,20 @@ if __name__ == "__main__":
     doubled = [x for x in bg_desc["new_name"].values if x in desc["new_name"].values]
 
     if len(doubled) > 0:
-        print(f"\n\n{doubled} appear in both the normal and the background description.")
+        print(
+            f"\n\n{doubled} appear in both the normal and the background description."
+        )
         desc = desc[~desc["new_name"].isin(doubled)]
-
 
     desc, group_info = drop_groups_with_no_vars_yet(
         desc=desc, group_info=group_info, data=data
     )
 
-
     # =================================================================================
 
     desc = pd.concat([desc, bg_desc])
 
-    desc = dashboard_data_description(
-        desc=desc, group_info=group_info, data=data
-    )
+    desc = dashboard_data_description(desc=desc, group_info=group_info, data=data)
 
     _check_groups_unique(desc)
 

@@ -146,7 +146,7 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
         y_range=f_range,
         plot_height=get_plot_height(selectors, bg_var),
         toolbar_location=None,
-        x_range=(-0.05, 1.05)
+        x_range=(-0.05, 1.05),
     )
 
     renderers = p.hbar_stack(
@@ -187,7 +187,7 @@ def specific_styling(p):
     p.xaxis.axis_line_alpha = 0.2
     p.yaxis.axis_line_width = 1.5
     p.xaxis.axis_line_width = 1.5
-    p.xaxis.formatter = NumeralTickFormatter(format='0 %')
+    p.xaxis.formatter = NumeralTickFormatter(format="0 %")
 
     p.xaxis.major_label_text_color = "#808080"
     p.xaxis.major_label_text_font_style = "bold"

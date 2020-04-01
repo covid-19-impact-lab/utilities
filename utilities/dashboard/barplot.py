@@ -30,7 +30,8 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
     categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
 
     p = setup_basic_plot(
-        cds=cds, categories=categories, selectors=selectors, bg_var=bg_var)
+        cds=cds, categories=categories, selectors=selectors, bg_var=bg_var
+    )
 
     p = specific_styling(p)
     p = unclutter(p)
@@ -44,7 +45,7 @@ def setup_basic_plot(cds, categories, selectors, bg_var):
         y_range=f_range,
         plot_height=get_plot_height(selectors, bg_var),
         toolbar_location=None,
-        x_range=(-0.05, 1.05)
+        x_range=(-0.05, 1.05),
     )
 
     renderers = p.hbar_stack(

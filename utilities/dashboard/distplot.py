@@ -124,9 +124,9 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     for bg_var in bg_vars:
         selected = data[bg_var].cat.categories.tolist()
         col_list = [col for col in raw_dist_data.keys() if col != "x"]
-        selectors[nice_names[bg_var]] = [
-            col for col in col_list if col[1] in selected
-        ][::-1]
+        selectors[nice_names[bg_var]] = [col for col in col_list if col[1] in selected][
+            ::-1
+        ]
 
     dist_data = _prepare_dist_data_for_bokeh_patch(raw_dist_data, selectors)
 
@@ -198,9 +198,10 @@ def setup_plot(dist_data, selectors, questions, x_info, bg_var="Nothing"):
         tooltips = [("Question", questions[var])]
         zero_vals = [(item[0], item[1], 0) for item in dist_data[cat]]
         renderer = p.patches(
-            [dist_data["x"], dist_data["x"]], [zero_vals, dist_data[cat]],
-
-            color=var_to_color[var], alpha=0.15
+            [dist_data["x"], dist_data["x"]],
+            [zero_vals, dist_data[cat]],
+            color=var_to_color[var],
+            alpha=0.15,
         )
         hover = HoverTool(tooltips=tooltips, renderers=[renderer])
         p.tools.append(hover)

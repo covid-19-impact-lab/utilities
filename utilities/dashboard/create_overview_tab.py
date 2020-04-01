@@ -111,7 +111,7 @@ def create_overview_tab(
     )
     background_selector.on_change("value", background_var_callback)
 
-    tab = Panel(child=page, title="LISS Data", name="overview_panel")
+    tab = Panel(child=page, title="Variables", name="overview_panel")
 
     return tab
 
