@@ -131,16 +131,16 @@ if __name__ == "__main__":
     # handle trouble with duplicates
     dup_names = desc[desc["new_name"].duplicated()]["new_name"].tolist()
     if len(dup_names) > 0:
-        print(f"\n\nDropping {dup_names} because they appear more than once\n\n")
+        # print(f"\n\nDropping {dup_names} because they appear more than once\n\n")
         desc = desc.drop_duplicates(subset=["new_name"])
 
     bg_desc = pd.read_excel("background_var_description.xlsx")
     doubled = [x for x in bg_desc["new_name"].values if x in desc["new_name"].values]
 
     if len(doubled) > 0:
-        print(
-            f"\n\n{doubled} appear in both the normal and the background description."
-        )
+        # print(
+        #     f"\n\n{doubled} appear in both the normal and the background description."
+        # )
         desc = desc[~desc["new_name"].isin(doubled)]
 
     desc, group_info = drop_groups_with_no_vars_yet(
@@ -163,6 +163,6 @@ if __name__ == "__main__":
     with open(out_path, "wb") as f:
         pickle.dump(overview_tab_data, f)
 
-    path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
-    command = f"bokeh serve --show {path_to_app} --args {out_path}"
-    os.system(command)
+    # path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
+    # command = f"bokeh serve --show {path_to_app} --args {out_path}"
+    # os.system(command)
