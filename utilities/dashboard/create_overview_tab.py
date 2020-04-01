@@ -64,7 +64,7 @@ def create_overview_tab(
         group=group,
         background_variables=background_variables,
     )
-    title_style = {"font-size": "200%", "color": "#696969"}
+    title_style = {"font-size": "200%", "color": "#808080"}
     title = Div(
         text=as_html(group), style=title_style, width=600, margin=(25, 0, 25, 0)
     )

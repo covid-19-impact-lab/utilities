@@ -241,6 +241,8 @@ def _specific_styling(p, x_info):
             int(x_info["x_max"]): x_info["x_max_label"],
         }
 
+    p.xaxis.major_label_text_color = "#808080"
+    p.xaxis.major_label_text_font_style = "bold"
     # remove separator line between groups
     p.yaxis.separator_line_alpha = 0
 

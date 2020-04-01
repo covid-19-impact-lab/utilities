@@ -189,6 +189,9 @@ def specific_styling(p):
     p.xaxis.axis_line_width = 1.5
     p.xaxis.formatter = NumeralTickFormatter(format='0 %')
 
+    p.xaxis.major_label_text_color = "#808080"
+    p.xaxis.major_label_text_font_style = "bold"
+
     # remove separator line between groups
     p.yaxis.separator_line_alpha = 0
     return p
