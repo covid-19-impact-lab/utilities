@@ -205,9 +205,6 @@ def setup_plot(dist_data, selectors, questions, x_info, bg_var="Nothing"):
         hover = HoverTool(tooltips=tooltips, renderers=[renderer])
         p.tools.append(hover)
 
-        p.line(dist_data["x"], zero_vals, color="red", line_width=0.5)
-
-
     _specific_styling(p, x_info)
     _unclutter(p)
 

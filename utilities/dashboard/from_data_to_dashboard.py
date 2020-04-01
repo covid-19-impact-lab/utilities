@@ -19,11 +19,12 @@ def dashboard_data_description(desc, group_info, data):
 
     # drop columns the dashboard does not use
     keep_cols = ["new_name", "group_english", "label_english", "nice_name_english"]
-    desc = desc[keep_cols]
+    desc = desc[keep_cols].copy()
     desc.dropna(how="all", inplace=True)
 
     # set index to new_name
-    assert not desc["new_name"].duplicated().any(), "Duplicates in new_name."
+    dup_new_names = desc[desc["new_name"].duplicated()]["new_name"].tolist()
+    assert len(dup_new_names) == 0, f"{dup_new_names} are duplicate new names."
     assert desc["new_name"].notnull().all()
     desc.set_index("new_name", inplace=True)
 
@@ -110,12 +111,6 @@ def drop_groups_with_no_vars_yet(desc, group_info, data):
     return desc, group_info
 
 
-
-def add_background_variables(data, desc):
-    data = data.copy()
-    return data, desc
-
-
 if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
@@ -123,11 +118,48 @@ if __name__ == "__main__":
     desc = pd.read_csv(
         dir_to_data + "covid19_data_description.csv", sep=";"
     )
+
+    # =================================================================================
+    # HOT FIXES
+    # =================================================================================
+
+    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
+
+    aprop_vars = ["nervous", "depressed", "calm", "gloomy", "happy"]
+    aprop_cats = [
+        (1, "never"),
+        (2, "rarely"),
+        (3, "sometimes"),
+        (4, "often"),
+        (5, "mostly"),
+        (6, "constantly"),
+    ]
+
+    for col in aprop_vars:
+        data[col] = data[col].replace({nl: en for nl, en in aprop_cats})
+        data[col] = pd.Categorical(
+            values=data[col], categories=[en for nl, en in aprop_cats], ordered=True
+        )
+
+
+    # handle trouble with duplicates
+    dup_names = desc[desc["new_name"].duplicated()]["new_name"].tolist()
+    if len(dup_names) > 0:
+        print(f"\n\nDropping {dup_names} because they appear more than once\n\n")
+        desc = desc.drop_duplicates(subset=["new_name"])
+
     bg_desc = pd.read_excel("background_var_description.xlsx")
+    doubled = [x for x in bg_desc["new_name"].values if x in desc["new_name"].values]
+
+    if len(doubled) > 0:
+        print(f"\n\n{doubled} appear in both the normal and the background description.")
+        desc = desc[~desc["new_name"].isin(doubled)]
+
+    # =================================================================================
+
     desc = pd.concat([desc, bg_desc])
 
     group_info = pd.read_csv("group_info.csv", sep=";")
-    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
     desc = dashboard_data_description(
         desc=desc, group_info=group_info, data=data
