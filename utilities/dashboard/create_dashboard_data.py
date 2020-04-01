@@ -38,7 +38,8 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
     """
     res = {}
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
-    res["groups"] = [group for group in raw_groups if group != "Background Variables"]
+    bg_var_groups = ["Background Overview", "Background Dotplot"]
+    res["groups"] = [group for group in raw_groups if group not in bg_var_groups]
     raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
     res["topics"] = [topic for topic in raw_topics if topic != "Background Variables"]
 
@@ -55,7 +56,7 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
         data_desc, f"group_{language}", "new_name"
     )
 
-    internal_bg_vars = res["group_to_variables"].pop("Background Variables")
+    internal_bg_vars = res["group_to_variables"].pop("Background Overview")
     nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
     res["variable_to_nice_name"] = nice_names
     res["background_variables"] = [nice_names[var] for var in internal_bg_vars]

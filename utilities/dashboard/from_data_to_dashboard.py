@@ -127,7 +127,7 @@ if __name__ == "__main__":
     desc = pd.concat([desc, bg_desc])
 
     group_info = pd.read_csv("group_info.csv", sep=";")
-    data = pd.read_pickle(dir_to_data + "corona.pickle")
+    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
     desc = dashboard_data_description(
         desc=desc, group_info=group_info, data=data
