@@ -118,13 +118,12 @@ if __name__ == "__main__":
     desc = pd.read_csv(
         dir_to_data + "covid19_data_description.csv", sep=";"
     )
+    group_info = pd.read_csv("group_info.csv", sep=";")
+    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
     # =================================================================================
     # HOT FIXES
     # =================================================================================
-
-    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
-
     aprop_vars = ["nervous", "depressed", "calm", "gloomy", "happy"]
     aprop_cats = [
         (1, "never"),
@@ -155,18 +154,21 @@ if __name__ == "__main__":
         print(f"\n\n{doubled} appear in both the normal and the background description.")
         desc = desc[~desc["new_name"].isin(doubled)]
 
+
+    desc, group_info = drop_groups_with_no_vars_yet(
+        desc=desc, group_info=group_info, data=data
+    )
+
+    # =================================================================================
+    # ADD DOTPLOT BACKGROUND VARIABLES
+    # =================================================================================
+
+
     # =================================================================================
 
     desc = pd.concat([desc, bg_desc])
 
-    group_info = pd.read_csv("group_info.csv", sep=";")
-
     desc = dashboard_data_description(
-        desc=desc, group_info=group_info, data=data
-    )
-
-    # HOT FIXES
-    desc, group_info = drop_groups_with_no_vars_yet(
         desc=desc, group_info=group_info, data=data
     )
 
