@@ -11,8 +11,29 @@ plot_modules = {
     "distplot": distplot,
 }
 
+def create_dashboard_data(data, data_desc, group_info, language, kde_cutoff=7):
+    """Create a dict with all data needed for the dashboard.
 
-def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7):
+    Args:
+        data (pd.DataFrame): The empirical dataset.
+        data_decs (pd.DataFrame): Description of the dataset.
+        group_info (pd.DataFrame): Description of groups.
+        language (pd.DataFrame): One of ["english", "german", "dutch"]
+
+    Returns:
+        dict: Dictionary with one entry for the overview tab, the correlation tab and
+            the timeline tab.
+
+    """
+    dashboard_data = {
+        "overview": _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff),
+        "correlation": _create_correlation_tab_data(data, data_desc, language),
+        "timeline": _create_timeline_tab_data(language),
+    }
+    return dashboard_data
+
+
+def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff):
     """Create a dict with all data needed in the overview tab.
 
     Args:
@@ -89,3 +110,11 @@ def create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff=7
 def _dict_of_uniques_from_df(df, key_col, val_col):
     raw = df.groupby(key_col)[val_col].unique().to_dict()
     return {k: val.tolist() for k, val in raw.items()}
+
+
+def _create_correlation_tab_data(data, data_desc, language):
+    return {}
+
+
+def _create_timeline_tab_data(language):
+    return {}

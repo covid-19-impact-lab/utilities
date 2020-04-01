@@ -3,8 +3,7 @@ import pickle
 import sys
 import pandas as pd
 
-import utilities
-from utilities.dashboard.create_dashboard_data import create_overview_tab_data
+from utilities.dashboard.create_dashboard_data import create_dashboard_data
 
 
 def dashboard_data_description(desc, group_info, data):
@@ -147,21 +146,19 @@ if __name__ == "__main__":
         desc=desc, group_info=group_info, data=data
     )
 
-    # =================================================================================
-
     desc = pd.concat([desc, bg_desc])
 
     desc = dashboard_data_description(desc=desc, group_info=group_info, data=data)
 
     _check_groups_unique(desc)
 
-    overview_tab_data = create_overview_tab_data(
+    dashboard_data = create_dashboard_data(
         data=data, data_desc=desc, group_info=group_info, language=lang
     )
 
-    out_path = "overview_tab_data_current.pickle"
+    out_path = "dashboard_data_current.pickle"
     with open(out_path, "wb") as f:
-        pickle.dump(overview_tab_data, f)
+        pickle.dump(dashboard_data, f)
 
     # path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
     # command = f"bokeh serve --show {path_to_app} --args {out_path}"

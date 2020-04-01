@@ -18,14 +18,9 @@ from utilities.dashboard.create_overview_tab import create_overview_tab
 
 template_dir = Path(__file__).resolve().parent
 
-overview_tab_data_path = sys.argv[1]
-with open(overview_tab_data_path, "rb") as f:
-    overview_tab_data = pickle.load(f)
-
-with open("data/mock_corr_data.pickle", "rb") as f:
-    mock_corr_data = pickle.load(f)
-
-timeline_tab_data = None
+dashboard_data_path = sys.argv[1]
+with open(dashboard_data_path, "rb") as f:
+    dashboard_data = pickle.load(f)
 
 doc = curdoc()
 
@@ -34,9 +29,9 @@ curdoc().template = env.get_template("index.html")
 
 doc.title = "The LISS Dataset"
 
-overview_tab = create_overview_tab(**overview_tab_data)
-corr_tab = create_corr_tab(mock_corr_data)
-# timeline_tab = create_timeline_tab(timeline_tab_data)
+overview_tab = create_overview_tab(**dashboard_data["overview"])
+corr_tab = create_corr_tab(dashboard_data["correlation"])
+# timeline_tab = create_timeline_tab(dashboard_data["timeline"])
 tabs = Tabs(tabs=[overview_tab, corr_tab], name="tabs")
 
 doc.add_root(tabs)

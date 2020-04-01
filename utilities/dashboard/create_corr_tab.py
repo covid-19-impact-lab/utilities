@@ -46,8 +46,8 @@ def _create_selection_menus(tuples):
     titles = [
         "On the Horizontal Axis",
         "On the Vertical Axis",
-        "Average Over",
-        "Color By:",
+        "Group By",
+        "Color By",
     ]
     selectors = []
     for i in range(4):
