@@ -2,6 +2,7 @@ from utilities.dashboard import barplot
 from utilities.dashboard import distplot
 from utilities.dashboard import no_plot
 from utilities.dashboard import stacked_barplot
+from itertools import product
 
 
 plot_modules = {
@@ -10,6 +11,7 @@ plot_modules = {
     "no_plot": no_plot,
     "distplot": distplot,
 }
+
 
 def create_dashboard_data(data, data_desc, group_info, language, kde_cutoff=7):
     """Create a dict with all data needed for the dashboard.
@@ -26,7 +28,9 @@ def create_dashboard_data(data, data_desc, group_info, language, kde_cutoff=7):
 
     """
     dashboard_data = {
-        "overview": _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff),
+        "overview": _create_overview_tab_data(
+            data, data_desc, group_info, language, kde_cutoff
+        ),
         "correlation": _create_correlation_tab_data(data, data_desc, language),
         "timeline": _create_timeline_tab_data(language),
     }
@@ -59,7 +63,7 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
     """
     res = {}
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
-    bg_var_groups = ["Background Overview", "Background Dotplot"]
+    bg_var_groups = ["Background Overview", "Background Correlation"]
     res["groups"] = [group for group in raw_groups if group not in bg_var_groups]
     raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
     res["topics"] = [topic for topic in raw_topics if topic != "Background Variables"]
@@ -113,7 +117,34 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
 
 
 def _create_correlation_tab_data(data, data_desc, language):
-    return {}
+    # might make sense to just have one function determining all three lists
+    axis_vars = _determine_axis_vars(data, data_desc, language)
+    groupby_vars = _determine_groupby_vars(data_desc, language)
+    color_vars = _determine_color_vars(data, data_desc, language)
+
+    corr_data = {}
+    for x, y, g, c in product(axis_vars, axis_vars, groupby_vars, color_vars):
+        corr_data[(x, y, g, c)] = _corr_plot(data=data, x=x, y=y, g=g, c=c)
+
+    return corr_data
+
+
+def _determine_axis_vars(data, data_desc, laungage):
+    return ["A Long Variable Name", "Another Long Variable", "Short Name"]
+
+
+def _determine_groupby_vars(data_desc, language):
+    bg_corr_slice = data_desc[data_desc["group_english"] == "Background Correlation"]
+    groupby_vars = bg_corr_slice[f"nice_name_{language}"].tolist()
+    return groupby_vars
+
+
+def _determine_color_vars(data, data_desc, language):
+    return ["Gender", "Age Group"]
+
+
+def _corr_plot(data, x, y, g, c):
+    return {"xs": [0, 1, 2], "ys": [3, 0, 1]}
 
 
 def _create_timeline_tab_data(language):

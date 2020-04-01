@@ -69,7 +69,7 @@ def create_overview_tab(
         text=as_html(group), style=title_style, width=600, margin=(25, 0, 25, 0)
     )
 
-    header_style = {"color": "grey"}
+    header_style = {"color": "#808080"}
     header = Div(
         text=group_to_header[group],
         name="header",

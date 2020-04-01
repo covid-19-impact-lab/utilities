@@ -1,6 +1,6 @@
 topic_english;group_english;plot_type;header_english
 Background Variables;Background Overview;;
-Background Variables;Background Dotplot;;
+Background Variables;Background Correlation;;
 Health Beliefs;Subjective Risks;distplot;In light of the current coronavirus outbreak, there is a probability that you and your direct environment might become infected and infect others. As a result, you or they may select into self-quarantining or seeking  medical attention.  How likely do you think that the following events will happen in the next 2 months? 
 Health Beliefs;Vignettes: Risk of Hospitalization;distplot;How big do you think the chances are that the following people infected with the coronavirus will have to go to the hospital in the next two months because of the coronavirus?
 Health Beliefs;Vignettes: Risk of Death;distplot;How big do you think the chances are that the following people infected with the coronavirus will die in the next two months because of the coronavirus?

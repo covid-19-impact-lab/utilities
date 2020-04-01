@@ -1,4 +1,3 @@
-import os
 import pickle
 import sys
 import pandas as pd
@@ -33,7 +32,8 @@ def dashboard_data_description(desc, group_info, data):
     old_len = len(desc)
     desc = desc.loc[keep_vars]
     len_after_var_drop = len(desc)
-    print(f"{old_len - len_after_var_drop} variables dropped because no data.")  # noqa
+    if old_len - len_after_var_drop > 0:
+        print(f"{old_len - len_after_var_drop} variables dropped because no data.")  # noqa
     return desc.reset_index()
 
 
@@ -160,6 +160,8 @@ if __name__ == "__main__":
     with open(out_path, "wb") as f:
         pickle.dump(dashboard_data, f)
 
+    # import os
+    # import utilities
     # path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
     # command = f"bokeh serve --show {path_to_app} --args {out_path}"
     # os.system(command)
