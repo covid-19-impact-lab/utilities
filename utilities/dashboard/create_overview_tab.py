@@ -82,8 +82,8 @@ def create_overview_tab(
 
     bottom_txt = \
         "Hover over the graph for more information. You can see how different groups " + \
-        "responded by choosing something in the Condition On menu. " + \
-        "Or you can click a different topic or subtopic to explore different questions."
+        "responded by choosing something in the Split By menu. " + \
+        "You can explore different questions by choosing different topics and subtopics."
     bottom_info = Div(
         text=bottom_txt,
         name="bottom",
