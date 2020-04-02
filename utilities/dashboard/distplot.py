@@ -115,6 +115,15 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         for col in df.columns:
             raw_dist_data[col] = df[col].tolist()
 
+    observations = {}
+    for var in variables:
+        observations[(nice_names[var], "")] = data[var].notnull().sum()
+        for bg_var in bg_vars:
+            bg_values = data[bg_var].cat.categories
+            for val in bg_values:
+                sr = data[data[bg_var] == val][var]
+                observations[(nice_names[var], val)] = sr.notnull().sum()
+
     nice_name_to_label = {}
     for var in variables:
         nice_name_to_label[nice_names[var]] = labels[var]
@@ -135,6 +144,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         "selectors": selectors,
         "questions": nice_name_to_label,
         "x_info": x_info,
+        "observations": observations,
     }
 
     return res
@@ -181,7 +191,7 @@ def _check_variables_have_same_dtype(data, variables):
             raise ValueError("Variables have to have the same dtype.")
 
 
-def setup_plot(dist_data, selectors, questions, x_info, bg_var="Nothing"):
+def setup_plot(dist_data, selectors, questions, x_info, observations, bg_var="Nothing"):
     colors = get_colors("categorical", len(questions))
     var_to_color = {var: c for var, c in zip(questions, colors)}
 
@@ -195,7 +205,7 @@ def setup_plot(dist_data, selectors, questions, x_info, bg_var="Nothing"):
     for cat in categories:
         var = cat[0]
         p.line(dist_data["x"], dist_data[cat], color=var_to_color[var], line_width=3)
-        tooltips = [("Question", questions[var])]
+        tooltips = [("Question", questions[var]), ("No. Obs.", str(observations[cat]))]
         zero_vals = [(item[0], item[1], 0) for item in dist_data[cat]]
         renderer = p.patches(
             [dist_data["x"], dist_data["x"]],
@@ -277,7 +287,7 @@ def _get_plot_height(selectors, bg_var):
     return int(1.2 * height)
 
 
-def condition_plot(plot, dist_data, selectors, questions, x_info, bg_var):
+def condition_plot(plot, dist_data, selectors, questions, x_info, observations, bg_var):
     p = plot
     p.y_range.factors = selectors[bg_var]
     p.plot_height = _get_plot_height(selectors, bg_var)
