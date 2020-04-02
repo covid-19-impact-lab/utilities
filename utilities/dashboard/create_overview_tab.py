@@ -80,7 +80,17 @@ def create_overview_tab(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     plot = setup_plot(**plot_data[group])
 
-    page = Column(selection_menues, title, header, plot)
+    bottom_txt = \
+        "Hover over the graph for more information. You can see how different groups " + \
+        "responded by choosing something in the Condition On menu. " + \
+        "Or you can click a different topic or subtopic to explore different questions."
+    bottom_info = Div(
+        text=bottom_txt,
+        name="bottom",
+        margin=(25, 0, 25, 0),
+        style=header_style,
+        )
+    page = Column(selection_menues, title, header, plot, bottom_info)
 
     topic_callback = partial(
         set_topic,
@@ -159,15 +169,15 @@ def set_subtopic(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     new_p = setup_plot(**plot_data[new])
 
-    page.children[-1] = new_p
+    page.children[-2] = new_p
     background_selector.value = "Nothing"
 
 
 def condition_on_background_var(
     attr, old, new, subtopic_selector, plot_data, page, group_to_plot_type
 ):
-    plot = page.children[-1]
-    page.children = page.children[:-1]
+    plot, bottom = page.children[-2:]
+    page.children = page.children[:-2]
     group = subtopic_selector.value
     plot_type = group_to_plot_type[group]
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")
@@ -175,4 +185,4 @@ def condition_on_background_var(
     condition_plot(
         plot, **plot_data[group], bg_var=new,
     )
-    page.children.append(plot)
+    page.children += [plot, bottom]
