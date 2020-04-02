@@ -257,8 +257,20 @@ def _zero_plus_quartiles(data, var):
 
 def _add_variables(data):
     data = data.copy()
-    data["equiv_hh_inc"] = np.nan
-    # data["base_mental_health"] =
+    data["hh_adults"] = data["hh_members"] - data["hh_children"]
+    # we use the OECD factor, see https://bit.ly/2yu1cXs
+    data["equiv_factor"] = 0.5 + 0.5 * data["hh_adults"] + 0.3 * data["hh_children"]
+    data["equiv_net_inc"] = data["equiv_factor"] * data["net_income_hh"]
+    fine_cuts = [
+        -0.1, 1500, 2000, 2500, 3000, 3500, 4000,
+        5000, 6000, 7000, 8000, 12000, 1e7]
+    data["inc_group_fine"] = pd.cut(data["equiv_net_inc"], fine_cuts)
+
+    approx_quartiles = [
+        -0.1, 2500, 4500, 7500, 1e7]
+    labels = ["<2500", "2500 to 4500", "4500 to 7500", ">7500"]
+    data["income_group"] = pd.cut(
+        data["equiv_net_inc"], approx_quartiles, labels=labels)
     return data
 
 
