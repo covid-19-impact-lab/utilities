@@ -7,15 +7,14 @@ Variables are:
 - hue color
 
 """
-
 from functools import partial
+
+from bokeh.layouts import Column
+from bokeh.layouts import Row
 from bokeh.models import Panel
 from bokeh.models import Select
 from bokeh.models.widgets import Div
-from bokeh.layouts import Column
-from bokeh.layouts import Row
 from bokeh.plotting import figure
-from utilities.dashboard.stacked_barplot import as_html
 
 
 def create_corr_tab(data_dict):
@@ -29,7 +28,7 @@ def create_corr_tab(data_dict):
     """
     title_style = {"font-size": "200%", "color": "#808080"}
     title = Div(
-        text=as_html("Some Title"), style=title_style, width=600, margin=(25, 0, 25, 0)
+        text=_as_html("Some Title"), style=title_style, width=600, margin=(25, 0, 25, 0)
     )
     selection_menus = _create_selection_menus(data_dict.keys())
     start_combination = tuple(menu.value for menu in selection_menus)
@@ -80,3 +79,7 @@ def _update_plot(attr, old, new, data_dict, page, index, menus):
     new_data = data_dict[tuple(new_key)]
     new_p = _setup_plot(new_data)
     page.children[-1] = new_p
+
+
+def _as_html(text):
+    return f"<b> {text} <b>"

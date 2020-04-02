@@ -18,8 +18,6 @@ plot_modules = {
     "distplot": distplot,
 }
 
-from utilities.dashboard.stacked_barplot import as_html
-
 
 def create_overview_tab(
     groups,
@@ -66,7 +64,7 @@ def create_overview_tab(
     )
     title_style = {"font-size": "200%", "color": "#808080"}
     title = Div(
-        text=as_html(group), style=title_style, width=600, margin=(25, 0, 25, 0)
+        text=_as_html(group), style=title_style, width=600, margin=(25, 0, 25, 0)
     )
 
     header_style = {"color": "#808080"}
@@ -161,7 +159,7 @@ def set_subtopic(
     title,
 ):
     """Adjust title, header and plot to new subtopic."""
-    title.text = as_html(new.title())
+    title.text = _as_html(new.title())
     header.text = group_to_header[new]
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
@@ -184,3 +182,7 @@ def condition_on_background_var(
         plot, **plot_data[group], bg_var=new,
     )
     page.children += [plot, bottom]
+
+
+def _as_html(text):
+    return f"<b> {text} <b>"
