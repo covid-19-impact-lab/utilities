@@ -80,16 +80,14 @@ def create_overview_tab(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     plot = setup_plot(**plot_data[group])
 
-    bottom_txt = \
-        "Hover over the graph for more information. You can see how different groups " + \
-        "responded by choosing something in the Split By menu. " + \
-        "You can explore different questions by choosing different topics and subtopics."
+    bottom_txt = (
+        "Hover over the graph for more information. You can see how different groups "
+        + "responded by choosing something in the Split By menu. "
+        + "You can explore different questions by choosing different topics and subtopics."
+    )
     bottom_info = Div(
-        text=bottom_txt,
-        name="bottom",
-        margin=(25, 0, 25, 0),
-        style=header_style,
-        )
+        text=bottom_txt, name="bottom", margin=(25, 0, 25, 0), style=header_style,
+    )
     page = Column(selection_menues, title, header, plot, bottom_info)
 
     topic_callback = partial(
@@ -121,9 +119,9 @@ def create_overview_tab(
     )
     background_selector.on_change("value", background_var_callback)
 
-    tab = Panel(child=page, title="Variables", name="overview_panel")
+    # tab = Panel(child=page, title="Variables", name="overview_panel")
 
-    return tab
+    return page
 
 
 def create_selection_menus(topics, subtopics, topic, group, background_variables):
