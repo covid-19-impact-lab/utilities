@@ -92,7 +92,7 @@ def _process_data(data):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
-    data = _bin_variables(data)
+    # data = _bin_variables(data)
     #  data["base_mental_health"] =
     return data
 
@@ -181,12 +181,6 @@ def _fix_numeric(data):
     for var in convert_to_float:
         data[var] = data[var].astype(float)
     return data
-
-
-def _bin_variables(data):
-    data = data.copy()
-    var = "p_severe_financial_distress"
-    data[var] = data[var]
 
 
 if __name__ == "__main__":
