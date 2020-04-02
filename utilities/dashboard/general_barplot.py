@@ -108,7 +108,7 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
     cds = ColumnDataSource(shares)
     categories = [cat for cat in shares if cat not in NON_DATA_COLS]
 
-    colors = get_colors("blue-yellow", len(categories), skip_bright=2, skip_dark=1)
+    colors = get_colors("blue-yellow", len(categories), skip_bright=2, skip_dark=2)
 
     p = setup_basic_plot(
         cds=cds,
@@ -300,7 +300,7 @@ def _convert_variables_to_categorical(data, variables):
     for var in variables:
         if is_bool_dtype(data[var]):
             data[var] = pd.Categorical(
-                data[var], categories=[False, True], ordered=True
+                data[var], categories=[True, False], ordered=True
             )
             data[var] = data[var].cat.rename_categories({False: "False", True: "True"})
         elif is_integer_dtype(data[var]):
