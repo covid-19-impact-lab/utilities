@@ -88,29 +88,16 @@ def _check_groups_unique(desc):
         raise AssertionError(msg)
 
 
-def drop_groups_with_no_vars_yet(desc, group_info, data):
-    groups_without_vars = [
-        "Duration of the Economic Crisis",
-        "Probabilities of Economic Repercussions",
-        "House Prices",
-        "Consumption Plans Next 12 Months",
-    ]
-    group_info = group_info[~group_info["group_english"].isin(groups_without_vars)]
-    desc = desc[~desc["group_english"].isin(groups_without_vars)]
-    return desc, group_info
+def _process_data(data):
+    data = data.copy()
+    data = _fix_categories(data)
+    data = _fix_numeric(data)
+    #  data["base_mental_health"] =
+    return data
 
 
-if __name__ == "__main__":
-    lang = "english"
-    dir_to_data = sys.argv[1]
-
-    desc = pd.read_csv(dir_to_data + "covid19_data_description_changed.csv", sep=";")
-    group_info = pd.read_csv("group_info.csv", sep=";")
-    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
-
-    # =================================================================================
-    # HOT FIXES
-    # =================================================================================
+def _fix_categories(data):
+    data = data.copy()
     aprop_vars = [
         "nervous", "depressed", "calm", "gloomy", "happy",
         "nervous_back", "depressed_back", "calm_back", "gloomy_back", "happy_back"
@@ -130,37 +117,57 @@ if __name__ == "__main__":
             values=data[col], categories=[en for nl, en in aprop_cats], ordered=True
         )
 
-    # handle trouble with duplicates
-    dup_names = desc[desc["new_name"].duplicated()]["new_name"].tolist()
-    if len(dup_names) > 0:
-        # print(f"\n\nDropping {dup_names} because they appear more than once\n\n")
-        desc = desc.drop_duplicates(subset=["new_name"])
+    data["edu"] = data["edu"].cat.rename_categories({
+        "hs_and_less": "High School Or Less",
+        "jun_college": "Junior College",
+        "college": "College",
+        "uni": "University",
+        })
 
-    bg_desc = pd.read_excel("background_var_description.xlsx")
-    doubled = [x for x in bg_desc["new_name"].values if x in desc["new_name"].values]
+    data["health_group"] = pd.Categorical(
+        values=data["health_group"],
+        categories=data["health_group"].dtype.categories[::-1],
+        ordered=True)
+    data["health_group"] = data["health_group"].cat.rename_categories(
+        {"moderate": "moderate or less"})
 
-    if len(doubled) > 0:
-        # print(
-        #     f"\n\n{doubled} appear in both the normal and the background description."
-        # )
-        desc = desc[~desc["new_name"].isin(doubled)]
+    data["gender"] = data["gender"].cat.rename_categories(
+        {"man": "men", "woman": "women"})
 
-    desc, group_info = drop_groups_with_no_vars_yet(
-        desc=desc, group_info=group_info, data=data
-    )
+    data["duration_restrictions"] = data["duration_restrictions"].cat.rename_categories({
+        "btw. April 6 and 2 months": "April 6 to 2 months",
+        "btw. 2 and 4 months": "2 to 4 months",
+        "btw. 4 and 8 months": "4 to 8 months",
+        "btw. 8 and 12 months": "8 to 12 months",
+        "for more than 1 year": "more than 1 year",
+        })
 
-    # =================================================================================
-    # ADD BACKGROUND VARIABLES
-    # =================================================================================
-    #  data["base_mental_health"] =
+    data["trust_gov"] = data["trust_gov"].cat.rename_categories({
+        "1 no confidence at all": "1 <br> none at all",
+        "5 a lot of confidence": "5 <br> a lot",
+    })
+
+    concern_vars = [
+        "concern_bored",
+        "concern_infect_others",
+        "concern_loved_ill",
+        "concern_serious_ill",
+        "concern_health_care",
+        "concern_fav_shop_bancrupt",
+        "concern_company",
+        "concern_unemp",
+        "concern_new_job",
+        "concern_food",
+    ]
+    for var in concern_vars:
+        data[var] = data[var].cat.rename_categories(
+            {1: "1 <br> not at all worried", 2:"2", 3:"3", 4:"4", 5: "5 <br> very worrried"})
+
+    return data
 
 
-
-    # =================================================================================
-    # OWN VARIABLES
-    # =================================================================================
-
-    # for the dashboard we want some int variables as floats.
+def _fix_numeric(data):
+    data = data.copy()
     convert_to_float = [
         "comply_curfew_others",
         "workplace_h_before", "workplace_h_after", "home_h_before", "home_h_after",
@@ -172,10 +179,26 @@ if __name__ == "__main__":
     ]
     for var in convert_to_float:
         data[var] = data[var].astype(float)
+    return data
 
-    # =================================================================================
 
+if __name__ == "__main__":
+    lang = "english"
+    dir_to_data = sys.argv[1]
+
+    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
+    data = _process_data(data)
+
+    desc = pd.read_csv(dir_to_data + "covid19_data_description_changed.csv", sep=";")
+    desc = desc[desc["new_name"].notnull()]
+    assert not desc["new_name"].duplicated().any()
+    bg_desc = pd.read_excel("background_var_description.xlsx")
+    doubled = [x for x in bg_desc["new_name"].values if x in desc["new_name"].values]
+    assert len(doubled) == 0, "Doubles between data description and background."
     desc = pd.concat([desc, bg_desc])
+
+    group_info = pd.read_csv("group_info.csv", sep=";")
+    group_info = group_info[group_info["group_english"].notnull()]
 
     desc = dashboard_data_description(desc=desc, group_info=group_info, data=data)
 
