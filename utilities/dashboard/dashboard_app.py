@@ -32,6 +32,6 @@ doc.title = "The LISS Dataset"
 overview_tab = create_overview_tab(**dashboard_data["overview"])
 corr_tab = create_corr_tab(dashboard_data["correlation"])
 # timeline_tab = create_timeline_tab(dashboard_data["timeline"])
-tabs = Tabs(tabs=[overview_tab, corr_tab], name="tabs")
-
-doc.add_root(tabs)
+# tabs = Tabs(tabs=[overview_tab, corr_tab], name="tabs")
+# doc.add_root(tabs)
+doc.add_root(overview_tab)

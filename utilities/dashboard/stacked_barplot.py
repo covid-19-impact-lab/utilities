@@ -5,11 +5,11 @@ from bokeh.models import ColumnDataSource
 from bokeh.models import Div
 from bokeh.models import FactorRange
 from bokeh.models import HoverTool
+from bokeh.models import NumeralTickFormatter
 from bokeh.plotting import figure
 from pandas.api.types import is_bool_dtype
 from pandas.api.types import is_categorical_dtype
 from pandas.api.types import is_integer_dtype
-from bokeh.models import NumeralTickFormatter
 
 from utilities.colors import get_colors
 
@@ -103,7 +103,7 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
     """
     cds = ColumnDataSource(shares)
     categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
-    colors = get_colors("ordered", len(categories))
+    colors = get_colors("blue-yellow", len(categories), skip_bright=2, skip_dark=1)
 
     p = setup_basic_plot(
         cds=cds,
