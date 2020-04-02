@@ -27,7 +27,11 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
         shares (list):
     """
     cds = ColumnDataSource(shares)
-    categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
+    categories = [
+        cat
+        for cat in shares
+        if cat not in ("label", "Question", "color", "Observations")
+    ]
 
     p = setup_basic_plot(
         cds=cds, categories=categories, selectors=selectors, bg_var=bg_var
@@ -55,7 +59,12 @@ def setup_basic_plot(cds, categories, selectors, bg_var):
     if not isinstance(renderers, list):
         renderers = [renderers]
 
-    tooltips = [("Question", "@Question"), ("Reply", "$name"), ("Share", "@$name{%0f}")]
+    tooltips = [
+        ("Question", "@Question"),
+        ("Reply", "$name"),
+        ("Share", "@$name{%0f}"),
+        ("No. Obs.", "@Observations"),
+    ]
     hover = HoverTool(renderers=renderers, tooltips=tooltips)
     p.tools.append(hover)
 

@@ -49,22 +49,19 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         # unconditional shares. Repeated. Once with empty label once with label=Nothing
         vc = data[var].value_counts(normalize=True)
         df = vc.to_frame().T
-
         df.columns = df.columns.tolist()
         df.reset_index(drop=True, inplace=True)
         df["variable"] = nice_names[var]
         df["Question"] = labels[var]
         df["label"] = ""
         df["color"] = c
+        df["Observations"] = data[var].notnull().sum()
         to_concat.append(df)
         # conditional shares
         for bg_var in bg_vars:
-            df = (
-                data.groupby(bg_var)[var]
-                .value_counts(normalize=True)
-                .unstack()
-                .reset_index()
-            )
+            df = data.groupby(bg_var)[var].value_counts(normalize=True).unstack()
+            df["Observations"] = data[var].notnull().groupby(data[bg_var]).sum()
+            df.reset_index(inplace=True)
             df.rename(columns={bg_var: "label"}, inplace=True)
             df["variable"] = nice_names[var]
             df["Question"] = labels[var]
@@ -78,6 +75,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     share_dict["label"] = list(zip(share_data["variable"], share_data["label"]))
     share_dict["Question"] = share_data["Question"].tolist()
     share_dict["color"] = share_data["color"].tolist()
+    share_dict["Observations"] = share_data["Observations"].tolist()
 
     order = data[variables[0]].dtype.categories.tolist()
 
@@ -91,7 +89,6 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         selectors[nice_names[bg_var]] = tuple(
             [tuple(lab) for lab in share_dict["label"] if lab[1] in selected][::-1]
         )
-
     return {"shares": share_dict, "selectors": selectors}
 
 
@@ -102,7 +99,11 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
         shares (list):
     """
     cds = ColumnDataSource(shares)
-    categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
+    categories = [
+        cat
+        for cat in shares
+        if cat not in ("label", "Question", "color", "Observations")
+    ]
     colors = get_colors("blue-yellow", len(categories), skip_bright=2, skip_dark=1)
 
     p = setup_basic_plot(
@@ -123,7 +124,11 @@ def setup_plot(shares, selectors, bg_var="Nothing"):
 
 def condition_plot(plot, shares, selectors, bg_var):
     legend, p = plot.children
-    categories = [cat for cat in shares if cat not in ("label", "Question", "color")]
+    categories = [
+        cat
+        for cat in shares
+        if cat not in ("label", "Question", "color", "Observations")
+    ]
     n_categories = len(categories)
     legend_width = get_legend_width(p.plot_width, selectors, bg_var, n_categories)
     for entry in legend.children:
@@ -156,7 +161,12 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
     if not isinstance(renderers, list):
         renderers = [renderers]
 
-    tooltips = [("Question", "@Question"), ("Reply", "$name"), ("Share", "@$name{%0f}")]
+    tooltips = [
+        ("Question", "@Question"),
+        ("Reply", "$name"),
+        ("Share", "@$name{%0f}"),
+        ("No. Obs.", "@Observations"),
+    ]
     hover = HoverTool(renderers=renderers, tooltips=tooltips)
     p.tools.append(hover)
 
@@ -265,7 +275,8 @@ def _check_variables_have_same_dtype(data, variables):
     for var in variables:
         if data[var].dtype != dtype:
             raise ValueError(
-                f"Variables have to have the same dtype. Not the case for {var}")
+                f"Variables have to have the same dtype. Not the case for {var}"
+            )
 
 
 def _convert_variables_to_categorical(data, variables):
