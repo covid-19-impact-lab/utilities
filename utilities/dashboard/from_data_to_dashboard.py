@@ -104,14 +104,17 @@ if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
 
-    desc = pd.read_csv(dir_to_data + "covid19_data_description.csv", sep=";")
+    desc = pd.read_csv(dir_to_data + "covid19_data_description_changed.csv", sep=";")
     group_info = pd.read_csv("group_info.csv", sep=";")
     data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
 
     # =================================================================================
     # HOT FIXES
     # =================================================================================
-    aprop_vars = ["nervous", "depressed", "calm", "gloomy", "happy"]
+    aprop_vars = [
+        "nervous", "depressed", "calm", "gloomy", "happy",
+        "nervous_back", "depressed_back", "calm_back", "gloomy_back", "happy_back"
+    ]
     aprop_cats = [
         (1, "never"),
         (2, "rarely"),
@@ -145,6 +148,32 @@ if __name__ == "__main__":
     desc, group_info = drop_groups_with_no_vars_yet(
         desc=desc, group_info=group_info, data=data
     )
+
+    # =================================================================================
+    # ADD BACKGROUND VARIABLES
+    # =================================================================================
+    #  data["base_mental_health"] =
+
+
+
+    # =================================================================================
+    # OWN VARIABLES
+    # =================================================================================
+
+    # for the dashboard we want some int variables as floats.
+    convert_to_float = [
+        "comply_curfew_others",
+        "workplace_h_before", "workplace_h_after", "home_h_before", "home_h_after",
+        "p_employed_keep", "p_employed_keep_gov", "p_employed_lost", "p_employed_other",
+        "p_severe_financial_distress", "eur_1k_basic_needs", "eur_1k_expenses",
+        "eur_1k_durables", "eur_1k_savings", "eur_1k_support_others",
+        "p_selfempl_as_normal", "p_selfempl_fewer", "p_selfempl_shutdown_gov",
+        "p_selfempl_shutdown_no_gov", "p_selfempl_other",
+    ]
+    for var in convert_to_float:
+        data[var] = data[var].astype(float)
+
+    # =================================================================================
 
     desc = pd.concat([desc, bg_desc])
 

@@ -264,7 +264,8 @@ def _check_variables_have_same_dtype(data, variables):
     dtype = data[variables[0]].dtype
     for var in variables:
         if data[var].dtype != dtype:
-            raise ValueError("Variables have to have the same dtype.")
+            raise ValueError(
+                f"Variables have to have the same dtype. Not the case for {var}")
 
 
 def _convert_variables_to_categorical(data, variables):
