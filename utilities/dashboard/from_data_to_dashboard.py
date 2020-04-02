@@ -92,8 +92,8 @@ def _process_data(data):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
-    # data = _bin_variables(data)
-    #  data["base_mental_health"] =
+    data = _bin_variables(data)
+    data = _add_variables(data)
     return data
 
 
@@ -180,6 +180,85 @@ def _fix_numeric(data):
     ]
     for var in convert_to_float:
         data[var] = data[var].astype(float)
+    return data
+
+
+def _bin_variables(data):
+    data = data.copy()
+    data = _zero_plus_quartiles(
+        data=data, var="p_severe_financial_distress")
+
+    self_empl_emp_vars = [
+        "p_selfempl_as_normal",
+        "p_selfempl_fewer",
+        "p_selfempl_shutdown_gov",
+        "p_selfempl_shutdown_no_gov",
+        "p_selfempl_other",
+    ]
+
+    empl_emp_vars = [
+        "p_employed_keep",
+        "p_employed_keep_gov",
+        "p_employed_lost",
+        "p_employed_other",
+    ]
+
+    for var in self_empl_emp_vars + empl_emp_vars:
+        cuts = [-1, 0.5, 50.0, 99, 110]
+        data[var] = pd.cut(data[var], cuts)
+        nice_cats = {}
+        for intv in data[var].cat.categories:
+            if intv.left < 0:
+                nice_cats[intv] = "0%"
+            elif intv.right > 100:
+                nice_cats[intv] = "100%"
+            else:
+                nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
+        data[var] = data[var].cat.rename_categories(nice_cats)
+
+
+    work_hours = [
+        "workplace_h_before",
+        "home_h_before",
+        "workplace_h_after",
+        "home_h_after",
+    ]
+
+    for var in work_hours:
+        cuts = [-1, 0.5, 10, 20, 30, 40, 100]
+        data[var] = pd.cut(data[var], cuts)
+        nice_cats = {}
+        for intv in data[var].cat.categories:
+            if intv.left < 0:
+                nice_cats[intv] = "0h"
+            elif intv.right > 40:
+                nice_cats[intv] = ">40h"
+            else:
+                nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
+        data[var] = data[var].cat.rename_categories(nice_cats)
+
+    return data
+
+
+def _zero_plus_quartiles(data, var):
+    zeros = data[data[var] == 0].index
+    data[var] = pd.qcut(data[var][data[var] > 0], 4)
+    nice_cats = {}
+    for intv in data[var].cat.categories:
+        nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
+    data[var] = data[var].cat.rename_categories(nice_cats)
+    data[var] = data[var].cat.add_categories(["0%"])
+    data.loc[zeros, var] = "0%"
+    right_order_cats = ["0%"] + data[var].cat.categories[:-1].tolist()
+    data[var] = data[var].cat.reorder_categories(
+        new_categories=right_order_cats, ordered=True)
+    return data
+
+
+def _add_variables(data):
+    data = data.copy()
+    data["equiv_hh_inc"] = np.nan
+    # data["base_mental_health"] =
     return data
 
 
