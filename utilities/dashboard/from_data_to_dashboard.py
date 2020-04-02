@@ -92,6 +92,7 @@ def _process_data(data):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
+    data = _bin_variables(data)
     #  data["base_mental_health"] =
     return data
 
@@ -182,6 +183,12 @@ def _fix_numeric(data):
     return data
 
 
+def _bin_variables(data):
+    data = data.copy()
+    var = "p_severe_financial_distress"
+    data[var] = data[var]
+
+
 if __name__ == "__main__":
     lang = "english"
     dir_to_data = sys.argv[1]
@@ -189,7 +196,7 @@ if __name__ == "__main__":
     data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
     data = _process_data(data)
 
-    desc = pd.read_csv(dir_to_data + "covid19_data_description_changed.csv", sep=";")
+    desc = pd.read_csv("covid19_data_description.csv", sep=";")
     desc = desc[desc["new_name"].notnull()]
     assert not desc["new_name"].duplicated().any()
     bg_desc = pd.read_excel("background_var_description.xlsx")
