@@ -304,8 +304,8 @@ if __name__ == "__main__":
     with open(out_path, "wb") as f:
         pickle.dump(dashboard_data, f)
 
-    import os
-    import utilities
-    path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
-    command = f"bokeh serve --show {path_to_app} --args {out_path}"
-    os.system(command)
+    # import os
+    # import utilities
+    # path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
+    # command = f"bokeh serve --show {path_to_app} --args {out_path}"
+    # os.system(command)

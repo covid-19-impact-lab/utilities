@@ -120,7 +120,12 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
             + "responded by choosing something in the Split By menu. "
             + "You can explore different questions by choosing different topics and subtopics."
         )
-        res["bg_info_text"] = "Info on Split By Variables Here"
+        res["bg_info_text"] = (
+            "You can see how these answers differed by " +
+            ", ".join([x.lower() for x in res["background_variables"][:-1]]) + " or "
+            + res["background_variables"][-1].lower() + " by selecting one of them in "
+            + "the Split By menu above."
+        )
 
     return res
 

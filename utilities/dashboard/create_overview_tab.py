@@ -200,7 +200,7 @@ def condition_on_background_var(
         bg_info.text = bg_info_text
     else:
         label = variable_to_label[nice_name_to_variable[new]]
-        bg_info.text = f"The variables are split by {new}. {label}"
+        bg_info.text = f"The variables are split by {new.lower()}. {label}"
 
     page.children += [plot, caption, bg_info, bottom]
 
