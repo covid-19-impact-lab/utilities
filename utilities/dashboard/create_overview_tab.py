@@ -178,6 +178,7 @@ def set_subtopic(
     new_p = setup_plot(**plot_data[new])
 
     page.children[-4] = new_p
+    page.children[-3].text = group_to_caption[new]
     background_selector.value = "Nothing"
 
 
