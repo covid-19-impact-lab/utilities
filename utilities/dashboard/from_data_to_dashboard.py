@@ -305,7 +305,7 @@ if __name__ == "__main__":
         pickle.dump(dashboard_data, f)
 
     import os
-    import utilities
-    path_to_app = utilities.__path__[0] + "/dashboard/dashboard_app.py"
-    command = f"bokeh serve --show {path_to_app} --args {out_path}"
+    from pathlib import Path
+    path_to_app = Path(__file__).resolve().parent / "app"
+    command = f"bokeh serve --show {path_to_app} --args {out_path}" # noqa
     os.system(command)
