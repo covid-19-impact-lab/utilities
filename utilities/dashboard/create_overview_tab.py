@@ -30,6 +30,9 @@ def create_overview_tab(
     group_to_variables,
     variable_to_label,
     variable_to_nice_name,
+    group_to_caption,
+    bottom_text,
+    bg_info_text,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -44,6 +47,9 @@ def create_overview_tab(
         group_to_variables (dict)
         variable_to_label (dict)
         variable_to_nice_name (dict)
+        group_to_caption (dict)
+        bottom_text (str)
+        bg_info_text (str)
 
     Returns:
         tab (bokeh.models.Tab)
@@ -78,15 +84,14 @@ def create_overview_tab(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     plot = setup_plot(**plot_data[group])
 
-    bottom_txt = (
-        "Hover over the graph for more information. You can see how different groups "
-        + "responded by choosing something in the Split By menu. "
-        + "You can explore different questions by choosing different topics and subtopics."
-    )
+    bg_info = Div(text=bg_info_text, name="bg_info", margin=(10, 0, 25, 0), style=header_style,)
+
     bottom_info = Div(
-        text=bottom_txt, name="bottom", margin=(25, 0, 25, 0), style=header_style,
+        text=bottom_text, name="bottom", margin=(10, 0, 25, 0), style=header_style,
     )
-    page = Column(selection_menues, title, header, plot, bottom_info)
+    caption = Div(
+        text=group_to_caption[group], name="bottom", margin=(10, 0, 25, 0), style=header_style)
+    page = Column(selection_menues, title, header, plot, caption, bg_info, bottom_info)
 
     topic_callback = partial(
         set_topic,
@@ -100,6 +105,7 @@ def create_overview_tab(
         set_subtopic,
         header=header,
         group_to_header=group_to_header,
+        group_to_caption=group_to_caption,
         plot_data=plot_data,
         page=page,
         background_selector=background_selector,
@@ -114,11 +120,12 @@ def create_overview_tab(
         plot_data=plot_data,
         page=page,
         group_to_plot_type=group_to_plot_type,
+        variable_to_label=variable_to_label,
+        group_to_variables=group_to_variables,
     )
     background_selector.on_change("value", background_var_callback)
 
     # tab = Panel(child=page, title="Variables", name="overview_panel")
-
     return page
 
 
@@ -152,6 +159,7 @@ def set_subtopic(
     new,
     header,
     group_to_header,
+    group_to_caption,
     group_to_plot_type,
     plot_data,
     page,
@@ -165,15 +173,16 @@ def set_subtopic(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     new_p = setup_plot(**plot_data[new])
 
-    page.children[-2] = new_p
+    page.children[-4] = new_p
     background_selector.value = "Nothing"
 
 
 def condition_on_background_var(
-    attr, old, new, subtopic_selector, plot_data, page, group_to_plot_type
+    attr, old, new, subtopic_selector, plot_data, page, group_to_plot_type,
+    variable_to_label, group_to_variables,
 ):
-    plot, bottom = page.children[-2:]
-    page.children = page.children[:-2]
+    plot, caption, bg_info, bottom = page.children[-4:]
+    page.children = page.children[:-4]
     group = subtopic_selector.value
     plot_type = group_to_plot_type[group]
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")

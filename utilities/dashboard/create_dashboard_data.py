@@ -53,6 +53,7 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
             - "topic_to_groups": Dictionary
             - "group_to_header": Dictionary
             - "group_to_plot_type": Dictionary
+            - "group_to_caption": Dictionary
             - "background_vars": List of strings
             - "group_to_variables": Dictionary
             - "variable_to_label": Dictionary
@@ -75,6 +76,10 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
     res["group_to_header"] = group_info.set_index(f"group_{language}")[
         f"header_{language}"
     ].to_dict()
+    res["group_to_caption"] = group_info.set_index(f"group_{language}")[
+        f"caption_{language}"
+    ].to_dict()
+
 
     # maybe we don't have to return this
     res["group_to_variables"] = _dict_of_uniques_from_df(
@@ -107,6 +112,14 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
         )
 
     res["plot_data"] = plot_data
+
+    if language == "english":
+        res["bottom_text"] = (
+            "Hover over the graph for more information. You can see how different groups "
+            + "responded by choosing something in the Split By menu. "
+            + "You can explore different questions by choosing different topics and subtopics."
+        )
+        res["bg_info_text"] = "Info on Split By Variables Here"
 
     return res
 
