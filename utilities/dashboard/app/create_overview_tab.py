@@ -16,6 +16,8 @@ plot_modules = {
     "distplot": distplot,
 }
 
+header_style = {"color": "#808080"}
+
 
 def create_overview_tab(
     groups,
@@ -73,7 +75,6 @@ def create_overview_tab(
         text=_as_html(group), style=title_style, width=600, margin=(25, 0, 25, 0)
     )
 
-    header_style = {"color": "#808080"}
     header = Div(
         text=group_to_header[group],
         name="header",
@@ -89,8 +90,8 @@ def create_overview_tab(
     bottom_info = Div(
         text=bottom_text, name="bottom", margin=(10, 0, 25, 0), style=header_style,
     )
-    caption = Div(
-        text=group_to_caption[group], name="bottom", margin=(25, 0, 25, 0), style=header_style)
+
+    caption = _create_caption(group_to_caption=group_to_caption, group=group, group_to_variables=group_to_variables,)
     page = Column(selection_menues, title, header, plot, caption, bg_info, bottom_info)
 
     topic_callback = partial(
@@ -145,6 +146,12 @@ def create_selection_menus(topics, subtopics, topic, group, background_variables
         width=120,
     )
     return topic_selector, subtopic_selector, background_selector
+
+
+def _create_caption(group_to_caption, group, group_to_variables):
+    return Div(
+        text=group_to_caption[group], name="bottom", margin=(25, 0, 25, 0),
+        style=header_style)
 
 
 def set_topic(attr, old, new, topic_to_groups, topic_selector, subtopic_selector):
