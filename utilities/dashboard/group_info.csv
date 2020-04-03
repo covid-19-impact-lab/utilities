@@ -1,7 +1,7 @@
 topic_english;group_english;header_english;caption_english;plot_type
 Background Variables;Background Overview;Header Background Overview;Caption Background Overview;
 Background Variables;Background Correlation;Header Background Correlation;Caption Background Correlation;
-Health Beliefs and Behavior;Subjective Risks;How likely do you think that the following events will happen in the next 2 months? ;Caption Text Here;distplot
+Health Beliefs and Behavior;Subjective Risks;How likely do you think that the following events will happen in the next 2 months? ;Caption Text Here;stacked_barplot
 Health Beliefs and Behavior;Vignettes: Risk of Hospitalization;How big do you think the chances are that the following people infected with the coronavirus will have to go to the hospital in the next two months because of the coronavirus?;Caption Text Here;stacked_barplot
 Health Beliefs and Behavior;Vignettes: Risk of Death;How big do you think the chances are that the following people infected with the coronavirus will die in the next two months because of the coronavirus?;Caption Text Here;stacked_barplot
 Health Beliefs and Behavior;Subjective Effectiveness of Health Behaviors; In your opinion, how effective are the following behaviors for keeping you safe from the coronavirus? ;Caption Text Here;stacked_barplot
