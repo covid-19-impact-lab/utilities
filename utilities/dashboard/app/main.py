@@ -5,16 +5,8 @@ usage: bokeh serve run_dashboard.py --show --args path/to/overview_tab_data_dict
 import pickle
 import sys
 from pathlib import Path
-
-from bokeh.models import Tabs
 from bokeh.plotting import curdoc
-from jinja2 import Environment
-from jinja2 import FileSystemLoader
-
-from utilities.dashboard.create_corr_tab import create_corr_tab
-from utilities.dashboard.create_overview_tab import create_overview_tab
-
-# from utilities.dashboard.create_timeline_tab import create_timeline_tab
+from utilities.dashboard.app.create_overview_tab import create_overview_tab
 
 template_dir = Path(__file__).resolve().parent
 
@@ -23,9 +15,6 @@ with open(dashboard_data_path, "rb") as f:
     dashboard_data = pickle.load(f)
 
 doc = curdoc()
-
-env = Environment(loader=FileSystemLoader(template_dir))
-curdoc().template = env.get_template("index.html")
 
 doc.title = "The LISS Dataset"
 

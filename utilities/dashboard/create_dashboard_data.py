@@ -1,7 +1,7 @@
-from utilities.dashboard import barplot
-from utilities.dashboard import distplot
-from utilities.dashboard import no_plot
-from utilities.dashboard import stacked_barplot
+from utilities.dashboard.app import barplot
+from utilities.dashboard.app import distplot
+from utilities.dashboard.app import no_plot
+from utilities.dashboard.app import stacked_barplot
 from itertools import product
 
 

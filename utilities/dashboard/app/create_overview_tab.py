@@ -6,15 +6,13 @@ from bokeh.models import Panel
 from bokeh.models import Select
 from bokeh.models.widgets import Div
 
-from utilities.dashboard import barplot
-from utilities.dashboard import distplot
-from utilities.dashboard import no_plot
-from utilities.dashboard import stacked_barplot
+from utilities.dashboard.app import barplot
+from utilities.dashboard.app import distplot
+from utilities.dashboard.app import stacked_barplot
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
     "barplot": barplot,
-    "no_plot": no_plot,
     "distplot": distplot,
 }
 
