@@ -20,7 +20,7 @@ adjust_school_work;Social Distancing;I have adjusted my school / work situation;
 quarantine_symptoms;Social Distancing;I have quarantined myself because I had symptoms.;Quarantine Sick
 no_health_behaviors;Social Distancing;I have done none of the above;No Changes
 effect_close_schools;Subjective Effectiveness of Policies;How effective do you think school and pre-k closures are in fighting the spread of coronavirus?;Close Schools
-effect_close_sports;Skip;How effective do you think is it to close sport establishments to fight the spread of coronavirus?;Close Sports
+effect_close_sports;;How effective do you think is it to close sport establishments to fight the spread of coronavirus?;Close Sports
 effect_close_food_service;Subjective Effectiveness of Policies;How effective do you think is it to close bars, cafes and restaurants to fight the spread of coronavirus?;Close Eateries
 effect_close_most_stores;Subjective Effectiveness of Policies;How effective do you think is it to close all stores except grocery stores and pharmacies to fight the spread of coronavirus?;Close Shops
 effect_forbid_hospital_visits;Subjective Effectiveness of Policies;How effective do you think is it to forbid visits to hospitals, nursing homes and retirement homes to fight the spread of coronavirus?;No Hospital Visits
@@ -32,8 +32,8 @@ approp_gov_restrict_public_life;Appropriateness of Policy Response;Has the feder
 approp_gov_econ_mitigation;Appropriateness of Policy Response;Has the federal government taken enough action to mitigate the economic repercussions to fight the current epidemic?;Help Economy
 approp_gov_communication;Appropriateness of Policy Response;Has the federal government taken enough action communicating with the general public to fight the current epidemic?;Communication
 trust_gov;Trust in Government;In general, how confident are you in the government?;Confidence
-labor_status_liss;Skip;Which of the following options describes your work situation at the beginning of March 2020 best?;Work Situation
-nr_children_hh;Skip;How many children under 12 are in your household?;How Many Children
+labor_status_liss;;Which of the following options describes your work situation at the beginning of March 2020 best?;Work Situation
+nr_children_hh;;How many children under 12 are in your household?;How Many Children
 cc_self_home;Childcare Adjustments;I stay at home.;Self
 cc_partner_home;Childcare Adjustments;My partner stays at home.;Partner
 cc_older_siblings;Childcare Adjustments;The older siblings care for the younger children.;Older Siblings
@@ -44,11 +44,11 @@ cc_state;Childcare Adjustments;The state organizes child care for my profession.
 cc_ex_partner;Childcare Adjustments;My ex-partner cares for the children.;Ex Partner
 cc_home_alone;Childcare Adjustments;The child(ren) stay(s) at home alone.;Children Alone
 cc_other;Childcare Adjustments;Otherwise;Other
-cc_other_str;Skip;Otherwise, namely:;
-cc_emergency_helpful;Skip;Are you well helped with this emergency (child) care?;State Care Helps
-cc_emergency_comment;Skip;If you want to say something about this emergency (child) care, maybe about what you think could be improved, you can put it here;Comment Childcare
-liked_survey;Skip;How did you like this survey overall?;
-remarks;Skip;Do you have any remarks or would like to add something to the special survey on the topic of coronavirus?;
+cc_other_str;;Otherwise, namely:;
+cc_emergency_helpful;;Are you well helped with this emergency (child) care?;State Care Helps
+cc_emergency_comment;;If you want to say something about this emergency (child) care, maybe about what you think could be improved, you can put it here;Comment Childcare
+liked_survey;;How did you like this survey overall?;
+remarks;;Do you have any remarks or would like to add something to the special survey on the topic of coronavirus?;
 effect_mask;Subjective Effectiveness of Health Behaviors;In your opinion, how effective is wearing a mask when it comes to protecting yourself against the coronavirus?;Wear Mask
 effect_pray;Subjective Effectiveness of Health Behaviors;In your opinion, how effective is praying when it comes to protecting yourself against the coronavirus?;Pray 
 effect_wash_hands;Subjective Effectiveness of Health Behaviors;In your opinion, how effective is washing your hands or using desinfectant when it comes to protecting yourself against the coronavirus?;Wash Or Disinfect
@@ -75,7 +75,7 @@ comply_bc_protect_close;Reasons for Complying with Curfew;I would comply with a 
 comply_bc_protect_all;Reasons for Complying with Curfew;I would comply with a curfew to protect others in general.;Protect Others
 comply_bc_high_risk;Reasons for Complying with Curfew;I would comply with a curfew to protect vulnerable groups.;Protect High Risk
 comply_bc_other;Reasons for Complying with Curfew;I would comply with a curfew for another reason.;Other
-comply_bc_other_str;Skip;I would comply with a curfew because of another resaon, namely:;
+comply_bc_other_str;;I would comply with a curfew because of another resaon, namely:;
 disobey_bc_freedom;Reasons for Disobeying a Curfew;I would disobey a curfew because I don't accept such drastic infringements of my liberties;Liberty
 disobey_bc_not_punish;Reasons for Disobeying a Curfew;I would disobey a curfew because I don't believe that I would be punished.;No Punishment
 disobey_bc_unjustified;Reasons for Disobeying a Curfew;I would disobey a curfew because I don't believe such drastic infringements are justified to stop the spread of coronavirus.;Unjustified
@@ -83,8 +83,8 @@ disobey_bc_obligations;Reasons for Disobeying a Curfew;I would disobey a curfew 
 disobey_bc_ineffective;Reasons for Disobeying a Curfew;I would disobey a curfew because I don't believe that a curfew will slow the spread of coronavirus.;Ineffective
 disobey_bc_unaffected;Reasons for Disobeying a Curfew;I would disobey a curfew because I don't believe I will be affected by the outbreak.;Unaffected
 disobey_bc_bored;Reasons for Disobeying a Curfew;I would disobey a curfew because it would be too boring to stay home all the time.;Bored
-disobey_bc_other;Skip;I would disobey a curfew because of another reason.;Other
-disobey_bc_other_str;Skip;I would disobey a curfew because of another reason, namely: ;Other
+disobey_bc_other;;I would disobey a curfew because of another reason.;Other
+disobey_bc_other_str;;I would disobey a curfew because of another reason, namely: ;Other
 workplace_h_before;Working Hours;On average, how many hours per week did you work at your workplace in early March?;At Office Before
 home_h_before;Working Hours;On average, how many hours per week did you work at home in early March?;At Home Before
 workplace_h_after;Working Hours;On average, how many hours per week did you work at your workplace in the past seven days?;At Office Now
@@ -95,13 +95,13 @@ not_work_fear_infection;Reasons for Not Working Among Employees;I do not go to m
 not_work_employer;Reasons for Not Working Among Employees;Because of the risk of infection, my employer postponed work;Work Suspended
 not_work_fired;Reasons for Not Working Among Employees;I got fired;Fired
 not_work_other;Reasons for Not Working Among Employees;Otherwise;Other
-not_work_other_str;Skip;Otherwise, namely:;Other
+not_work_other_str;;Otherwise, namely:;Other
 less_work_lessbusiness;Reasons for Working Less Among Employees;Less business activity in the company where I work;Less Business
 less_work_care;Reasons for Working Less Among Employees;Must take care of people (children, parents) who depend on me;Provide Care
 less_work_fear_infection;Reasons for Working Less Among Employees;I go to my workplace less because of fear of being infected by the coronavirus and not able to work at home.;Fear Of Infection
 less_work_employer;Reasons for Working Less Among Employees;Because of the risk of infection, my employer has decided that less work will be done;Work Suspended
 less_work_other;Reasons for Working Less Among Employees;Otherwise;Other
-less_work_other_str;Skip;Otherwise, namely:;Other
+less_work_other_str;;Otherwise, namely:;Other
 selfempl_less_business;Reasons for Working Not Or Less Among the Self-Employed;Less business activity in my company;Less Business
 selfempl_less_care;Reasons for Working Not Or Less Among the Self-Employed;Must take care of people (children, parents) who depend on me;Provide Care
 selfempl_less_closure;Reasons for Working Not Or Less Among the Self-Employed;The entire company is closed (for now) due to the risk of contamination;Company Closed

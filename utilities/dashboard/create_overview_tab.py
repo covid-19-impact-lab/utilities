@@ -33,6 +33,7 @@ def create_overview_tab(
     group_to_caption,
     bottom_text,
     bg_info_text,
+    nice_name_to_variable,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -47,6 +48,7 @@ def create_overview_tab(
         group_to_variables (dict)
         variable_to_label (dict)
         variable_to_nice_name (dict)
+        nice_name_to_variable (dict)
         group_to_caption (dict)
         bottom_text (str)
         bg_info_text (str)
@@ -90,7 +92,7 @@ def create_overview_tab(
         text=bottom_text, name="bottom", margin=(10, 0, 25, 0), style=header_style,
     )
     caption = Div(
-        text=group_to_caption[group], name="bottom", margin=(10, 0, 25, 0), style=header_style)
+        text=group_to_caption[group], name="bottom", margin=(25, 0, 25, 0), style=header_style)
     page = Column(selection_menues, title, header, plot, caption, bg_info, bottom_info)
 
     topic_callback = partial(
@@ -122,6 +124,8 @@ def create_overview_tab(
         group_to_plot_type=group_to_plot_type,
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
+        nice_name_to_variable=nice_name_to_variable,
+        bg_info_text=bg_info_text
     )
     background_selector.on_change("value", background_var_callback)
 
@@ -179,7 +183,7 @@ def set_subtopic(
 
 def condition_on_background_var(
     attr, old, new, subtopic_selector, plot_data, page, group_to_plot_type,
-    variable_to_label, group_to_variables,
+    variable_to_label, group_to_variables, nice_name_to_variable, bg_info_text,
 ):
     plot, caption, bg_info, bottom = page.children[-4:]
     page.children = page.children[:-4]
@@ -190,7 +194,14 @@ def condition_on_background_var(
     condition_plot(
         plot, **plot_data[group], bg_var=new,
     )
-    page.children += [plot, bottom]
+
+    if new == "Nothing":
+        bg_info.text = bg_info_text
+    else:
+        label = variable_to_label[nice_name_to_variable[new]]
+        bg_info.text = f"The variables are split by {new}. {label}"
+
+    page.children += [plot, caption, bg_info, bottom]
 
 
 def _as_html(text):
