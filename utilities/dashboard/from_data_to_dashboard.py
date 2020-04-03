@@ -33,7 +33,9 @@ def dashboard_data_description(desc, group_info, data):
     desc = desc.loc[keep_vars]
     len_after_var_drop = len(desc)
     if old_len - len_after_var_drop > 0:
-        print(f"{old_len - len_after_var_drop} variables dropped because no data.")  # noqa
+        print(
+            f"{old_len - len_after_var_drop} variables dropped because no data."
+        )  # noqa
     return desc.reset_index()
 
 
@@ -100,8 +102,16 @@ def _process_data(data):
 def _fix_categories(data):
     data = data.copy()
     aprop_vars = [
-        "nervous", "depressed", "calm", "gloomy", "happy",
-        "nervous_back", "depressed_back", "calm_back", "gloomy_back", "happy_back"
+        "nervous",
+        "depressed",
+        "calm",
+        "gloomy",
+        "happy",
+        "nervous_back",
+        "depressed_back",
+        "calm_back",
+        "gloomy_back",
+        "happy_back",
     ]
     aprop_cats = [
         (1, "never"),
@@ -118,35 +128,44 @@ def _fix_categories(data):
             values=data[col], categories=[en for nl, en in aprop_cats], ordered=True
         )
 
-    data["edu"] = data["edu"].cat.rename_categories({
-        "hs_and_less": "High School Or Less",
-        "jun_college": "Junior College",
-        "college": "College",
-        "uni": "University",
-        })
+    data["edu"] = data["edu"].cat.rename_categories(
+        {
+            "hs_and_less": "High School Or Less",
+            "jun_college": "Junior College",
+            "college": "College",
+            "uni": "University",
+        }
+    )
 
     data["health_group"] = pd.Categorical(
         values=data["health_group"],
         categories=data["health_group"].dtype.categories[::-1],
-        ordered=True)
+        ordered=True,
+    )
     data["health_group"] = data["health_group"].cat.rename_categories(
-        {"moderate": "moderate or less"})
+        {"moderate": "moderate or less"}
+    )
 
     data["gender"] = data["gender"].cat.rename_categories(
-        {"man": "men", "woman": "women"})
+        {"man": "men", "woman": "women"}
+    )
 
-    data["duration_restrictions"] = data["duration_restrictions"].cat.rename_categories({
-        "btw. April 6 and 2 months": "April 6 to 2 months",
-        "btw. 2 and 4 months": "2 to 4 months",
-        "btw. 4 and 8 months": "4 to 8 months",
-        "btw. 8 and 12 months": "8 to 12 months",
-        "for more than 1 year": "more than 1 year",
-        })
+    data["duration_restrictions"] = data["duration_restrictions"].cat.rename_categories(
+        {
+            "btw. April 6 and 2 months": "April 6 to 2 months",
+            "btw. 2 and 4 months": "2 to 4 months",
+            "btw. 4 and 8 months": "4 to 8 months",
+            "btw. 8 and 12 months": "8 to 12 months",
+            "for more than 1 year": "more than 1 year",
+        }
+    )
 
-    data["trust_gov"] = data["trust_gov"].cat.rename_categories({
-        "1 no confidence at all": "1 <br> none at all",
-        "5 a lot of confidence": "5 <br> a lot",
-    })
+    data["trust_gov"] = data["trust_gov"].cat.rename_categories(
+        {
+            "1 no confidence at all": "1 <br> none at all",
+            "5 a lot of confidence": "5 <br> a lot",
+        }
+    )
 
     concern_vars = [
         "concern_bored",
@@ -162,7 +181,14 @@ def _fix_categories(data):
     ]
     for var in concern_vars:
         data[var] = data[var].cat.rename_categories(
-            {1: "1 <br> not at all worried", 2:"2", 3:"3", 4:"4", 5: "5 <br> very worrried"})
+            {
+                1: "1 <br> not at all worried",
+                2: "2",
+                3: "3",
+                4: "4",
+                5: "5 <br> very worrried",
+            }
+        )
 
     return data
 
@@ -171,12 +197,25 @@ def _fix_numeric(data):
     data = data.copy()
     convert_to_float = [
         "comply_curfew_others",
-        "workplace_h_before", "workplace_h_after", "home_h_before", "home_h_after",
-        "p_employed_keep", "p_employed_keep_gov", "p_employed_lost", "p_employed_other",
-        "p_severe_financial_distress", "eur_1k_basic_needs", "eur_1k_expenses",
-        "eur_1k_durables", "eur_1k_savings", "eur_1k_support_others",
-        "p_selfempl_as_normal", "p_selfempl_fewer", "p_selfempl_shutdown_gov",
-        "p_selfempl_shutdown_no_gov", "p_selfempl_other",
+        "workplace_h_before",
+        "workplace_h_after",
+        "home_h_before",
+        "home_h_after",
+        "p_employed_keep",
+        "p_employed_keep_gov",
+        "p_employed_lost",
+        "p_employed_other",
+        "p_severe_financial_distress",
+        "eur_1k_basic_needs",
+        "eur_1k_expenses",
+        "eur_1k_durables",
+        "eur_1k_savings",
+        "eur_1k_support_others",
+        "p_selfempl_as_normal",
+        "p_selfempl_fewer",
+        "p_selfempl_shutdown_gov",
+        "p_selfempl_shutdown_no_gov",
+        "p_selfempl_other",
     ]
     for var in convert_to_float:
         data[var] = data[var].astype(float)
@@ -185,8 +224,7 @@ def _fix_numeric(data):
 
 def _bin_variables(data):
     data = data.copy()
-    data = _zero_plus_quartiles(
-        data=data, var="p_severe_financial_distress")
+    data = _zero_plus_quartiles(data=data, var="p_severe_financial_distress")
 
     self_empl_emp_vars = [
         "p_selfempl_as_normal",
@@ -215,7 +253,6 @@ def _bin_variables(data):
             else:
                 nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
         data[var] = data[var].cat.rename_categories(nice_cats)
-
 
     work_hours = [
         "workplace_h_before",
@@ -251,7 +288,8 @@ def _zero_plus_quartiles(data, var):
     data.loc[zeros, var] = "0%"
     right_order_cats = ["0%"] + data[var].cat.categories[:-1].tolist()
     data[var] = data[var].cat.reorder_categories(
-        new_categories=right_order_cats, ordered=True)
+        new_categories=right_order_cats, ordered=True
+    )
     return data
 
 
@@ -262,15 +300,27 @@ def _add_variables(data):
     data["equiv_factor"] = 0.5 + 0.5 * data["hh_adults"] + 0.3 * data["hh_children"]
     data["equiv_net_inc"] = data["equiv_factor"] * data["net_income_hh"]
     fine_cuts = [
-        -0.1, 1500, 2000, 2500, 3000, 3500, 4000,
-        5000, 6000, 7000, 8000, 12000, 1e7]
+        -0.1,
+        1500,
+        2000,
+        2500,
+        3000,
+        3500,
+        4000,
+        5000,
+        6000,
+        7000,
+        8000,
+        12000,
+        1e7,
+    ]
     data["inc_group_fine"] = pd.cut(data["equiv_net_inc"], fine_cuts)
 
-    approx_quartiles = [
-        -0.1, 2500, 4500, 7500, 1e7]
+    approx_quartiles = [-0.1, 2500, 4500, 7500, 1e7]
     labels = ["<2500", "2500 to 4500", "4500 to 7500", ">7500"]
     data["income_group"] = pd.cut(
-        data["equiv_net_inc"], approx_quartiles, labels=labels)
+        data["equiv_net_inc"], approx_quartiles, labels=labels
+    )
     return data
 
 
@@ -304,8 +354,8 @@ if __name__ == "__main__":
     with open(out_path, "wb") as f:
         pickle.dump(dashboard_data, f)
 
-    import os
-    from pathlib import Path
-    path_to_app = Path(__file__).resolve().parent / "app"
-    command = f"bokeh serve --show {path_to_app} --args {out_path}" # noqa
-    os.system(command)
+    # import os
+    # from pathlib import Path
+    # path_to_app = Path(__file__).resolve().parent / "app"
+    # command = f"bokeh serve --show {path_to_app} --args {out_path}"  # noqa
+    # os.system(command)

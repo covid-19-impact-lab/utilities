@@ -15,8 +15,9 @@ from utilities.colors import get_colors
 
 NON_DATA_COLS = {"label", "Question", "color", "Observations"}
 FACTOR_PADDING = -0.2
-GROUP_PADDING = 0.5
-GROUP_PADDING_COND = 1.2
+GROUP_PADDING_UNCONDITIONAL = 0.5
+GROUP_PADDING_BINARY = 2.0
+GROUP_PADDING_NONBINARY = 1.5
 
 
 def prepare_data(data, variables, bg_vars, nice_names, labels, keep_last):
@@ -143,12 +144,18 @@ def condition_plot(plot, shares, selectors, bg_var):
     p.plot_height = get_plot_height(selectors, bg_var)
     if bg_var == "Nothing":
         p.yaxis.group_label_orientation = "horizontal"
-        p.y_range.group_padding = GROUP_PADDING
+        p.y_range.group_padding = GROUP_PADDING_UNCONDITIONAL
         p.yaxis.separator_line_alpha = 0
     else:
+        n_vars = len(selectors["Nothing"])
+        n_bars = len(selectors[bg_var])
+        n_groups = int(n_bars / n_vars)
         p.yaxis.group_label_orientation = "vertical"
-        p.y_range.group_padding = GROUP_PADDING_COND
         p.yaxis.separator_line_alpha = 1
+        if n_groups == 2:
+            p.y_range.group_padding = GROUP_PADDING_BINARY
+        else:
+            p.y_range.group_padding = GROUP_PADDING_NONBINARY
 
 
 def setup_basic_plot(cds, categories, selectors, bg_var, colors):
@@ -183,7 +190,7 @@ def _specific_styling(p):
     # make the range nicer
     p.y_range.range_padding = 0.0
     p.y_range.factor_padding = FACTOR_PADDING
-    p.y_range.group_padding = GROUP_PADDING
+    p.y_range.group_padding = GROUP_PADDING_UNCONDITIONAL
     p.ygrid.grid_line_color = None
 
     p.outline_line_color = None
@@ -263,8 +270,10 @@ def get_plot_height(selectors, bg_var):
     n_bars = len(selectors[bg_var])
     if bg_var == "Nothing":
         height = int(15 + 41 * n_vars)
+    elif n_bars / n_vars == 2:
+        height = int(15 + 50 * n_vars + 22 * n_bars)
     else:
-        height = int(15 + 25 * n_vars + 22 * n_bars)
+        height = int(15 + 35 * n_vars + 22 * n_bars)
     return height
 
 

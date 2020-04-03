@@ -70,9 +70,13 @@ def create_overview_tab(
         group=group,
         background_variables=background_variables,
     )
-    title_style = {"font-size": "200%", "color": "#808080"}
+    selection_menues = Row(topic_selector, subtopic_selector, background_selector)
+
     title = Div(
-        text=_as_html(group), style=title_style, width=600, margin=(25, 0, 25, 0)
+        text=_as_html(group),
+        style={"font-size": "200%", "color": "#808080"},
+        width=600,
+        margin=(25, 0, 25, 0),
     )
 
     header = Div(
@@ -81,17 +85,23 @@ def create_overview_tab(
         margin=(0, 0, 25, 0),
         style=header_style,
     )
-    selection_menues = Row(topic_selector, subtopic_selector, background_selector)
+
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     plot = setup_plot(**plot_data[group])
 
-    bg_info = Div(text=bg_info_text, name="bg_info", margin=(10, 0, 25, 0), style=header_style,)
-
-    bottom_info = Div(
-        text=bottom_text, name="bottom", margin=(10, 0, 25, 0), style=header_style,
+    create_caption = partial(
+        _create_caption,
+        group_to_caption=group_to_caption,
+        group_to_variables=group_to_variables,
+        variable_to_nice_name=variable_to_nice_name,
+        variable_to_label=variable_to_label,
     )
+    caption = create_caption(group=group)
 
-    caption = _create_caption(group_to_caption=group_to_caption, group=group, group_to_variables=group_to_variables,)
+    bg_info = Div(text=bg_info_text, margin=(10, 0, 10, 0), style=header_style)
+
+    bottom_info = Div(text=bottom_text, margin=(10, 0, 10, 0), style=header_style)
+
     page = Column(selection_menues, title, header, plot, caption, bg_info, bottom_info)
 
     topic_callback = partial(
@@ -104,14 +114,13 @@ def create_overview_tab(
 
     subtopic_callback = partial(
         set_subtopic,
-        header=header,
         group_to_header=group_to_header,
-        group_to_caption=group_to_caption,
         plot_data=plot_data,
         page=page,
         background_selector=background_selector,
         group_to_plot_type=group_to_plot_type,
         title=title,
+        caption_callback=create_caption,
     )
     subtopic_selector.on_change("value", subtopic_callback)
 
@@ -124,7 +133,7 @@ def create_overview_tab(
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
-        bg_info_text=bg_info_text
+        bg_info_text=bg_info_text,
     )
     background_selector.on_change("value", background_var_callback)
 
@@ -148,10 +157,27 @@ def create_selection_menus(topics, subtopics, topic, group, background_variables
     return topic_selector, subtopic_selector, background_selector
 
 
-def _create_caption(group_to_caption, group, group_to_variables):
-    return Div(
-        text=group_to_caption[group], name="bottom", margin=(25, 0, 25, 0),
-        style=header_style)
+def _create_caption(
+    group,
+    group_to_caption,
+    group_to_variables,
+    variable_to_nice_name,
+    variable_to_label,
+):
+    variables = group_to_variables[group]
+    nice_vars = [variable_to_nice_name[var] for var in variables]
+    labels = [variable_to_label[var] for var in variables]
+    if len(variables) == 1:
+        text = ""
+    else:
+        text = f"The questions asked were: <br>"
+        for name, label in zip(nice_vars, labels):
+            text += f"<br> <b>{name}</b>: {label}"
+    if isinstance(group_to_caption[group], str):
+        text += "<br> <br>" + group_to_caption[group]
+
+    element = Div(text=text, name="bottom", margin=(30, 0, 10, 0), style=header_style)
+    return element
 
 
 def set_topic(attr, old, new, topic_to_groups, topic_selector, subtopic_selector):
@@ -166,30 +192,43 @@ def set_subtopic(
     attr,
     old,
     new,
-    header,
     group_to_header,
-    group_to_caption,
     group_to_plot_type,
     plot_data,
     page,
     background_selector,
     title,
+    caption_callback,
 ):
     """Adjust title, header and plot to new subtopic."""
-    title.text = _as_html(new.title())
-    header.text = group_to_header[new]
+    title, header, plot, caption, bg_info, bottom_info = page.children[1:]
+
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
+
+    title.text = _as_html(new.title())
+    header.text = group_to_header[new]
+
     new_p = setup_plot(**plot_data[new])
+    new_caption = caption_callback(group=new)
 
     page.children[-4] = new_p
-    page.children[-3].text = group_to_caption[new]
+    page.children[-3] = new_caption
     background_selector.value = "Nothing"
 
 
 def condition_on_background_var(
-    attr, old, new, subtopic_selector, plot_data, page, group_to_plot_type,
-    variable_to_label, group_to_variables, nice_name_to_variable, bg_info_text,
+    attr,
+    old,
+    new,
+    subtopic_selector,
+    plot_data,
+    page,
+    group_to_plot_type,
+    variable_to_label,
+    group_to_variables,
+    nice_name_to_variable,
+    bg_info_text,
 ):
     plot, caption, bg_info, bottom = page.children[-4:]
     page.children = page.children[:-4]
@@ -204,8 +243,7 @@ def condition_on_background_var(
     if new == "Nothing":
         bg_info.text = bg_info_text
     else:
-        label = variable_to_label[nice_name_to_variable[new]]
-        bg_info.text = f"The variables are split by {new.lower()}. {label}"
+        bg_info.text = variable_to_label[nice_name_to_variable[new]]
 
     page.children += [plot, caption, bg_info, bottom]
 
