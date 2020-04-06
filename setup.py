@@ -18,11 +18,10 @@ setup(
     zip_safe=False,
     package_data={
         "utilities": [
-        "dashboard/_static/css/*.css",
-        "dashboard/_static/js/*.js",
-        "dashboard/index.html",
-        "dashboard/styles.css",
-    ]
+            "dashboard/app/static/css/*.css",
+            "dashboard/app/static/js/*.js",
+            "dashboard/app/templates/*.html",
+        ],
     },
     include_package_data=True,
 )
