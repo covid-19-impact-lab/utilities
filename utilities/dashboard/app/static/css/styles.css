@@ -1,6 +1,6 @@
-.custom_button_bokeh button.bk.bk-btn.bk-btn-default {
-    color: black;
+button.bk.bk-btn.bk-btn-default {
+    color: red;
     font-size:12pt;
-    background-color: #05b7ff;
-    border-color: #05b7ff;
+    background-color: blue;
+    border-color: blue;
 }

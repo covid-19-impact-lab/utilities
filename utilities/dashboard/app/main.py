@@ -15,8 +15,14 @@ with open(dashboard_data_path, "rb") as f:
     dashboard_data = pickle.load(f)
 
 doc = curdoc()
-
 doc.title = "The LISS Dataset"
+
+# from bokeh.models import Toggle
+# from bokeh.layouts import layout
+# default_toggle = Toggle(label="Default Toggle")
+# layout = layout([[default_toggle]])
+# doc.add_root(layout)
+
 
 overview_tab = create_overview_tab(**dashboard_data["overview"])
 # corr_tab = create_corr_tab(dashboard_data["correlation"])
