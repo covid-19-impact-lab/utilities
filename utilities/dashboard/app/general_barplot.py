@@ -165,6 +165,7 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors):
         plot_height=get_plot_height(selectors, bg_var),
         toolbar_location=None,
         x_range=(-0.05, 1.05),
+        # sizing_mode='scale_width',
     )
 
     c = colors if len(categories) > 1 else "color"
@@ -288,9 +289,6 @@ def _check_variables_have_same_dtype(data, variables):
         variables (list):
 
     """
-    first_var = variables[0]
-    sr = data[first_var]
-
     dtype = data[variables[0]].dtype
     for var in variables:
         if data[var].dtype != dtype:
