@@ -2,7 +2,6 @@ from functools import partial
 
 from bokeh.layouts import Column
 from bokeh.layouts import Row
-from bokeh.models import Panel
 from bokeh.models import Select
 from bokeh.models.widgets import Div
 
@@ -72,13 +71,6 @@ def create_overview_tab(
     )
     selection_menues = Row(topic_selector, subtopic_selector, background_selector)
 
-    title = Div(
-        text=_as_html(group),
-        style={"font-size": "200%", "color": "#808080"},
-        width=600,
-        margin=(25, 0, 25, 0),
-    )
-
     header = Div(
         text=group_to_header[group],
         name="header",
@@ -100,9 +92,9 @@ def create_overview_tab(
 
     bg_info = Div(text=bg_info_text, margin=(10, 0, 10, 0), style=header_style)
 
-    bottom_info = Div(text=bottom_text, margin=(10, 0, 10, 0), style=header_style)
+    top_info = Div(text=bottom_text, margin=(10, 0, 10, 0), style=header_style)
 
-    page = Column(selection_menues, title, header, plot, caption, bg_info, bottom_info)
+    page = Column(top_info, selection_menues, header, plot, caption, bg_info)
 
     topic_callback = partial(
         set_topic,
@@ -119,7 +111,6 @@ def create_overview_tab(
         page=page,
         background_selector=background_selector,
         group_to_plot_type=group_to_plot_type,
-        title=title,
         caption_callback=create_caption,
     )
     subtopic_selector.on_change("value", subtopic_callback)
@@ -170,9 +161,8 @@ def _create_caption(
     if len(variables) == 1:
         text = ""
     else:
-        text = f"The questions asked were: <br>"
-        for name, label in zip(nice_vars, labels):
-            text += f"<br> <b>{name}</b>: {label}"
+        text = "<br>".join(
+            f"<b>{name}</b>: {label}" for name, label in zip(nice_vars, labels))
     if isinstance(group_to_caption[group], str):
         text += "<br> <br>" + group_to_caption[group]
 
@@ -197,23 +187,19 @@ def set_subtopic(
     plot_data,
     page,
     background_selector,
-    title,
     caption_callback,
 ):
     """Adjust title, header and plot to new subtopic."""
-    title, header, plot, caption, bg_info, bottom_info = page.children[1:]
+    header, plot, caption, bg_info = page.children[2:]
 
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
-    title.text = _as_html(new.title())
-    header.text = group_to_header[new]
-
     new_p = setup_plot(**plot_data[new])
     new_caption = caption_callback(group=new)
 
-    page.children[-4] = new_p
-    page.children[-3] = new_caption
+    page.children[-3] = new_p
+    page.children[-2] = new_caption
     background_selector.value = "Nothing"
 
 
@@ -230,8 +216,8 @@ def condition_on_background_var(
     nice_name_to_variable,
     bg_info_text,
 ):
-    plot, caption, bg_info, bottom = page.children[-4:]
-    page.children = page.children[:-4]
+    plot, caption, bg_info = page.children[-3:]
+    page.children = page.children[:-3]
     group = subtopic_selector.value
     plot_type = group_to_plot_type[group]
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")
@@ -245,8 +231,4 @@ def condition_on_background_var(
     else:
         bg_info.text = variable_to_label[nice_name_to_variable[new]]
 
-    page.children += [plot, caption, bg_info, bottom]
-
-
-def _as_html(text):
-    return f"<b> {text} <b>"
+    page.children += [plot, caption, bg_info]
