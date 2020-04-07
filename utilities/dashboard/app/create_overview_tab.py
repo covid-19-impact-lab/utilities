@@ -30,9 +30,10 @@ def create_overview_tab(
     variable_to_label,
     variable_to_nice_name,
     group_to_caption,
-    bottom_text,
-    bg_info_text,
+    top_text,
+    top_title,
     nice_name_to_variable,
+    menu_titles,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -49,8 +50,9 @@ def create_overview_tab(
         variable_to_nice_name (dict)
         nice_name_to_variable (dict)
         group_to_caption (dict)
-        bottom_text (str)
-        bg_info_text (str)
+        top_text (str)
+        top_title (str)
+        menu_titles (tuple)
 
     Returns:
         tab (bokeh.models.Tab)
@@ -61,6 +63,11 @@ def create_overview_tab(
     subtopics = topic_to_groups[topic]
     group = subtopics[0]
     plot_type = group_to_plot_type[group]
+    setup_plot = getattr(plot_modules[plot_type], "setup_plot")
+
+    # create the page elements
+    top_title = Div(text=top_title, style={"font-size": "200%"})
+    top_info = Div(text=top_text, margin=(10, 0, 10, 0))
 
     topic_selector, subtopic_selector, background_selector = create_selection_menus(
         topics=topics,
@@ -68,8 +75,8 @@ def create_overview_tab(
         topic=topic,
         group=group,
         background_variables=background_variables,
+        menu_titles=menu_titles,
     )
-    selection_menues = Row(topic_selector, subtopic_selector, background_selector)
 
     header = Div(
         text=group_to_header[group],
@@ -78,7 +85,6 @@ def create_overview_tab(
         style=header_style,
     )
 
-    setup_plot = getattr(plot_modules[plot_type], "setup_plot")
     plot = setup_plot(**plot_data[group])
 
     create_caption = partial(
@@ -89,12 +95,11 @@ def create_overview_tab(
         variable_to_label=variable_to_label,
     )
     caption = create_caption(group=group)
+    bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
 
-    bg_info = Div(text=bg_info_text, margin=(10, 0, 10, 0), style=header_style)
-
-    top_info = Div(text=bottom_text, margin=(10, 0, 10, 0), style=header_style)
-
-    page = Column(top_info, selection_menues, header, plot, caption, bg_info)
+    # assemble page
+    selection_menues = Row(topic_selector, subtopic_selector, background_selector)
+    page = Column(top_title, top_info, selection_menues, header, plot, caption, bg_info)
 
     topic_callback = partial(
         set_topic,
@@ -124,7 +129,6 @@ def create_overview_tab(
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
-        bg_info_text=bg_info_text,
     )
     background_selector.on_change("value", background_var_callback)
 
@@ -132,15 +136,21 @@ def create_overview_tab(
     return page
 
 
-def create_selection_menus(topics, subtopics, topic, group, background_variables):
+def create_selection_menus(
+    topics, subtopics, topic, group, background_variables, menu_titles
+):
     topic_selector = Select(
-        title="Topic:", options=topics, value=topic, name="topic_selector", width=180
+        title=menu_titles[0],
+        options=topics,
+        value=topic,
+        name="topic_selector",
+        width=180,
     )
     subtopic_selector = Select(
-        title="Subtopic:", options=subtopics, value=group, name="subtopic_selector",
+        title=menu_titles[1], options=subtopics, value=group, name="subtopic_selector",
     )
     background_selector = Select(
-        title="Split By:",
+        title=menu_titles[2],
         options=["Nothing"] + background_variables,
         value="Nothing",
         width=120,
@@ -162,7 +172,8 @@ def _create_caption(
         text = ""
     else:
         text = "<br>".join(
-            f"<b>{name}</b>: {label}" for name, label in zip(nice_vars, labels))
+            f"<b>{name}</b>: {label}" for name, label in zip(nice_vars, labels)
+        )
     if isinstance(group_to_caption[group], str):
         text += "<br> <br>" + group_to_caption[group]
 
@@ -214,7 +225,6 @@ def condition_on_background_var(
     variable_to_label,
     group_to_variables,
     nice_name_to_variable,
-    bg_info_text,
 ):
     plot, caption, bg_info = page.children[-3:]
     page.children = page.children[:-3]
@@ -227,7 +237,7 @@ def condition_on_background_var(
     )
 
     if new == "Nothing":
-        bg_info.text = bg_info_text
+        bg_info.text = ""
     else:
         bg_info.text = variable_to_label[nice_name_to_variable[new]]
 
