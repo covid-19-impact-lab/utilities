@@ -3,7 +3,7 @@ import seaborn as sns
 from matplotlib.colors import LinearSegmentedColormap
 
 
-def get_colors(palette, number, as_cmap=False):
+def get_colors(palette, number, as_cmap=False, skip_dark=0, skip_bright=0):
     """Return a list with hex codes representing a color palette.
 
     Args:
@@ -12,34 +12,44 @@ def get_colors(palette, number, as_cmap=False):
             "red-green".
         number (int): Number of colors needed. Between 1 and 12 for non combined
             color scales and between 1 and 24 for combined color scales.
+        as_cmap (bool): If True, the result is returned as matplotlib cmap.
+        skip_dark (int): How many colors to skip from the dark side. Only
+            available for monochrome and combined color palettes.
+        skip_bright (int): How many colors to skip from the bright side. Only
+            available for monochrome and combined color palettes.
 
     Returns:
         list or cmap: List of hex codes or cmap.
 
     """
-    number = int(number)
-    if "-" in palette:
-        if number > 24:
-            raise ValueError("At most 24 colors are supported.")
+    if palette in ["categorical", "ordered"]:
+        assert skip_bright == skip_dark == 0
+
+    if number < 0:
+        raise ValueError("Number must be non-negative")
+    if number == 0:
+        res = []
+    elif "-" in palette:
+        actual_number = int(number + 2 * (skip_bright + skip_dark))
+        if actual_number > 24:
+            raise ValueError("Too many colors requested.")
         pal1, pal2 = palette.split("-")
-        triangle1 = _mono_list_to_triangle(MONO_COLORS[pal1])
-        triangle2 = _mono_list_to_triangle(MONO_COLORS[pal2])
         num1 = np.ceil(number / 2)
         num2 = np.floor(number / 2)
-        res = triangle1[num1] + triangle2[num2][::-1]
-
+        res1 = _get_mono_colors(pal1, num1, skip_dark, skip_bright)
+        res2 = _get_mono_colors(pal2, num2, skip_dark, skip_bright)
+        res = res1 + res2[::-1]
+    elif palette in ["blue", "red", "green", "yellow", "orange", "purple"]:
+        res = _get_mono_colors(palette, number, skip_dark, skip_bright)
     else:
         if number > 12:
-            raise ValueError("At most 12 colors are supported.")
+            raise ValueError("Too many colors requested.")
         if palette == "categorical":
             triangle = {i + 1: CAT_LIST[: i + 1] for i in range(12)}
         elif palette == "ordered":
             triangle = ORDERED
-        elif palette in ["blue", "red", "green", "yellow", "orange", "purple"]:
-            triangle = _mono_list_to_triangle(MONO_COLORS[palette])
         else:
             raise NotImplementedError(f"{palette} is not implemented.")
-
         res = triangle[number]
 
     if as_cmap:
@@ -47,7 +57,20 @@ def get_colors(palette, number, as_cmap=False):
     return res
 
 
-def plot_colors(palette, number, size=1):
+def _get_mono_colors(palette, number, skip_dark, skip_bright):
+    if number == 0:
+        res = []
+    else:
+        triangle = _mono_list_to_triangle(MONO_COLORS[palette])
+        actual_number = number + skip_dark + skip_bright
+        res = triangle[actual_number][skip_dark:]
+        # list[:-0] = [] but we need the full list in that case
+        if skip_bright != 0:
+            res = res[:-skip_bright]
+    return res
+
+
+def plot_colors(palette, number, skip_dark=0, skip_bright=0, size=1):
     """Plot a color palette.
 
     Args:
@@ -57,7 +80,10 @@ def plot_colors(palette, number, size=1):
         size (float): Scaling factor for the plot size.
 
     """
-    return sns.palplot(get_colors(palette, number), size=size)
+    return sns.palplot(
+        get_colors(palette, number, skip_dark=skip_dark, skip_bright=skip_bright),
+        size=size,
+    )
 
 
 def _mono_list_to_triangle(mono_list):

@@ -6,7 +6,7 @@ print(p)
 
 setup(
     name="utilities",
-    version="0.1.5",
+    version="0.2.2",
     description=(
         "Package with code that has to be shared across repos of covid-19-impact-lab"
     ),
@@ -18,11 +18,10 @@ setup(
     zip_safe=False,
     package_data={
         "utilities": [
-        "dashboard/_static/css/*.css",
-        "dashboard/_static/js/*.js",
-        "dashboard/index.html",
-        "dashboard/styles.css",
-    ]
+            "dashboard/app/static/css/*.css",
+            "dashboard/app/static/js/*.js",
+            "dashboard/app/templates/*.html",
+        ],
     },
     include_package_data=True,
 )
