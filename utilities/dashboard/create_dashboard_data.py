@@ -114,25 +114,10 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
     res["plot_data"] = plot_data
 
     if language == "english":
-        res[
-            "top_title"
-        ] = "Exploring What People Believe and Do in Response to CoViD-19"
+        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
         res["menu_titles"] = ("Topic", "Subtopic", "Split By")
-        res["top_text"] = (
-            "Have you ever wondered whether young or old comply more with social distancing? "
-            + "How many people fear losing their jobs during this epidemic? <br> <br>"
-            + "We asked more than 5000 men and women in the Netherlands these and many "
-            + "more questions on what they know, believe, fear and do in response to the current epidemic. "
-            + "Below you can explore their answers. <br> <br>"
-            + "Simply choose a topic and subtopic to get started. "
-            + "Hover over the graph to see the exact questions and more information. "
-            + "You can see how answers differ by "
-            + ", ".join([x.lower() for x in res["background_variables"][:-1]])
-            + " or "
-            + res["background_variables"][-1].lower()
-            + " by selecting one of them in "
-            + "the Split By menu."
-        )
+        with open("top_text_english.txt", "r") as f:
+            res["text"] = f.read()
     return res
 
 

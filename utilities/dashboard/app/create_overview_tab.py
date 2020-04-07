@@ -30,8 +30,8 @@ def create_overview_tab(
     variable_to_label,
     variable_to_nice_name,
     group_to_caption,
-    top_text,
-    top_title,
+    text,
+    title,
     nice_name_to_variable,
     menu_titles,
 ):
@@ -50,8 +50,8 @@ def create_overview_tab(
         variable_to_nice_name (dict)
         nice_name_to_variable (dict)
         group_to_caption (dict)
-        top_text (str)
-        top_title (str)
+        text (str)
+        title (str)
         menu_titles (tuple)
 
     Returns:
@@ -66,8 +66,12 @@ def create_overview_tab(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
     # create the page elements
-    top_title = Div(text=top_title, style={"font-size": "200%"})
-    top_info = Div(text=top_text, margin=(10, 0, 10, 0))
+    title_div = Div(
+        text=title,
+        style={"font-size": "150%", "text-align": "left"},
+        margin=(10, 0, 10, 0),
+    )
+    top_info = Div(text=text, margin=(10, 0, 30, 0), style={"text-align": "justify"})
 
     topic_selector, subtopic_selector, background_selector = create_selection_menus(
         topics=topics,
@@ -78,17 +82,11 @@ def create_overview_tab(
         menu_titles=menu_titles,
     )
 
-    header = Div(
-        text=group_to_header[group],
-        name="header",
-        margin=(0, 0, 25, 0),
-        style=header_style,
-    )
-
     plot = setup_plot(**plot_data[group])
 
     create_caption = partial(
         _create_caption,
+        group_to_header=group_to_header,
         group_to_caption=group_to_caption,
         group_to_variables=group_to_variables,
         variable_to_nice_name=variable_to_nice_name,
@@ -99,7 +97,7 @@ def create_overview_tab(
 
     # assemble page
     selection_menues = Row(topic_selector, subtopic_selector, background_selector)
-    page = Column(top_title, top_info, selection_menues, header, plot, caption, bg_info)
+    page = Column(title_div, top_info, selection_menues, plot, caption, bg_info)
 
     topic_callback = partial(
         set_topic,
@@ -111,7 +109,6 @@ def create_overview_tab(
 
     subtopic_callback = partial(
         set_subtopic,
-        group_to_header=group_to_header,
         plot_data=plot_data,
         page=page,
         background_selector=background_selector,
@@ -144,22 +141,24 @@ def create_selection_menus(
         options=topics,
         value=topic,
         name="topic_selector",
-        width=180,
+        width=200,
     )
     subtopic_selector = Select(
         title=menu_titles[1], options=subtopics, value=group, name="subtopic_selector",
+        width=250,
     )
     background_selector = Select(
         title=menu_titles[2],
         options=["Nothing"] + background_variables,
         value="Nothing",
-        width=120,
+        width=100,
     )
     return topic_selector, subtopic_selector, background_selector
 
 
 def _create_caption(
     group,
+    group_to_header,
     group_to_caption,
     group_to_variables,
     variable_to_nice_name,
@@ -168,16 +167,15 @@ def _create_caption(
     variables = group_to_variables[group]
     nice_vars = [variable_to_nice_name[var] for var in variables]
     labels = [variable_to_label[var] for var in variables]
-    if len(variables) == 1:
-        text = ""
-    else:
-        text = "<br>".join(
+    text = group_to_header[group]
+    if len(variables) > 1:
+        text += "<br> <br>" + "<br>".join(
             f"<b>{name}</b>: {label}" for name, label in zip(nice_vars, labels)
         )
     if isinstance(group_to_caption[group], str):
         text += "<br> <br>" + group_to_caption[group]
 
-    element = Div(text=text, name="bottom", margin=(30, 0, 10, 0), style=header_style)
+    element = Div(text=text, name="bottom", margin=(20, 0, 10, 0), style=header_style)
     return element
 
 
@@ -193,7 +191,6 @@ def set_subtopic(
     attr,
     old,
     new,
-    group_to_header,
     group_to_plot_type,
     plot_data,
     page,
@@ -201,7 +198,7 @@ def set_subtopic(
     caption_callback,
 ):
     """Adjust title, header and plot to new subtopic."""
-    header, plot, caption, bg_info = page.children[2:]
+    plot, caption, bg_info = page.children[-3:]
 
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
