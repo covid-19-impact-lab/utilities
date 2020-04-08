@@ -242,14 +242,13 @@ def _bin_variables(data):
     ]
 
     for var in self_empl_emp_vars + empl_emp_vars:
-        cuts = [-1, 0.5, 50.0, 99, 110]
+        # cuts = [-1, 0.5, 50.0, 99, 110]
+        cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
         data[var] = pd.cut(data[var], cuts)
         nice_cats = {}
         for intv in data[var].cat.categories:
-            if intv.left < 0:
-                nice_cats[intv] = "0%"
-            elif intv.right > 100:
-                nice_cats[intv] = "100%"
+            if intv.right - intv.left < 1:
+                nice_cats[intv] = f"{int(intv.right)}%"
             else:
                 nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
         data[var] = data[var].cat.rename_categories(nice_cats)
@@ -354,8 +353,9 @@ if __name__ == "__main__":
     with open(out_path, "wb") as f:
         pickle.dump(dashboard_data, f)
 
-    # import os
-    # from pathlib import Path
-    # path_to_app = Path(__file__).resolve().parent / "app"
-    # command = f"bokeh serve --show {path_to_app} --args {out_path}"  # noqa
-    # os.system(command)
+    import os
+    from pathlib import Path
+
+    path_to_app = Path(__file__).resolve().parent / "app"
+    command = f"bokeh serve --show {path_to_app} --args {out_path}"  # noqa
+    os.system(command)
