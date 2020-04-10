@@ -206,7 +206,16 @@ def setup_plot(dist_data, selectors, questions, x_info, observations, bg_var, nt
     for cat in categories:
         var = cat[0]
         p.line(dist_data["x"], dist_data[cat], color=var_to_color[var], line_width=3)
-        tooltips = [("Question", questions[var]), ("No. Obs.", str(observations[cat]))]
+        if nth_str == "Nothing":
+            tooltips = [
+                ("Question", questions[var]),
+                ("No. Obs.", str(observations[cat])),
+            ]
+        elif nth_str == "Nichts":
+            tooltips = [
+                ("Frage", questions[var]),
+                ("Antworten insg.", str(observations[cat])),
+            ]
         zero_vals = [(item[0], item[1], 0) for item in dist_data[cat]]
         renderer = p.patches(
             [dist_data["x"], dist_data["x"]],
@@ -288,7 +297,9 @@ def _get_plot_height(selectors, bg_var, nth_str):
     return int(1.2 * height)
 
 
-def condition_plot(plot, dist_data, selectors, questions, x_info, observations, bg_var, nth_str):
+def condition_plot(
+    plot, dist_data, selectors, questions, x_info, observations, bg_var, nth_str
+):
     p = plot
     p.y_range.factors = selectors[bg_var]
     p.plot_height = _get_plot_height(selectors, bg_var)

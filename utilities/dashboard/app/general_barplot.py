@@ -177,12 +177,21 @@ def setup_basic_plot(cds, categories, selectors, bg_var, colors, nth_str):
 
     renderers = [renderers] if not isinstance(renderers, list) else renderers
 
-    tooltips = [
-        ("Question", "@Question"),
-        ("Reply", "$name"),
-        ("Share", "@$name{%0f}"),
-        ("No. Obs.", "@Observations"),
-    ]
+    if nth_str == "Nothing":
+        tooltips = [
+            ("Question", "@Question"),
+            ("Reply", "$name"),
+            ("Share", "@$name{%0f}"),
+            ("No. Obs.", "@Observations"),
+        ]
+    elif nth_str == "Nichts":
+        tooltips = [
+            ("Frage", "@Question"),
+            ("Antwort", "$name"),
+            ("Anteil", "@$name{%0f}"),
+            ("Antworten insg.", "@Observations"),
+        ]
+
     hover = HoverTool(renderers=renderers, tooltips=tooltips)
     p.tools.append(hover)
 

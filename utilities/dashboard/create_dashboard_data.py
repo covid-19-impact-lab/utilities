@@ -86,8 +86,6 @@ def _create_overview_tab_data(
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
 
-
-
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     res["groups"] = [group for group in raw_groups if group not in bg_var_groups]

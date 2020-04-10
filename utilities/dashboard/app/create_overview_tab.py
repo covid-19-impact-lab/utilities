@@ -130,7 +130,7 @@ def create_overview_tab(
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
-        nth_str=nth_str
+        nth_str=nth_str,
     )
     background_selector.on_change("value", background_var_callback)
 
@@ -204,7 +204,7 @@ def set_subtopic(
     page,
     background_selector,
     caption_callback,
-    nth_str
+    nth_str,
 ):
     """Adjust title, header and plot to new subtopic."""
     plot, caption, bg_info = page.children[-3:]
@@ -231,7 +231,7 @@ def condition_on_background_var(
     variable_to_label,
     group_to_variables,
     nice_name_to_variable,
-    nth_str
+    nth_str,
 ):
     plot, caption, bg_info = page.children[-3:]
     page.children = page.children[:-3]
