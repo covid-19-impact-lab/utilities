@@ -87,10 +87,9 @@ def _fix_categories(data):
 
     data["edu"] = data["edu"].cat.rename_categories(
         {
-            "hs_and_less": "High School Or Less",
-            "jun_college": "Junior College",
-            "college": "College",
-            "uni": "University",
+            "lower_secondary_and_lower": "Below Upper Secondary",
+            "upper_secondary": "Upper Secondary",
+            "tertiary": "Tertiary",
         }
     )
 
