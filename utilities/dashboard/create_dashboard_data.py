@@ -68,6 +68,26 @@ def _create_overview_tab_data(
 
     """
     res = {}
+
+    if language == "english":
+        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
+        res["menu_titles"] = ("Topic", "Subtopic", "Split By")
+        with open(f"{data_name}/top_text_english.txt", "r") as f:
+            res["text"] = f.read()
+        res["nth_str"] = "Nothing"
+    elif language == "german":
+        res[
+            "title"
+        ] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
+        res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach")
+        with open(f"{data_name}/top_text_german.txt", "r") as f:
+            res["text"] = f.read()
+        res["nth_str"] = "Nichts"
+    else:
+        raise NotImplementedError("The language you supplied is not supported yet.")
+
+
+
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     res["groups"] = [group for group in raw_groups if group not in bg_var_groups]
@@ -112,24 +132,10 @@ def _create_overview_tab_data(
             bg_vars=internal_bg_vars,
             nice_names=res["variable_to_nice_name"],
             labels=res["variable_to_label"],
+            nth_str=res["nth_str"],
         )
 
     res["plot_data"] = plot_data
-
-    if language == "english":
-        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
-        res["menu_titles"] = ("Topic", "Subtopic", "Split By")
-        with open(f"{data_name}/top_text_english.txt", "r") as f:
-            res["text"] = f.read()
-    elif language == "german":
-        res[
-            "title"
-        ] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
-        res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach")
-        with open(f"{data_name}/top_text_german.txt", "r") as f:
-            res["text"] = f.read()
-    else:
-        raise NotImplementedError("The language you supplied is not supported yet.")
     return res
 
 

@@ -11,7 +11,7 @@ from scipy.stats.kde import gaussian_kde
 from utilities.colors import get_colors
 
 
-def prepare_data(data, variables, bg_vars, nice_names, labels):
+def prepare_data(data, variables, bg_vars, nice_names, labels, nth_str):
     """Create data for a distplot.
 
     Args:
@@ -24,6 +24,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         bg_vars (list): pd.Categorical variables with background characteristics.
         nice_names (dict): Maps variables to nice_names
         labels (dict): Maps variables to labels
+        nth_str (str): name of the "Nothing" category in English
 
 
     Returns:
@@ -129,7 +130,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
         nice_name_to_label[nice_names[var]] = labels[var]
 
     selectors = {}
-    selectors["Nothing"] = tuple([(nice_names[var], "") for var in variables][::-1])
+    selectors[nth_str] = tuple([(nice_names[var], "") for var in variables][::-1])
     for bg_var in bg_vars:
         selected = data[bg_var].cat.categories.tolist()
         col_list = [col for col in raw_dist_data.keys() if col != "x"]
@@ -191,14 +192,14 @@ def _check_variables_have_same_dtype(data, variables):
             raise ValueError("Variables have to have the same dtype.")
 
 
-def setup_plot(dist_data, selectors, questions, x_info, observations, bg_var="Nothing"):
+def setup_plot(dist_data, selectors, questions, x_info, observations, bg_var, nth_str):
     colors = get_colors("categorical", len(questions))
     var_to_color = {var: c for var, c in zip(questions, colors)}
 
     categories = [k for k in dist_data if k != "x"]
     p = figure(
         y_range=FactorRange(*categories),
-        plot_height=_get_plot_height(selectors, bg_var),
+        plot_height=_get_plot_height(selectors, bg_var, nth_str),
         toolbar_location=None,
     )
 
@@ -276,10 +277,10 @@ def _unclutter(p, remove_grid=True, remove_ticks=True):
     return p
 
 
-def _get_plot_height(selectors, bg_var):
-    n_groups = len(selectors["Nothing"])
+def _get_plot_height(selectors, bg_var, nth_str):
+    n_groups = len(selectors[nth_str])
     n_densities = len(selectors[bg_var])
-    if bg_var == "Nothing":
+    if bg_var == nth_str:
         height = int(30 + n_groups * 50)
     else:
         height = int(30 + n_groups * 10 + n_densities * 40)
@@ -287,11 +288,11 @@ def _get_plot_height(selectors, bg_var):
     return int(1.2 * height)
 
 
-def condition_plot(plot, dist_data, selectors, questions, x_info, observations, bg_var):
+def condition_plot(plot, dist_data, selectors, questions, x_info, observations, bg_var, nth_str):
     p = plot
     p.y_range.factors = selectors[bg_var]
     p.plot_height = _get_plot_height(selectors, bg_var)
-    if bg_var == "Nothing":
+    if bg_var == nth_str:
         p.yaxis.group_label_orientation = "horizontal"
         p.y_range.group_padding = 0.3
         p.yaxis.separator_line_alpha = 0
