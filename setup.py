@@ -21,6 +21,8 @@ setup(
             "dashboard/app/static/css/*.css",
             "dashboard/app/static/js/*.js",
             "dashboard/app/templates/*.html",
+            "dashboard/liss/provinces.geojson",
+            "dashboard/gesis/provinces.geojson",
         ],
     },
     include_package_data=True,
