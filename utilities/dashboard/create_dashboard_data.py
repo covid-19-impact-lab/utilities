@@ -3,6 +3,7 @@ from utilities.dashboard.app import distplot
 from utilities.dashboard.app import no_plot
 from utilities.dashboard.app import stacked_barplot
 from itertools import product
+import json
 
 
 plot_modules = {
@@ -49,7 +50,7 @@ def _create_overview_tab_data(
         data_decs (pd.DataFrame): Description of the dataset.
         group_info (pd.DataFrame): Description of groups.
         data_name (str): "liss" or "gesis"
-        language (pd.DataFrame): One of ["english", "german", "dutch"]
+        language (str): One of ["english", "german", "dutch"]
 
     Returns:
         dict: Dictionary with the following entries:
@@ -141,6 +142,50 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
     raw = df.groupby(key_col)[val_col].unique().to_dict()
     return {k: val.tolist() for k, val in raw.items()}
 
+# =====================================================================================
+
+def create_map_data(data, data_desc, group_info, language, data_name):
+    """Create a dict with all data needed in the overview tab.
+
+    Args:
+        data (pd.DataFrame): The empirical dataset.
+        data_decs (pd.DataFrame): Description of the dataset.
+        group_info (pd.DataFrame): Description of groups.
+        data_name (str): "liss" or "gesis"
+        language (str): One of ["english", "german", "dutch"]
+
+    """
+    provinces = _map_coordinates(data_name)
+
+    if data_name == "liss":
+        data_regions = data["prov"].unique()
+        province_names = [prov["properties"]["name"] for prov in provinces["features"]]
+    assert set(province_names) == set(data_regions), "Regions don't match."
+
+
+
+def _map_coordinates(data_name):
+    """Load and prepare the geo data.
+
+    source for the Netherlands:
+    https://www.webuildinternet.com/2015/07/09/geojson-data-of-the-netherlands/
+
+    source for Germany:
+    https://public.opendatasoft.com/explore/dataset/landkreise-in-germany/export/
+    """
+    with open(f"{data_name}/provinces.geojson", "r") as f:
+        provinces = json.load(f)
+
+    if data_name == "liss":
+        # change Friesland (Fryslân) to Friesland
+        for i, element in enumerate(provinces["features"]):
+            if element["properties"]["name"] == "Friesland (Fryslân)":
+                element["properties"]["name"] = "Friesland"
+    else:
+        raise NotImplementedError("Only LISS data supported at the moment.")
+    return provinces
+
+# =====================================================================================
 
 def _create_correlation_tab_data(data, data_desc, language):
     # might make sense to just have one function determining all three lists
