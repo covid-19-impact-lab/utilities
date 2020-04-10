@@ -305,6 +305,4 @@ def _add_variables(data):
     # hh_to_prov = provinces.set_index("nohouse_encr")["prov"].to_dict()
     # data["prov"] = data["hh_id"].replace(hh_to_prov)
 
-    # =================================================================================
-
     return data
