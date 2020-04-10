@@ -1,12 +1,11 @@
 """Build the data description table for creating the overview_tab data."""
 
 import pandas as pd
+
 # from utilities.dashboard.liss_data_functions import check_no_variables_lost
 
 
-def create_description_table(
-    raw_desc, background_table, group_info, data, language
-):
+def create_description_table(raw_desc, background_table, group_info, data, language):
     # check_no_variables_lost(current_desc=desc)
     desc = _reduce_description_table(raw_desc, language)
     desc = _add_background_vars(desc, background_table, language)
@@ -60,8 +59,9 @@ def _use_group_info(desc, group_info, language):
     present_groups = desc[f"group_{language}"].unique()
     known_groups = group_info[f"group_{language}"].unique()
     missing_in_desc = [x for x in known_groups if x not in present_groups]
-    assert len(missing_in_desc) == 0, \
-        f"The following groups are in group_info but not in the dataset: {missing_in_desc}"
+    assert (
+        len(missing_in_desc) == 0
+    ), f"The following groups are in group_info but not in the dataset: {missing_in_desc}"
     # to_drop = [x for x in present_groups if x not in known_groups]
     # print("Dropping from data description:\n\t" + "\n\t".join(str(x) for x in to_drop))
     desc = desc[desc[f"group_{language}"].isin(known_groups)].copy()
@@ -97,5 +97,7 @@ def _check_groups_unique(desc, language):
 def _check_vars_in_every_group(desc, language):
     gb = desc.groupby(f"group_{language}")
     nr_uniques_by_group = gb.apply(lambda x: len(x.index.unique()))
-    assert (nr_uniques_by_group > 0).all(), "Some groups have no variables:\n\t" + \
-        "\n\t".join(nr_uniques_by_group[nr_uniques_by_group == 0].index.tolist())
+    assert (nr_uniques_by_group > 0).all(), (
+        "Some groups have no variables:\n\t"
+        + "\n\t".join(nr_uniques_by_group[nr_uniques_by_group == 0].index.tolist())
+    )

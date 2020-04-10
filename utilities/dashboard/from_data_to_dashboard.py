@@ -18,12 +18,17 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError(f"{data_name} not supported.")
 
-
-    raw_group_info = pd.read_csv(f"{data_name}/group_info.csv", sep=";", encoding="latin3")
+    raw_group_info = pd.read_csv(
+        f"{data_name}/group_info.csv", sep=";", encoding="latin3"
+    )
     group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
 
-    raw_desc = pd.read_csv(f"{data_name}/data_description.csv", sep=";", encoding="latin3")
-    bg_desc = pd.read_csv(f"{data_name}/background_variables.csv", sep=";", encoding="latin3")
+    raw_desc = pd.read_csv(
+        f"{data_name}/data_description.csv", sep=";", encoding="latin3"
+    )
+    bg_desc = pd.read_csv(
+        f"{data_name}/background_variables.csv", sep=";", encoding="latin3"
+    )
     desc = create_description_table(
         raw_desc=raw_desc,
         background_table=bg_desc,
@@ -33,7 +38,11 @@ if __name__ == "__main__":
     )
 
     dashboard_data = create_dashboard_data(
-        data=data, data_desc=desc, group_info=group_info, language=lang, data_name="liss"
+        data=data,
+        data_desc=desc,
+        group_info=group_info,
+        language=lang,
+        data_name="liss",
     )
 
     out_path = f"{data_name}/dashboard_data_current.pickle"

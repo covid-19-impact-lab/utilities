@@ -13,7 +13,9 @@ plot_modules = {
 }
 
 
-def create_dashboard_data(data, data_desc, group_info, language, data_name, kde_cutoff=7):
+def create_dashboard_data(
+    data, data_desc, group_info, language, data_name, kde_cutoff=7
+):
     """Create a dict with all data needed for the dashboard.
 
     Args:
@@ -37,7 +39,9 @@ def create_dashboard_data(data, data_desc, group_info, language, data_name, kde_
     return dashboard_data
 
 
-def _create_overview_tab_data(data, data_desc, group_info, language, data_name, kde_cutoff):
+def _create_overview_tab_data(
+    data, data_desc, group_info, language, data_name, kde_cutoff
+):
     """Create a dict with all data needed in the overview tab.
 
     Args:
@@ -118,7 +122,9 @@ def _create_overview_tab_data(data, data_desc, group_info, language, data_name, 
         with open(f"{data_name}/top_text_english.txt", "r") as f:
             res["text"] = f.read()
     elif language == "german":
-        res["title"] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
+        res[
+            "title"
+        ] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
         res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach")
         with open(f"{data_name}/top_text_german.txt", "r") as f:
             res["text"] = f.read()
@@ -150,7 +156,9 @@ def _determine_axis_vars(data, data_desc, laungage):
 
 
 def _determine_groupby_vars(data_desc, language):
-    bg_corr_slice = data_desc[data_desc[f"group_{language}"] == "Background Correlation"]
+    bg_corr_slice = data_desc[
+        data_desc[f"group_{language}"] == "Background Correlation"
+    ]
     groupby_vars = bg_corr_slice[f"nice_name_{language}"].tolist()
     return groupby_vars
 
