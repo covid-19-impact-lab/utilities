@@ -142,7 +142,9 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
     raw = df.groupby(key_col)[val_col].unique().to_dict()
     return {k: val.tolist() for k, val in raw.items()}
 
+
 # =====================================================================================
+
 
 def create_map_data(data, data_desc, group_info, language, data_name):
     """Create a dict with all data needed in the overview tab.
@@ -161,7 +163,6 @@ def create_map_data(data, data_desc, group_info, language, data_name):
         data_regions = data["prov"].unique()
         province_names = [prov["properties"]["name"] for prov in provinces["features"]]
     assert set(province_names) == set(data_regions), "Regions don't match."
-
 
 
 def _map_coordinates(data_name):
@@ -185,7 +186,9 @@ def _map_coordinates(data_name):
         raise NotImplementedError("Only LISS data supported at the moment.")
     return provinces
 
+
 # =====================================================================================
+
 
 def _create_correlation_tab_data(data, data_desc, language):
     # might make sense to just have one function determining all three lists

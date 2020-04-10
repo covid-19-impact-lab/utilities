@@ -290,15 +290,25 @@ def _add_variables(data):
     )
 
     # =================================================================================
-    print('Careful: CREATING MOCK REGIONS!')
+    print("Careful: CREATING MOCK REGIONS!")
     liss_regions = [
-        'Groningen', 'Friesland', 'Drenthe', 'Overijssel',
-        'Flevoland', 'Gelderland', 'Utrecht', 'Noord-Holland',
-        'Zuid-Holland', 'Zeeland', 'Noord-Brabant', 'Limburg'
+        "Groningen",
+        "Friesland",
+        "Drenthe",
+        "Overijssel",
+        "Flevoland",
+        "Gelderland",
+        "Utrecht",
+        "Noord-Holland",
+        "Zuid-Holland",
+        "Zeeland",
+        "Noord-Brabant",
+        "Limburg",
     ]
     mock_regions = np.random.choice(liss_regions, len(data))
     data["prov"] = pd.Categorical(
-        values=mock_regions, categories=liss_regions, ordered=False)
+        values=mock_regions, categories=liss_regions, ordered=False
+    )
 
     # # with real data
     # provinces = pd.read_stata(path)
