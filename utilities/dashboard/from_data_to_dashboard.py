@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     if data_name == "liss":
         raw_data = pd.read_pickle(f"data/liss_data.pickle")
-        data = prepare_liss_data(raw_data)
+        data = prepare_liss_data(raw_data, lang)
     elif data_name == "gesis":
         raise NotImplementedError("GESIS not supported yet.")
     else:

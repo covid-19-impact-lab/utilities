@@ -1,14 +1,24 @@
 """Functions for LISS data preparation."""
 
 import pandas as pd
+import yaml
+from pandas.api.types import is_categorical
+from pathlib import Path
 
 
-def prepare_liss_data(data):
+def prepare_liss_data(data, language):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
     data = _bin_variables(data)
     data = _add_variables(data)
+    if language == "german":
+        cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
+        with open(cat_path, "r") as f:
+            cat_d = yaml.full_load(f)
+        for col in data:
+            if is_categorical(data[col]):
+                data[col] = data[col].cat.rename_categories(cat_d)
     return data
 
 
@@ -199,7 +209,8 @@ def _bin_variables(data):
 
     for var in self_empl_emp_vars + empl_emp_vars:
         # cuts = [-1, 0.5, 50.0, 99, 110]
-        cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
+        # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
+        cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
         data[var] = pd.cut(data[var], cuts)
         nice_cats = {}
         for intv in data[var].cat.categories:

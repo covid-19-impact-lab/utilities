@@ -1,0 +1,68 @@
+# responses
+not at all likely: völlig unwahr- scheinl.
+very unlikely: sehr unwahr- scheinl.
+rather unlikely: ziemlich unwahr- scheinl.
+moderately likely: mäßig wahr- scheinl.
+rather likely: eher wahr- scheinl.
+very likely: sehr wahr- scheinl.
+certain: sicher
+happened already: bereits passiert
+
+not effective at all: gar nicht effektiv
+hardly effective: kaum effektiv
+somewhat effective: einigermaßen effektiv
+effective: effektiv
+very effective: sehr effektiv
+
+until April 6: bis 6.4.
+April 6 to 2 months: zw. 6.4. und 2 Monaten
+2 to 4 months: 2 bis 4 Monate
+4 to 8 months: 4 bis 8 Monate
+8 to 12 months: 8 bis 12 Monate
+more than 1 year: über ein Jahr
+
+totally disagree: stimme überhaupt nicht zu
+disagree: stimme nicht zu
+neither/nore: weder noch
+agree: stimme zu
+totally agree: stimme völlig zu
+
+too few: zu wenige
+rather too few: eher zu wenige
+right amount: angemessen
+rather too many: eher zu viele
+too many: zu viele
+
+1 <br> none at all: 1 gar keins
+5 <br> a lot: 5 sehr viel
+
+"No": Nein
+"Yes": Ja
+Critical Profession: Systemrelevanter Beruf
+
+1 <br> not at all worried: 1 <br> gar nicht besorgt
+5 <br> very worried: 5 <br> sehr besorgt
+
+0h: 0 Std.
+0 to 10h: 0-10 Std.
+10 to 20h: 10-20 Std.
+20 to 30h: 20-30 Std.
+30 to 40h: 30-40 Std.
+">40h": über 40 Std.
+
+0 to 10%: 0 bis 10%
+10 to 49%: 10 bis 49%
+50 to 99%: 50 bis 99%
+
+# background variables
+40 to 65: 40 bis 65
+Below Upper Secondary: Keine Sekundarstufe II
+Upper Secondary: Sek II oder Berufsausbildung
+Tertiary: Hochschulausbildung
+2500 to 4500: zw. 2500 und 4500
+4500 to 7500: zw. 4500 und 7500
+very good: sehr gut
+good: gut
+moderate or less: mäßig oder schlecht
+Man: Männer
+Women: Frauen
