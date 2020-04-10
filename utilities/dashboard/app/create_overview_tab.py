@@ -144,6 +144,7 @@ def create_selection_menus(
         width=200,
     )
     subtopic_selector = Select(
+        more_dashboard
         title=menu_titles[1],
         options=subtopics,
         value=group,
