@@ -5,7 +5,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels):
     return {"shares": {}, "selectors": {}}
 
 
-def setup_plot(shares, selectors, bg_var="Nothing"):
+def setup_plot(shares, selectors, bg_var):
     return Div(text="This group is not being plotted at the moment.")
 
 

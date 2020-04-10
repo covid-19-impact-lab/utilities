@@ -34,6 +34,7 @@ def create_overview_tab(
     title,
     nice_name_to_variable,
     menu_titles,
+    nth_str,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -53,6 +54,7 @@ def create_overview_tab(
         text (str)
         title (str)
         menu_titles (tuple)
+        nth_str (str): name of the "Nothing" category in English
 
     Returns:
         tab (bokeh.models.Tab)
@@ -80,9 +82,10 @@ def create_overview_tab(
         group=group,
         background_variables=background_variables,
         menu_titles=menu_titles,
+        nth_str=nth_str,
     )
 
-    plot = setup_plot(**plot_data[group])
+    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
 
     create_caption = partial(
         _create_caption,
@@ -114,6 +117,7 @@ def create_overview_tab(
         background_selector=background_selector,
         group_to_plot_type=group_to_plot_type,
         caption_callback=create_caption,
+        nth_str=nth_str,
     )
     subtopic_selector.on_change("value", subtopic_callback)
 
@@ -126,6 +130,7 @@ def create_overview_tab(
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
+        nth_str=nth_str,
     )
     background_selector.on_change("value", background_var_callback)
 
@@ -134,7 +139,7 @@ def create_overview_tab(
 
 
 def create_selection_menus(
-    topics, subtopics, topic, group, background_variables, menu_titles
+    topics, subtopics, topic, group, background_variables, menu_titles, nth_str
 ):
     topic_selector = Select(
         title=menu_titles[0],
@@ -144,13 +149,16 @@ def create_selection_menus(
         width=200,
     )
     subtopic_selector = Select(
-        title=menu_titles[1], options=subtopics, value=group, name="subtopic_selector",
+        title=menu_titles[1],
+        options=subtopics,
+        value=group,
+        name="subtopic_selector",
         width=250,
     )
     background_selector = Select(
         title=menu_titles[2],
-        options=["Nothing"] + background_variables,
-        value="Nothing",
+        options=[nth_str] + background_variables,
+        value=nth_str,
         width=100,
     )
     return topic_selector, subtopic_selector, background_selector
@@ -196,6 +204,7 @@ def set_subtopic(
     page,
     background_selector,
     caption_callback,
+    nth_str,
 ):
     """Adjust title, header and plot to new subtopic."""
     plot, caption, bg_info = page.children[-3:]
@@ -203,12 +212,12 @@ def set_subtopic(
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
-    new_p = setup_plot(**plot_data[new])
+    new_p = setup_plot(**plot_data[new], bg_var=nth_str, nth_str=nth_str)
     new_caption = caption_callback(group=new)
 
     page.children[-3] = new_p
     page.children[-2] = new_caption
-    background_selector.value = "Nothing"
+    background_selector.value = nth_str
 
 
 def condition_on_background_var(
@@ -222,6 +231,7 @@ def condition_on_background_var(
     variable_to_label,
     group_to_variables,
     nice_name_to_variable,
+    nth_str,
 ):
     plot, caption, bg_info = page.children[-3:]
     page.children = page.children[:-3]
@@ -230,10 +240,10 @@ def condition_on_background_var(
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
     condition_plot(
-        plot, **plot_data[group], bg_var=new,
+        plot, **plot_data[group], bg_var=new, nth_str=nth_str,
     )
 
-    if new == "Nothing":
+    if new == nth_str:
         bg_info.text = ""
     else:
         bg_info.text = variable_to_label[nice_name_to_variable[new]]

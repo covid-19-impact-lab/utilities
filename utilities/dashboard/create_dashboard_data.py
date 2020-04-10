@@ -13,7 +13,9 @@ plot_modules = {
 }
 
 
-def create_dashboard_data(data, data_desc, group_info, language, kde_cutoff=7):
+def create_dashboard_data(
+    data, data_desc, group_info, language, data_name, kde_cutoff=7
+):
     """Create a dict with all data needed for the dashboard.
 
     Args:
@@ -29,7 +31,7 @@ def create_dashboard_data(data, data_desc, group_info, language, kde_cutoff=7):
     """
     dashboard_data = {
         "overview": _create_overview_tab_data(
-            data, data_desc, group_info, language, kde_cutoff
+            data, data_desc, group_info, language, data_name, kde_cutoff
         ),
         "correlation": _create_correlation_tab_data(data, data_desc, language),
         "timeline": _create_timeline_tab_data(language),
@@ -37,13 +39,16 @@ def create_dashboard_data(data, data_desc, group_info, language, kde_cutoff=7):
     return dashboard_data
 
 
-def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff):
+def _create_overview_tab_data(
+    data, data_desc, group_info, language, data_name, kde_cutoff
+):
     """Create a dict with all data needed in the overview tab.
 
     Args:
         data (pd.DataFrame): The empirical dataset.
         data_decs (pd.DataFrame): Description of the dataset.
         group_info (pd.DataFrame): Description of groups.
+        data_name (str): "liss" or "gesis"
         language (pd.DataFrame): One of ["english", "german", "dutch"]
 
     Returns:
@@ -63,6 +68,24 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
 
     """
     res = {}
+
+    if language == "english":
+        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
+        res["menu_titles"] = ("Topic", "Subtopic", "Split By")
+        with open(f"{data_name}/top_text_english.txt", "r") as f:
+            res["text"] = f.read()
+        res["nth_str"] = "Nothing"
+    elif language == "german":
+        res[
+            "title"
+        ] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
+        res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach")
+        with open(f"{data_name}/top_text_german.txt", "r") as f:
+            res["text"] = f.read()
+        res["nth_str"] = "Nichts"
+    else:
+        raise NotImplementedError("The language you supplied is not supported yet.")
+
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     res["groups"] = [group for group in raw_groups if group not in bg_var_groups]
@@ -79,8 +102,6 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
     res["group_to_caption"] = group_info.set_index(f"group_{language}")[
         f"caption_{language}"
     ].to_dict()
-
-    # maybe we don't have to return this
     res["group_to_variables"] = _dict_of_uniques_from_df(
         data_desc, f"group_{language}", "new_name"
     )
@@ -109,15 +130,10 @@ def _create_overview_tab_data(data, data_desc, group_info, language, kde_cutoff)
             bg_vars=internal_bg_vars,
             nice_names=res["variable_to_nice_name"],
             labels=res["variable_to_label"],
+            nth_str=res["nth_str"],
         )
 
     res["plot_data"] = plot_data
-
-    if language == "english":
-        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
-        res["menu_titles"] = ("Topic", "Subtopic", "Split By")
-        with open("top_text_english.txt", "r") as f:
-            res["text"] = f.read()
     return res
 
 
@@ -144,7 +160,9 @@ def _determine_axis_vars(data, data_desc, laungage):
 
 
 def _determine_groupby_vars(data_desc, language):
-    bg_corr_slice = data_desc[data_desc["group_english"] == "Background Correlation"]
+    bg_corr_slice = data_desc[
+        data_desc[f"group_{language}"] == "Background Correlation"
+    ]
     groupby_vars = bg_corr_slice[f"nice_name_{language}"].tolist()
     return groupby_vars
 
