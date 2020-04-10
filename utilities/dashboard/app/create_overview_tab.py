@@ -144,7 +144,10 @@ def create_selection_menus(
         width=200,
     )
     subtopic_selector = Select(
-        title=menu_titles[1], options=subtopics, value=group, name="subtopic_selector",
+        title=menu_titles[1],
+        options=subtopics,
+        value=group,
+        name="subtopic_selector",
         width=250,
     )
     background_selector = Select(
