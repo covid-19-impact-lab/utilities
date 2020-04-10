@@ -1,5 +1,4 @@
 import pickle
-import sys
 import pandas as pd
 
 from utilities.dashboard.create_dashboard_data import create_dashboard_data
@@ -325,20 +324,19 @@ def _add_variables(data):
 
 if __name__ == "__main__":
     lang = "english"
-    dir_to_data = sys.argv[1]
 
-    data = pd.read_pickle(dir_to_data + "covid_final_data_set.pickle")
+    data = pd.read_pickle("data/liss_data.pickle")
     data = _process_data(data)
 
-    desc = pd.read_csv("covid19_data_description.csv", sep=";")
+    desc = pd.read_csv("liss_data_description.csv", sep=";", encoding="latin3")
     desc = desc[desc["new_name"].notnull()]
     assert not desc["new_name"].duplicated().any()
-    bg_desc = pd.read_excel("background_var_description.xlsx")
+    bg_desc = pd.read_csv("liss_background_variables.csv", sep=";", encoding="latin3")
     doubled = [x for x in bg_desc["new_name"].values if x in desc["new_name"].values]
     assert len(doubled) == 0, "Doubles between data description and background."
     desc = pd.concat([desc, bg_desc])
 
-    group_info = pd.read_csv("group_info.csv", sep=";")
+    group_info = pd.read_csv("liss_group_info.csv", sep=";", encoding="latin3")
     group_info = group_info[group_info["group_english"].notnull()]
 
     desc = dashboard_data_description(desc=desc, group_info=group_info, data=data)
