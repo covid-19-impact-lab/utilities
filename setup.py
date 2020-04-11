@@ -23,6 +23,7 @@ setup(
             "dashboard/app/templates/*.html",
             "dashboard/liss/provinces.geojson",
             "dashboard/gesis/provinces.geojson",
+            "dashboard/*/*.txt",
         ],
     },
     include_package_data=True,
