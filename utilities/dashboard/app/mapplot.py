@@ -31,7 +31,7 @@ def prepare_map_data(data, variables, nice_names, labels, data_name):
 
 
 def setup_map(geo_source, data_var):
-    p = figure(title="mock data", x_axis_location=None, y_axis_location=None,)
+    p = figure(title="mock data", x_axis_location=None, y_axis_location=None, name="map")
     p.grid.grid_line_color = None
 
     renderer = p.patches(

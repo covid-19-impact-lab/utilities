@@ -87,7 +87,7 @@ def create_overview_tab(
             menu_titles=menu_titles,
             nth_str=nth_str,
             group_to_variables=group_to_variables,
-            variable_to_label=variable_to_label,
+            variable_to_nice_name=variable_to_nice_name,
         )
 
     plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
@@ -127,6 +127,9 @@ def create_overview_tab(
         background_selector=background_selector,
         caption_callback=create_caption,
         nth_str=nth_str,
+        q_selector=q_selector,
+        group_to_variables=group_to_variables,
+        variable_to_nice_name=variable_to_nice_name,
     )
     subtopic_selector.on_change("value", subtopic_callback)
 
@@ -145,13 +148,22 @@ def create_overview_tab(
     )
     background_selector.on_change("value", background_var_callback)
 
+    question_callback = partial(
+        map_update,
+        page=page,
+        nice_name_to_variable=nice_name_to_variable,
+        map_data=map_data,
+        subtopic_selector=subtopic_selector,
+    )
+    q_selector.on_change("value", question_callback)
+
     # tab = Panel(child=page, title="Variables", name="overview_panel")
     return page
 
 
 def create_selection_menus(
     topics, subtopics, topic, group, background_variables, menu_titles, nth_str,
-    group_to_variables, variable_to_label,
+    group_to_variables, variable_to_nice_name,
 ):
     topic_selector = Select(
         title=menu_titles[0],
@@ -175,11 +187,11 @@ def create_selection_menus(
         width=100,
     )
 
-    labels = [variable_to_label[var] for var in group_to_variables[group]]
+    nice_names = [variable_to_nice_name[var] for var in group_to_variables[group]]
     q_selector = Select(
         title=menu_titles[3],
-        options=labels,
-        value=labels[0],
+        options=nice_names,
+        value=nice_names[0],
         name="q_selector",
         visible=False,
     )
@@ -227,6 +239,9 @@ def set_subtopic(
     background_selector,
     caption_callback,
     nth_str,
+    q_selector,
+    group_to_variables,
+    variable_to_nice_name,
 ):
     """Adjust title, header and plot to new subtopic."""
     plot, caption, bg_info = page.children[-3:]
@@ -240,6 +255,10 @@ def set_subtopic(
     page.children[-3] = new_p
     page.children[-2] = new_caption
     background_selector.value = nth_str
+
+    new_var_nice_names = [variable_to_nice_name[var] for var in group_to_variables[new]]
+    q_selector.options = new_var_nice_names
+    q_selector.value = new_var_nice_names[0]
 
 
 def condition_on_background_var(
@@ -287,5 +306,9 @@ def condition_on_background_var(
     page.children += [plot, caption, bg_info]
 
 
-def map_update(attr, old, new, q_selector):
-    pass
+def map_update(attr, old, new, page, nice_name_to_variable, map_data, subtopic_selector):
+    if page.children[-3].name == "map":
+        group = subtopic_selector.value
+        data_var = nice_name_to_variable[new]
+        new_plot = setup_map(geo_source=map_data[group], data_var=data_var)
+        page.children[-3] = new_plot
