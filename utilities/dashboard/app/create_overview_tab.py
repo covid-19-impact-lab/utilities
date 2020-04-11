@@ -283,9 +283,11 @@ def condition_on_background_var(
 
     if new != nth_str and nice_name_to_variable[new] == "prov":
         # switch to map
+        start_var = group_to_variables[group][0]
         plot = setup_map(
-            geo_source=map_data[group],
-            data_var=group_to_variables[group][0]
+            geo_source=map_data[group][0],
+            data_var=start_var,
+            typ=map_data[group][1][start_var]
         )
         q_selector.visible = True
     elif old != nth_str and nice_name_to_variable[old] == "prov":
@@ -310,5 +312,8 @@ def map_update(attr, old, new, page, nice_name_to_variable, map_data, subtopic_s
     if page.children[-3].name == "map":
         group = subtopic_selector.value
         data_var = nice_name_to_variable[new]
-        new_plot = setup_map(geo_source=map_data[group], data_var=data_var)
+        new_plot = setup_map(
+            geo_source=map_data[group][0],
+            data_var=data_var,
+            typ=map_data[group][1][data_var])
         page.children[-3] = new_plot
