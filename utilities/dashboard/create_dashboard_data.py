@@ -93,7 +93,8 @@ def _create_overview_tab_data(
     nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
     res["variable_to_nice_name"] = nice_names
     res["nice_name_to_variable"] = {v: k for k, v in nice_names.items()}
-    res["background_variables"] = [nice_names[var] for var in internal_bg_vars]
+    res["background_variables"] = [
+        nice_names[var] for var in internal_bg_vars if var != "prov"]
     res["variable_to_label"] = data_desc.set_index("new_name")[
         f"label_{language}"
     ].to_dict()

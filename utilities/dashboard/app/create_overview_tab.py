@@ -17,6 +17,7 @@ plot_modules = {
 }
 
 header_style = {"color": "#808080"}
+TITLE_STYLE = {"font-size": "150%", "text-align": "left"}
 
 
 def create_overview_tab(
@@ -59,38 +60,48 @@ def create_overview_tab(
         nth_str (str): name of the "Nothing" category in English
 
     Returns:
-        tab (bokeh.models.Tab)
+        page (bokeh Column)
 
     """
+    group_to_nicenames = {}
+    for g, variables in group_to_variables.items():
+        group_to_nicenames[g] = [variable_to_nice_name[var] for var in variables]
     # start values
     topic = topics[0]
     subtopics = topic_to_groups[topic]
     group = subtopics[0]
+    var_nice_name = group_to_nicenames[group][0]
     plot_type = group_to_plot_type[group]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
-    # create the page elements
-    title_div = Div(
-        text=title,
-        style={"font-size": "150%", "text-align": "left"},
-        margin=(10, 0, 10, 0),
-    )
-    top_info = Div(text=text, margin=(10, 0, 30, 0), style={"text-align": "justify"})
+    # map element
+    title = Div(text=title, style=TITLE_STYLE, margin=(10, 0, 10, 0))
+    map_intro = Div(text=text, margin=(10, 0, 30, 0), style={"text-align": "justify"})
 
-    topic_selector, subtopic_selector, background_selector, q_selector = \
-        create_selection_menus(
-            topics=topics,
-            subtopics=subtopics,
-            topic=topic,
-            group=group,
-            background_variables=background_variables,
-            menu_titles=menu_titles,
-            nth_str=nth_str,
-            group_to_variables=group_to_variables,
-            variable_to_nice_name=variable_to_nice_name,
-        )
-
-    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
+    map_selectors = [
+        Select(
+            title=menu_titles[0],
+            options=topics,
+            value=topic,
+            name="topic_selector",
+            width=220,
+        ),
+        Select(
+            title=menu_titles[1],
+            options=subtopics,
+            value=group,
+            name="subtopic_selector",
+            width=220,
+        ),
+        Select(
+            title=menu_titles[3],
+            options=group_to_nicenames[group],
+            value=group_to_nicenames[group][0],
+            width=160,
+        ),
+    ]
+    map_func = partial(setup_map, map_data=map_data)
+    country_map = map_func(group=group, var_nice_name=var_nice_name)
 
     create_caption = partial(
         _create_caption,
@@ -100,102 +111,106 @@ def create_overview_tab(
         variable_to_nice_name=variable_to_nice_name,
         variable_to_label=variable_to_label,
     )
-    caption = create_caption(group=group)
+    map_caption = create_caption(group=group)
+
+    map_page = Column(title, map_intro, Row(*map_selectors), country_map, map_caption)
+
+    _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func)
+
+    plot_intro = Div(text="Plot intro goes here.", margin=(30, 0, 30, 0))
+
+    plot_selectors = [
+        Select(
+            title=menu_titles[0],
+            options=topics,
+            value=topic,
+            name="topic_selector",
+            width=200,
+        ),
+        Select(
+            title=menu_titles[1],
+            options=subtopics,
+            value=group,
+            name="subtopic_selector",
+            width=250,
+        ),
+        Select(
+            title=menu_titles[2],
+            options=[nth_str] + background_variables,
+            value=nth_str,
+            width=100,
+        ),
+    ]
+
+    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
+    plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
 
-    # assemble page
-    selection_menues = Column(
-        Row(topic_selector, subtopic_selector, background_selector),
-        Row(q_selector)
-    )
-    page = Column(title_div, top_info, selection_menues, plot, caption, bg_info)
+    plot_page = Column(plot_intro, Row(*plot_selectors), plot, plot_caption, bg_info)
 
-    # add callbacks
+    # plot callbacks
     topic_callback = partial(
-        set_topic,
-        topic_selector=topic_selector,
-        topic_to_groups=topic_to_groups,
-        subtopic_selector=subtopic_selector,
+        _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=plot_selectors[1]
     )
-    topic_selector.on_change("value", topic_callback)
+    plot_selectors[0].on_change("value", topic_callback)
 
     subtopic_callback = partial(
         set_subtopic,
-        group_to_plot_type=group_to_plot_type,
         plot_data=plot_data,
-        page=page,
-        background_selector=background_selector,
+        page=plot_page,
+        background_selector=plot_selectors[2],
+        group_to_plot_type=group_to_plot_type,
         caption_callback=create_caption,
         nth_str=nth_str,
-        q_selector=q_selector,
-        group_to_variables=group_to_variables,
-        variable_to_nice_name=variable_to_nice_name,
     )
-    subtopic_selector.on_change("value", subtopic_callback)
+    plot_selectors[1].on_change("value", subtopic_callback)
 
     background_var_callback = partial(
         condition_on_background_var,
-        subtopic_selector=subtopic_selector,
+        subtopic_selector=plot_selectors[1],
         plot_data=plot_data,
-        map_data=map_data,
-        page=page,
+        page=plot_page,
         group_to_plot_type=group_to_plot_type,
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
         nth_str=nth_str,
-        q_selector=q_selector,
     )
-    background_selector.on_change("value", background_var_callback)
+    plot_selectors[2].on_change("value", background_var_callback)
 
-    question_callback = partial(
-        map_update,
-        page=page,
-        nice_name_to_variable=nice_name_to_variable,
-        map_data=map_data,
-        subtopic_selector=subtopic_selector,
-    )
-    q_selector.on_change("value", question_callback)
-
-    # tab = Panel(child=page, title="Variables", name="overview_panel")
+    page = Column(map_page, plot_page)
     return page
 
 
-def create_selection_menus(
-    topics, subtopics, topic, group, background_variables, menu_titles, nth_str,
-    group_to_variables, variable_to_nice_name,
-):
-    topic_selector = Select(
-        title=menu_titles[0],
-        options=topics,
-        value=topic,
-        name="topic_selector",
-        width=200,
+def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func):
+    map_selectors = map_page.children[2].children
+    map_topic_callback = partial(
+        _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=map_selectors[1],
     )
-    subtopic_selector = Select(
-        title=menu_titles[1],
-        options=subtopics,
-        value=group,
-        name="subtopic_selector",
-        width=250,
-    )
+    map_selectors[0].on_change("value", map_topic_callback)
 
-    background_selector = Select(
-        title=menu_titles[2],
-        options=[nth_str] + background_variables,
-        value=nth_str,
-        width=100,
+    map_subtopic_callback = partial(
+        _set_lower_vals,
+        high_to_lower=group_to_nicenames,
+        lower_selector=map_selectors[2],
     )
+    map_selectors[1].on_change("value", map_subtopic_callback)
 
-    nice_names = [variable_to_nice_name[var] for var in group_to_variables[group]]
-    q_selector = Select(
-        title=menu_titles[3],
-        options=nice_names,
-        value=nice_names[0],
-        name="q_selector",
-        visible=False,
-    )
-    return topic_selector, subtopic_selector, background_selector, q_selector
+    change_map = partial(set_question, map_func=map_func, map_page=map_page)
+    map_selectors[2].on_change("value", change_map)
+
+
+def _set_lower_vals(attr, old, new, high_to_lower, lower_selector):
+    """Adjust lower level select menu according to new higher level."""
+    new_groups = high_to_lower[new]
+    lower_selector.options = new_groups
+    lower_selector.value = new_groups[0]
+
+
+def set_question(attr, old, new, map_func, map_page):
+    group = map_page.children[2].children[1].value
+    new_map = map_func(group=group, var_nice_name=new)
+    map_page.children[3] = new_map
 
 
 def _create_caption(
@@ -221,12 +236,7 @@ def _create_caption(
     return element
 
 
-def set_topic(attr, old, new, topic_to_groups, topic_selector, subtopic_selector):
-    """Adjust subtopic select menu according to new topic."""
-    topic_selector.value = new
-    new_groups = topic_to_groups[new]
-    subtopic_selector.options = new_groups
-    subtopic_selector.value = new_groups[0]
+# =====================================================================================
 
 
 def set_subtopic(
@@ -239,9 +249,6 @@ def set_subtopic(
     background_selector,
     caption_callback,
     nth_str,
-    q_selector,
-    group_to_variables,
-    variable_to_nice_name,
 ):
     """Adjust title, header and plot to new subtopic."""
     plot, caption, bg_info = page.children[-3:]
@@ -256,10 +263,6 @@ def set_subtopic(
     page.children[-2] = new_caption
     background_selector.value = nth_str
 
-    new_var_nice_names = [variable_to_nice_name[var] for var in group_to_variables[new]]
-    q_selector.options = new_var_nice_names
-    q_selector.value = new_var_nice_names[0]
-
 
 def condition_on_background_var(
     attr,
@@ -267,53 +270,26 @@ def condition_on_background_var(
     new,
     subtopic_selector,
     plot_data,
-    map_data,
     page,
     group_to_plot_type,
     variable_to_label,
     group_to_variables,
     nice_name_to_variable,
-    q_selector,
     nth_str,
 ):
     plot, caption, bg_info = page.children[-3:]
     page.children = page.children[:-3]
     group = subtopic_selector.value
     plot_type = group_to_plot_type[group]
+    condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
-    if new != nth_str and nice_name_to_variable[new] == "prov":
-        # switch to map
-        start_var = group_to_variables[group][0]
-        plot = setup_map(
-            geo_source=map_data[group][0],
-            data_var=start_var,
-            typ=map_data[group][1][start_var]
-        )
-        q_selector.visible = True
-    elif old != nth_str and nice_name_to_variable[old] == "prov":
-        # switch back to other plot
-        setup_plot = getattr(plot_modules[plot_type], "setup_plot")
-        plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
-        q_selector.visible = False
-    else:
-        condition_plot = getattr(plot_modules[plot_type], "condition_plot")
-        condition_plot(
-            plot, **plot_data[group], bg_var=new, nth_str=nth_str,
-        )
+    condition_plot(
+        plot, **plot_data[group], bg_var=new, nth_str=nth_str,
+    )
+
     if new == nth_str:
         bg_info.text = ""
     else:
         bg_info.text = variable_to_label[nice_name_to_variable[new]]
 
     page.children += [plot, caption, bg_info]
-
-
-def map_update(attr, old, new, page, nice_name_to_variable, map_data, subtopic_selector):
-    if page.children[-3].name == "map":
-        group = subtopic_selector.value
-        data_var = nice_name_to_variable[new]
-        new_plot = setup_map(
-            geo_source=map_data[group][0],
-            data_var=data_var,
-            typ=map_data[group][1][data_var])
-        page.children[-3] = new_plot
