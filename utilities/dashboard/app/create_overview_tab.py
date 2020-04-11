@@ -261,27 +261,31 @@ def condition_on_background_var(
     page.children = page.children[:-3]
     group = subtopic_selector.value
     plot_type = group_to_plot_type[group]
-    condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
-    if nice_name_to_variable[new] == "prov":
+    if new != nth_str and nice_name_to_variable[new] == "prov":
+        # switch to map
         plot = setup_map(
             geo_source=map_data[group],
             data_var=group_to_variables[group][0]
         )
         q_selector.visible = True
-
-    elif nice_name_to_variable[old] != "prov":
+    elif old != nth_str and nice_name_to_variable[old] == "prov":
+        # switch back to other plot
+        setup_plot = getattr(plot_modules[plot_type], "setup_plot")
+        plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
         q_selector.visible = False
+    else:
+        condition_plot = getattr(plot_modules[plot_type], "condition_plot")
         condition_plot(
             plot, **plot_data[group], bg_var=new, nth_str=nth_str,
         )
-    else:
-        setup_plot = getattr(plot_modules[plot_type], "setup_plot")
-        plot = setup_plot(**plot_data[new], bg_var=nth_str, nth_str=nth_str)
-
     if new == nth_str:
         bg_info.text = ""
     else:
         bg_info.text = variable_to_label[nice_name_to_variable[new]]
 
     page.children += [plot, caption, bg_info]
+
+
+def map_update(attr, old, new, q_selector):
+    pass
