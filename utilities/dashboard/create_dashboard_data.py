@@ -104,7 +104,25 @@ def _create_overview_tab_data(
     ].to_dict()
 
     plot_data = {}
-    map_data = {}
+    if language == "english":
+        translations = {
+            "Province": "Province",
+            "No. Obs": "No. Obs",
+            "Question": "Question",
+            "Value": "Value",
+            "Share": "Share",
+            "Mean": "Mean",
+        }
+    elif language == "german":
+        translations = {
+            "Province": "Provinz",
+            "No. Obs": "Antworten",
+            "Question": "Frage",
+            "Value": "Wert",
+            "Share": "Anteil",
+            "Mean": "Mittelwert",
+        }
+    map_data = {"tooltips": translations}
     for g in res["groups"]:
         plot_type = res["group_to_plot_type"][g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
@@ -140,20 +158,21 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
 
 def _language_specific_kwargs(language, data_name):
     res = {}
+    with open(f"{data_name}/top_text_{language}.txt", "r") as f:
+        res["top_text"] = f.read()
+    with open(f"{data_name}/plot_intro_{language}.txt", "r") as f:
+        res["plot_intro"] = f.read()
+
     if language == "english":
         res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
         res["menu_titles"] = ("Topic", "Subtopic", "Split By", "Question")
-        with open(f"{data_name}/top_text_english.txt", "r") as f:
-            res["text"] = f.read()
         res["nth_str"] = "Nothing"
+        res["groupby_title"] = "Group Differences"
     elif language == "german":
-        res[
-            "title"
-        ] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
+        res["title"] = "Was andere angesichts der Corona-Epidemie glauben und tun"
         res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach", "Frage")
-        with open(f"{data_name}/top_text_german.txt", "r") as f:
-            res["text"] = f.read()
         res["nth_str"] = "Nichts"
+        res["groupby_title"] = "Unterschiede zwischen Bevölkerungsgruppen"
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
     return res

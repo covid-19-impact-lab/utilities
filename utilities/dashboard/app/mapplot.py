@@ -108,6 +108,7 @@ def _load_map_coordinates(data_name):
 
 
 def setup_map(map_data, group, var_nice_name):
+    translations = map_data["tooltips"]
     geo_source = map_data[group][0]
     typ = map_data[group][1][var_nice_name]
     var_nice_name = var_nice_name.replace(" ", "_")
@@ -125,10 +126,10 @@ def setup_map(map_data, group, var_nice_name):
     )
 
     tooltips = [
-        ("Province", "@name"),
-        ("No. Obs", f"@nobs_{var_nice_name}"),
-        ("Question", f"@label_{var_nice_name}"),
-        (typ, f"@value_{var_nice_name}"),
+        (translations["Province"], "@name"),
+        (translations["No. Obs"], f"@nobs_{var_nice_name}"),
+        (translations["Question"], f"@label_{var_nice_name}"),
+        (translations[typ], f"@value_{var_nice_name}"),
     ]
 
     hover = HoverTool(tooltips=tooltips, renderers=[renderer])

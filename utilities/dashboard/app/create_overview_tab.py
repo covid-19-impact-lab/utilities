@@ -33,8 +33,10 @@ def create_overview_tab(
     variable_to_label,
     variable_to_nice_name,
     group_to_caption,
-    text,
     title,
+    top_text,
+    plot_intro,
+    groupby_title,
     nice_name_to_variable,
     menu_titles,
     nth_str,
@@ -54,8 +56,10 @@ def create_overview_tab(
         variable_to_nice_name (dict)
         nice_name_to_variable (dict)
         group_to_caption (dict)
-        text (str)
         title (str)
+        groupby_title (str)
+        top_text (str)
+        plot_intro (str)
         menu_titles (tuple)
         nth_str (str): name of the "Nothing" category in English
 
@@ -74,9 +78,9 @@ def create_overview_tab(
     plot_type = group_to_plot_type[group]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
-    # map element
+    # map elements
     title = Div(text=title, style=TITLE_STYLE, margin=(10, 0, 10, 0))
-    map_intro = Div(text=text, margin=(10, 0, 30, 0), style={"text-align": "justify"})
+    intro = Div(text=top_text, margin=(10, 0, 30, 0), style={"text-align": "justify"})
 
     map_selectors = [
         Select(
@@ -113,11 +117,12 @@ def create_overview_tab(
     )
     map_caption = create_caption(group=group)
 
-    map_page = Column(title, map_intro, Row(*map_selectors), country_map, map_caption)
+    map_page = Column(title, intro, Row(*map_selectors), country_map, map_caption)
 
-    _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func)
+    _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func, create_caption)
 
-    plot_intro = Div(text="Plot intro goes here.", margin=(30, 0, 30, 0))
+    plot_title = Div(text=groupby_title, style=TITLE_STYLE, margin=(30, 0, 10, 0))
+    plot_intro = Div(text=plot_intro, margin=(10, 0, 30, 0), style={"text-align": "justify"})
 
     plot_selectors = [
         Select(
@@ -146,7 +151,7 @@ def create_overview_tab(
     plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
 
-    plot_page = Column(plot_intro, Row(*plot_selectors), plot, plot_caption, bg_info)
+    plot_page = Column(plot_title, plot_intro, Row(*plot_selectors), plot, plot_caption, bg_info)
 
     # plot callbacks
     topic_callback = partial(
@@ -182,7 +187,7 @@ def create_overview_tab(
     return page
 
 
-def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func):
+def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func, caption_func):
     map_selectors = map_page.children[2].children
     map_topic_callback = partial(
         _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=map_selectors[1],
@@ -193,6 +198,8 @@ def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func):
         _set_lower_vals,
         high_to_lower=group_to_nicenames,
         lower_selector=map_selectors[2],
+        caption_func=caption_func,
+        map_page=map_page
     )
     map_selectors[1].on_change("value", map_subtopic_callback)
 
@@ -200,11 +207,13 @@ def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func):
     map_selectors[2].on_change("value", change_map)
 
 
-def _set_lower_vals(attr, old, new, high_to_lower, lower_selector):
+def _set_lower_vals(attr, old, new, high_to_lower, lower_selector, caption_func=None, map_page=None):
     """Adjust lower level select menu according to new higher level."""
     new_groups = high_to_lower[new]
     lower_selector.options = new_groups
     lower_selector.value = new_groups[0]
+    if caption_func is not None:
+        map_page.children[-1] = caption_func(group=new)
 
 
 def set_question(attr, old, new, map_func, map_page):
@@ -234,9 +243,6 @@ def _create_caption(
 
     element = Div(text=text, name="bottom", margin=(20, 0, 10, 0), style=header_style)
     return element
-
-
-# =====================================================================================
 
 
 def set_subtopic(
