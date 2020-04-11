@@ -2,8 +2,8 @@ from utilities.dashboard.app import barplot
 from utilities.dashboard.app import distplot
 from utilities.dashboard.app import no_plot
 from utilities.dashboard.app import stacked_barplot
+from utilities.dashboard.app.mapplot import prepare_map_data
 from itertools import product
-import json
 
 
 plot_modules = {
@@ -65,28 +65,10 @@ def _create_overview_tab_data(
             - "variable_to_label": Dictionary
             - "plot_data": A dict with data for the plots
             - "variable_to_nice_name": Dictionary
-            -
+            - "map_data": A dict with geojson data sources for each group
 
     """
-    res = {}
-
-    if language == "english":
-        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
-        res["menu_titles"] = ("Topic", "Subtopic", "Split By")
-        with open(f"{data_name}/top_text_english.txt", "r") as f:
-            res["text"] = f.read()
-        res["nth_str"] = "Nothing"
-    elif language == "german":
-        res[
-            "title"
-        ] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
-        res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach")
-        with open(f"{data_name}/top_text_german.txt", "r") as f:
-            res["text"] = f.read()
-        res["nth_str"] = "Nichts"
-    else:
-        raise NotImplementedError("The language you supplied is not supported yet.")
-
+    res = _language_specific_kwargs(language=language, data_name=data_name)
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     res["groups"] = [group for group in raw_groups if group not in bg_var_groups]
@@ -121,20 +103,32 @@ def _create_overview_tab_data(
     ].to_dict()
 
     plot_data = {}
+    map_data = {}
     for g in res["groups"]:
         plot_type = res["group_to_plot_type"][g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
         variables = res["group_to_variables"][g]
+        nice_names = res["variable_to_nice_name"]
+        labels = res["variable_to_label"]
         plot_data[g] = prepare_data(
             data=data,
             variables=variables,
-            bg_vars=internal_bg_vars,
-            nice_names=res["variable_to_nice_name"],
-            labels=res["variable_to_label"],
+            bg_vars=[x for x in internal_bg_vars if x != "prov"],
+            nice_names=nice_names,
+            labels=labels,
             nth_str=res["nth_str"],
         )
 
+        map_data[g] = prepare_map_data(
+            data=data,
+            variables=variables,
+            nice_names=nice_names,
+            labels=labels,
+            data_name=data_name,
+        )
+
     res["plot_data"] = plot_data
+    res["map_data"] = map_data
     return res
 
 
@@ -143,48 +137,25 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
     return {k: val.tolist() for k, val in raw.items()}
 
 
-# =====================================================================================
-
-
-def create_map_data(data, data_desc, group_info, language, data_name):
-    """Create a dict with all data needed in the overview tab.
-
-    Args:
-        data (pd.DataFrame): The empirical dataset.
-        data_decs (pd.DataFrame): Description of the dataset.
-        group_info (pd.DataFrame): Description of groups.
-        data_name (str): "liss" or "gesis"
-        language (str): One of ["english", "german", "dutch"]
-
-    """
-    provinces = _map_coordinates(data_name)
-
-    if data_name == "liss":
-        data_regions = data["prov"].unique()
-        province_names = [prov["properties"]["name"] for prov in provinces["features"]]
-    assert set(province_names) == set(data_regions), "Regions don't match."
-
-
-def _map_coordinates(data_name):
-    """Load and prepare the geo data.
-
-    source for the Netherlands:
-    https://www.webuildinternet.com/2015/07/09/geojson-data-of-the-netherlands/
-
-    source for Germany:
-    https://public.opendatasoft.com/explore/dataset/landkreise-in-germany/export/
-    """
-    with open(f"{data_name}/provinces.geojson", "r") as f:
-        provinces = json.load(f)
-
-    if data_name == "liss":
-        # change Friesland (Fryslân) to Friesland
-        for i, element in enumerate(provinces["features"]):
-            if element["properties"]["name"] == "Friesland (Fryslân)":
-                element["properties"]["name"] = "Friesland"
+def _language_specific_kwargs(language, data_name):
+    res = {}
+    if language == "english":
+        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
+        res["menu_titles"] = ("Topic", "Subtopic", "Split By", "Question")
+        with open(f"{data_name}/top_text_english.txt", "r") as f:
+            res["text"] = f.read()
+        res["nth_str"] = "Nothing"
+    elif language == "german":
+        res[
+            "title"
+        ] = "Erkunde, was andere angesichts der Corona-Epidemie glauben und tun"
+        res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach", "Frage")
+        with open(f"{data_name}/top_text_german.txt", "r") as f:
+            res["text"] = f.read()
+        res["nth_str"] = "Nichts"
     else:
-        raise NotImplementedError("Only LISS data supported at the moment.")
-    return provinces
+        raise NotImplementedError("The language you supplied is not supported yet.")
+    return res
 
 
 # =====================================================================================
