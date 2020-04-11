@@ -8,6 +8,7 @@ from bokeh.models.widgets import Div
 from utilities.dashboard.app import barplot
 from utilities.dashboard.app import distplot
 from utilities.dashboard.app import stacked_barplot
+from utilities.dashboard.app.mapplot import setup_map
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -26,6 +27,7 @@ def create_overview_tab(
     group_to_plot_type,
     background_variables,
     plot_data,
+    map_data,
     group_to_variables,
     variable_to_label,
     variable_to_nice_name,
@@ -75,15 +77,18 @@ def create_overview_tab(
     )
     top_info = Div(text=text, margin=(10, 0, 30, 0), style={"text-align": "justify"})
 
-    topic_selector, subtopic_selector, background_selector = create_selection_menus(
-        topics=topics,
-        subtopics=subtopics,
-        topic=topic,
-        group=group,
-        background_variables=background_variables,
-        menu_titles=menu_titles,
-        nth_str=nth_str,
-    )
+    topic_selector, subtopic_selector, background_selector, q_selector = \
+        create_selection_menus(
+            topics=topics,
+            subtopics=subtopics,
+            topic=topic,
+            group=group,
+            background_variables=background_variables,
+            menu_titles=menu_titles,
+            nth_str=nth_str,
+            group_to_variables=group_to_variables,
+            variable_to_label=variable_to_label,
+        )
 
     plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
 
@@ -99,9 +104,13 @@ def create_overview_tab(
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
 
     # assemble page
-    selection_menues = Row(topic_selector, subtopic_selector, background_selector)
+    selection_menues = Column(
+        Row(topic_selector, subtopic_selector, background_selector),
+        Row(q_selector)
+    )
     page = Column(title_div, top_info, selection_menues, plot, caption, bg_info)
 
+    # add callbacks
     topic_callback = partial(
         set_topic,
         topic_selector=topic_selector,
@@ -112,10 +121,10 @@ def create_overview_tab(
 
     subtopic_callback = partial(
         set_subtopic,
+        group_to_plot_type=group_to_plot_type,
         plot_data=plot_data,
         page=page,
         background_selector=background_selector,
-        group_to_plot_type=group_to_plot_type,
         caption_callback=create_caption,
         nth_str=nth_str,
     )
@@ -125,12 +134,14 @@ def create_overview_tab(
         condition_on_background_var,
         subtopic_selector=subtopic_selector,
         plot_data=plot_data,
+        map_data=map_data,
         page=page,
         group_to_plot_type=group_to_plot_type,
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
         nth_str=nth_str,
+        q_selector=q_selector,
     )
     background_selector.on_change("value", background_var_callback)
 
@@ -139,7 +150,8 @@ def create_overview_tab(
 
 
 def create_selection_menus(
-    topics, subtopics, topic, group, background_variables, menu_titles, nth_str
+    topics, subtopics, topic, group, background_variables, menu_titles, nth_str,
+    group_to_variables, variable_to_label,
 ):
     topic_selector = Select(
         title=menu_titles[0],
@@ -155,13 +167,23 @@ def create_selection_menus(
         name="subtopic_selector",
         width=250,
     )
+
     background_selector = Select(
         title=menu_titles[2],
         options=[nth_str] + background_variables,
         value=nth_str,
         width=100,
     )
-    return topic_selector, subtopic_selector, background_selector
+
+    labels = [variable_to_label[var] for var in group_to_variables[group]]
+    q_selector = Select(
+        title=menu_titles[3],
+        options=labels,
+        value=labels[0],
+        name="q_selector",
+        visible=False,
+    )
+    return topic_selector, subtopic_selector, background_selector, q_selector
 
 
 def _create_caption(
@@ -226,11 +248,13 @@ def condition_on_background_var(
     new,
     subtopic_selector,
     plot_data,
+    map_data,
     page,
     group_to_plot_type,
     variable_to_label,
     group_to_variables,
     nice_name_to_variable,
+    q_selector,
     nth_str,
 ):
     plot, caption, bg_info = page.children[-3:]
@@ -239,9 +263,21 @@ def condition_on_background_var(
     plot_type = group_to_plot_type[group]
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
-    condition_plot(
-        plot, **plot_data[group], bg_var=new, nth_str=nth_str,
-    )
+    if nice_name_to_variable[new] == "prov":
+        plot = setup_map(
+            geo_source=map_data[group],
+            data_var=group_to_variables[group][0]
+        )
+        q_selector.visible = True
+
+    elif nice_name_to_variable[old] != "prov":
+        q_selector.visible = False
+        condition_plot(
+            plot, **plot_data[group], bg_var=new, nth_str=nth_str,
+        )
+    else:
+        setup_plot = getattr(plot_modules[plot_type], "setup_plot")
+        plot = setup_plot(**plot_data[new], bg_var=nth_str, nth_str=nth_str)
 
     if new == nth_str:
         bg_info.text = ""
