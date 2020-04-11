@@ -6,6 +6,7 @@ from utilities.colors import get_colors
 from bokeh.plotting import figure
 from bokeh.models import HoverTool
 from pandas.api.types import is_categorical_dtype, is_bool_dtype
+from pathlib import Path
 
 
 def prepare_map_data(data, variables, nice_names, labels, data_name):
@@ -93,7 +94,8 @@ def _load_map_coordinates(data_name):
     source for Germany:
     https://public.opendatasoft.com/explore/dataset/landkreise-in-germany/export/
     """
-    with open(f"{data_name}/provinces.geojson", "r") as f:
+    dashboard_path = Path(__file__).resolve().parent.parent
+    with open(dashboard_path / data_name / "provinces.geojson", "r") as f:
         provinces = json.load(f)
 
     if data_name == "liss":

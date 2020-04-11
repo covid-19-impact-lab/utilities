@@ -4,6 +4,7 @@ from utilities.dashboard.app import no_plot
 from utilities.dashboard.app import stacked_barplot
 from utilities.dashboard.app.mapplot import prepare_map_data
 from itertools import product
+from pathlib import Path
 
 
 plot_modules = {
@@ -157,10 +158,11 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
 
 
 def _language_specific_kwargs(language, data_name):
+    module_path = Path(__file__).resolve().parent
     res = {}
-    with open(f"{data_name}/top_text_{language}.txt", "r") as f:
+    with open(module_path / data_name / f"top_text_{language}.txt", "r") as f:
         res["top_text"] = f.read()
-    with open(f"{data_name}/plot_intro_{language}.txt", "r") as f:
+    with open(module_path / data_name / f"plot_intro_{language}.txt", "r") as f:
         res["plot_intro"] = f.read()
 
     if language == "english":
