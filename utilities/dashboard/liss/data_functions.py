@@ -1,5 +1,6 @@
 """Functions for LISS data preparation."""
 
+import numpy as np
 import pandas as pd
 import yaml
 from pandas.api.types import is_categorical
@@ -287,4 +288,31 @@ def _add_variables(data):
     data["income_group"] = pd.cut(
         data["equiv_net_inc"], approx_quartiles, labels=labels
     )
+
+    # =================================================================================
+    print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
+    liss_regions = [
+        "Groningen",
+        "Friesland",
+        "Drenthe",
+        "Overijssel",
+        "Flevoland",
+        "Gelderland",
+        "Utrecht",
+        "Noord-Holland",
+        "Zuid-Holland",
+        "Zeeland",
+        "Noord-Brabant",
+        "Limburg",
+    ]
+    mock_regions = np.random.choice(liss_regions, len(data))
+    data["prov"] = pd.Categorical(
+        values=mock_regions, categories=liss_regions, ordered=False
+    )
+
+    # # with real data
+    # provinces = pd.read_stata(path)
+    # hh_to_prov = provinces.set_index("nohouse_encr")["prov"].to_dict()
+    # data["prov"] = data["hh_id"].replace(hh_to_prov)
+
     return data

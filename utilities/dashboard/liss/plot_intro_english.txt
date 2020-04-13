@@ -1,0 +1,12 @@
+In addition to seeing what people believe, differences between segments of society can be very important when we think about CoViD-19:
+<br> <br>
+Do the elderly practice more social distancing than younger individuals?
+<br> <br>
+How many among those of poor health would support a curfew for those
+at high risk of needing intensive care?
+<br> <br>
+Are people with low income at a higher risk to lose their jobs?
+<br> <br>
+You can see how answers differ between groups such as age groups or gender
+by selecting a group in the Split By menu below.
+To see the exact questions and more information just hover over the graph.
