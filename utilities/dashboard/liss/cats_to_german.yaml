@@ -50,6 +50,14 @@ Critical Profession: Systemrelevanter Beruf
 30 to 40h: 30-40 Std.
 ">40h": über 40 Std.
 
+">10h reduction": mehr als 10h weniger
+-20 to -10h: -20 bis -10 Std
+-10 to -5h: -10 bis -5 Std
+-5 to 0h: -5 bis 0 Std
+0 to 15h: 0 bis 15 Std
+">15h increase": mehr als 15h mehr
+
+
 0 to 10%: 0 bis 10%
 10 to 49%: 10 bis 49%
 50 to 99%: 50 bis 99%

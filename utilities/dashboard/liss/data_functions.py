@@ -11,8 +11,9 @@ def prepare_liss_data(data, language, path_to_regions):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
+    data = _add_variables(data)
     data = _bin_variables(data)
-    data = _add_variables(data, path_to_regions)
+    data = _add_regions(data, path_to_regions)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
         with open(cat_path, "r") as f:
@@ -226,10 +227,12 @@ def _bin_variables(data):
         "home_h_before",
         "workplace_h_after",
         "home_h_after",
+        "hours_before",
+        "hours_after",
     ]
 
+    cuts = [-1, 0.5, 10, 20, 30, 40, 100]
     for var in work_hours:
-        cuts = [-1, 0.5, 10, 20, 30, 40, 100]
         data[var + '_binned'] = pd.cut(data[var], cuts)
         nice_cats = {}
         for intv in data[var + "_binned"].cat.categories:
@@ -237,6 +240,20 @@ def _bin_variables(data):
                 nice_cats[intv] = "0h"
             elif intv.right > 40:
                 nice_cats[intv] = ">40h"
+            else:
+                nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
+        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
+
+    hour_changes = ["change_workplace_h", "change_home_h", "change_all_hours"]
+    cuts = [-np.inf, -20, -10, -5, 0, 15, np.inf]
+    for var in hour_changes:
+        data[var + '_binned'] = pd.cut(data[var], cuts)
+        nice_cats = {}
+        for intv in data[var + "_binned"].cat.categories:
+            if intv.left == -np.inf:
+                nice_cats[intv] = ">10h reduction"
+            elif intv.right > 15:
+                nice_cats[intv] = ">15h increase"
             else:
                 nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
         data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
@@ -261,8 +278,9 @@ def _zero_plus_quartiles(data, var):
     return data
 
 
-def _add_variables(data, path_to_regions):
+def _add_variables(data):
     data = data.copy()
+
     data["hh_adults"] = data["hh_members"] - data["hh_children"]
     # we use the OECD factor, see https://bit.ly/2yu1cXs
     data["equiv_factor"] = 0.5 + 0.5 * data["hh_adults"] + 0.3 * data["hh_children"]
@@ -290,7 +308,19 @@ def _add_variables(data, path_to_regions):
         data["equiv_net_inc"], approx_quartiles, labels=labels
     )
 
+    # add changes in each type and overall hours
+    data["change_workplace_h"] = data["workplace_h_after"] - data["workplace_h_before"]
+    data["change_home_h"] = data["home_h_after"] - data["home_h_before"]
+    data["hours_before"] = data["workplace_h_before"] + data["home_h_before"]
+    data["hours_after"] = data["workplace_h_after"] + data["home_h_after"]
+    data["change_all_hours"] = data["hours_after"] - data["hours_before"]
+
+    return data
+
+
+def _add_regions(data, path_to_regions):
     if path_to_regions is None:
+        data = data.copy()
         print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
         liss_regions = [
             "Groningen",

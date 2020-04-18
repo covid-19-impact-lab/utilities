@@ -24,7 +24,6 @@ def _reduce_description_table(raw_desc, language):
         f"group_{language}",
         f"label_{language}",
         f"nice_name_{language}",
-        "binned",
     ]
     desc = raw_desc[keep_cols]
     desc = desc[desc["new_name"].notnull()]
