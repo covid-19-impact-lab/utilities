@@ -10,6 +10,7 @@ from utilities.dashboard.create_description_table import create_description_tabl
 if __name__ == "__main__":
     lang = sys.argv[1]
     data_path = sys.argv[2]
+    path_to_regions = sys.argv[3] if len(sys.argv == 3) else None
 
     if "liss" in data_path:
         data_name = "liss"
@@ -18,7 +19,7 @@ if __name__ == "__main__":
 
     if data_name == "liss":
         raw_data = pd.read_pickle(data_path)
-        data = prepare_liss_data(raw_data, lang)
+        data = prepare_liss_data(raw_data, lang, path_to_regions)
 
     dashboard_path = Path(__file__).resolve().parent
     raw_group_info = pd.read_csv(

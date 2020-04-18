@@ -7,12 +7,12 @@ from pandas.api.types import is_categorical
 from pathlib import Path
 
 
-def prepare_liss_data(data, language):
+def prepare_liss_data(data, language, path_to_regions):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
     data = _bin_variables(data)
-    data = _add_variables(data)
+    data = _add_variables(data, path_to_regions)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
         with open(cat_path, "r") as f:
@@ -290,29 +290,34 @@ def _add_variables(data):
     )
 
     # =================================================================================
-    print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
-    liss_regions = [
-        "Groningen",
-        "Friesland",
-        "Drenthe",
-        "Overijssel",
-        "Flevoland",
-        "Gelderland",
-        "Utrecht",
-        "Noord-Holland",
-        "Zuid-Holland",
-        "Zeeland",
-        "Noord-Brabant",
-        "Limburg",
-    ]
-    mock_regions = np.random.choice(liss_regions, len(data))
-    data["prov"] = pd.Categorical(
-        values=mock_regions, categories=liss_regions, ordered=False
-    )
-
-    # # with real data
-    # provinces = pd.read_stata(path)
-    # hh_to_prov = provinces.set_index("nohouse_encr")["prov"].to_dict()
-    # data["prov"] = data["hh_id"].replace(hh_to_prov)
+    if path_to_regions is None:
+        print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
+        liss_regions = [
+            "Groningen",
+            "Friesland",
+            "Drenthe",
+            "Overijssel",
+            "Flevoland",
+            "Gelderland",
+            "Utrecht",
+            "Noord-Holland",
+            "Zuid-Holland",
+            "Zeeland",
+            "Noord-Brabant",
+            "Limburg",
+        ]
+        mock_regions = np.random.choice(liss_regions, len(data))
+        data["prov"] = pd.Categorical(
+            values=mock_regions, categories=liss_regions, ordered=False
+        )
+    else:
+        prov = pd.read_pickle(path_to_regions)
+        data = pd.merge(
+            left=data,
+            right=prov,
+            left_on=['hh_id'],
+            right_index=True,
+            how="left",
+        )
 
     return data
