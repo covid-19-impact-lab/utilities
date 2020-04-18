@@ -290,6 +290,7 @@ def _add_variables(data):
     )
 
     # =================================================================================
+<<<<<<< HEAD
     if path_to_regions is None:
         print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
         liss_regions = [
@@ -319,5 +320,4 @@ def _add_variables(data):
             right_index=True,
             how="left",
         )
-
     return data
