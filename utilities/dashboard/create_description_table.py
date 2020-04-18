@@ -17,6 +17,7 @@ def create_description_table(raw_desc, background_table, group_info, data, langu
     return desc.reset_index()
 
 
+
 def _reduce_description_table(raw_desc, language):
     keep_cols = [
         "new_name",

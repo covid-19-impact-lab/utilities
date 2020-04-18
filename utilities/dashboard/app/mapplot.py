@@ -5,7 +5,7 @@ from bokeh.models import GeoJSONDataSource
 from utilities.colors import get_colors
 from bokeh.plotting import figure
 from bokeh.models import HoverTool
-from pandas.api.types import is_categorical_dtype, is_bool_dtype
+from pandas.api.types import is_categorical_dtype, is_bool_dtype, is_numeric_dtype
 from pathlib import Path
 
 
@@ -23,17 +23,19 @@ def prepare_map_data(data, variables, nice_names, labels, data_name):
     provinces = _load_map_coordinates(data_name=data_name)
     types = {}
     for var in variables:
+        binned = var.endswith('_binned')
         var_nice_name = nice_names[var]
-        if is_categorical_dtype(data[var]):
-            types[var_nice_name] = "Value"
-        elif is_bool_dtype(data[var]):
+        sr = data[var[:-7]] if binned else data[var]
+        if is_categorical_dtype(sr):
+            types[var_nice_name] = "Most Common"
+        elif is_bool_dtype(sr):
             types[var_nice_name] = "Share"
         else:
             types[var_nice_name] = "Mean"
         provinces = _add_entries_for_one_variable(
             data=data,
             provinces=provinces,
-            data_var=var,
+            data_var=var[:-7] if binned else var,
             nice_name=var_nice_name,
             label=labels[var],
             typ=types[var_nice_name],
@@ -47,9 +49,10 @@ def _add_entries_for_one_variable(data, provinces, data_var, label, typ, nice_na
     gb = data.groupby("prov")[data_var]
     nobs = gb.apply(len)
 
-    if typ == "Value":  # categorical
-        values = gb.apply(lambda x: x.dropna().cat.codes.mean())
-    else:
+    if typ == "Most Common":  # categorical
+        dtyp = data[data_var].dtype
+        values = gb.apply(lambda x: x.mode()[0]).astype(dtyp)
+    else:  # boolean and
         values = gb.apply(lambda x: x.mean())
 
     color_dict = _get_color_dict(values)
@@ -57,12 +60,14 @@ def _add_entries_for_one_variable(data, provinces, data_var, label, typ, nice_na
     for prov_dict in provinces["features"]:
         prov_name = prov_dict["properties"]["name"]
         val = values[prov_name]
-        if typ == "Value":
-            val_str = f"{val:.1f} ({data[data_var].cat.categories[int(val)]})"
+        if typ == "Most Common":
+            val_str = val
         elif typ == "Share":
             val_str = f"{100 * val:.0f}%"
-        else:
-            val_str = f"{val:.2f}"
+        elif data_var.startswith('p_'): # mean probability
+            val_str = f"{val:.0f}%"
+        else: # mean and not probability
+            val_str = f"{val:.0f}"
 
         no_str_name = nice_name.replace(" ", "_")
         var_entries = {
@@ -77,11 +82,20 @@ def _add_entries_for_one_variable(data, provinces, data_var, label, typ, nice_na
 
 
 def _get_color_dict(sr):
-    linspace = np.linspace(sr.min() - 0.05, sr.max() + 0.05, 12)
-    colors = get_colors("blue-yellow", 12)
-    bins = pd.cut(sr, linspace)
-    bin_to_color = {bin_: color for bin_, color in zip(bins.cat.categories, colors)}
-    color_dict = {val: bin_to_color[bin_] for val, bin_ in zip(sr, bins)}
+    if is_categorical_dtype(sr):
+        if sr.cat.ordered:
+            colors = get_colors("blue-yellow", len(sr.cat.categories))
+        else:
+            colors = get_colors("categorical", len(sr.cat.categories))
+        color_dict = {cat: col for cat, col in zip(sr.cat.categories, colors)}
+    elif is_numeric_dtype(sr):
+        colors = get_colors("blue-yellow", 12)
+        linspace = np.linspace(sr.min() - 0.05, sr.max() + 0.05, 12)
+        bins = pd.cut(sr, linspace)
+        bin_to_color = {bin_: color for bin_, color in zip(bins.cat.categories, colors)}
+        color_dict = {val: bin_to_color[bin_] for val, bin_ in zip(sr, bins)}
+    else:
+        raise AssertionError(f"{sr.name} is neihter categorical nor numeric")
     return color_dict
 
 

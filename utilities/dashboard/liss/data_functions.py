@@ -7,12 +7,13 @@ from pandas.api.types import is_categorical
 from pathlib import Path
 
 
-def prepare_liss_data(data, language):
+def prepare_liss_data(data, language, path_to_regions):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
-    data = _bin_variables(data)
     data = _add_variables(data)
+    data = _bin_variables(data)
+    data = _add_regions(data, path_to_regions)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
         with open(cat_path, "r") as f:
@@ -212,49 +213,66 @@ def _bin_variables(data):
         # cuts = [-1, 0.5, 50.0, 99, 110]
         # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
         cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
-        data[var] = pd.cut(data[var], cuts)
+        data[var + '_binned'] = pd.cut(data[var], cuts)
         nice_cats = {}
-        for intv in data[var].cat.categories:
+        for intv in data[var + "_binned"].cat.categories:
             if intv.right - intv.left < 1:
                 nice_cats[intv] = f"{int(intv.right)}%"
             else:
                 nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
-        data[var] = data[var].cat.rename_categories(nice_cats)
+        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
 
     work_hours = [
         "workplace_h_before",
         "home_h_before",
         "workplace_h_after",
         "home_h_after",
+        "hours_before",
+        "hours_after",
     ]
 
+    cuts = [-1, 0.5, 10, 20, 30, 40, 100]
     for var in work_hours:
-        cuts = [-1, 0.5, 10, 20, 30, 40, 100]
-        data[var] = pd.cut(data[var], cuts)
+        data[var + '_binned'] = pd.cut(data[var], cuts)
         nice_cats = {}
-        for intv in data[var].cat.categories:
+        for intv in data[var + "_binned"].cat.categories:
             if intv.left < 0:
                 nice_cats[intv] = "0h"
             elif intv.right > 40:
                 nice_cats[intv] = ">40h"
             else:
                 nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
-        data[var] = data[var].cat.rename_categories(nice_cats)
+        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
+
+    hour_changes = ["change_workplace_h", "change_home_h", "change_all_hours"]
+    cuts = [-np.inf, -20, -10, -5, 0, 15, np.inf]
+    for var in hour_changes:
+        data[var + '_binned'] = pd.cut(data[var], cuts)
+        nice_cats = {}
+        for intv in data[var + "_binned"].cat.categories:
+            if intv.left == -np.inf:
+                nice_cats[intv] = ">10h reduction"
+            elif intv.right > 15:
+                nice_cats[intv] = ">15h increase"
+            else:
+                nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
+        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
 
     return data
 
 
 def _zero_plus_quartiles(data, var):
     zeros = data[data[var] == 0].index
-    data[var] = pd.qcut(data[var][data[var] > 0], 4)
+    new_name = var + '_binned'
+    data[new_name] = pd.qcut(data[var][data[var] > 0], 4)
     nice_cats = {}
-    for intv in data[var].cat.categories:
+    for intv in data[new_name].cat.categories:
         nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
-    data[var] = data[var].cat.rename_categories(nice_cats)
-    data[var] = data[var].cat.add_categories(["0%"])
-    data.loc[zeros, var] = "0%"
-    right_order_cats = ["0%"] + data[var].cat.categories[:-1].tolist()
-    data[var] = data[var].cat.reorder_categories(
+    data[new_name] = data[new_name].cat.rename_categories(nice_cats)
+    data[new_name] = data[new_name].cat.add_categories(["0%"])
+    data.loc[zeros, new_name] = "0%"
+    right_order_cats = ["0%"] + data[new_name].cat.categories[:-1].tolist()
+    data[new_name] = data[new_name].cat.reorder_categories(
         new_categories=right_order_cats, ordered=True
     )
     return data
@@ -262,6 +280,7 @@ def _zero_plus_quartiles(data, var):
 
 def _add_variables(data):
     data = data.copy()
+
     data["hh_adults"] = data["hh_members"] - data["hh_children"]
     # we use the OECD factor, see https://bit.ly/2yu1cXs
     data["equiv_factor"] = 0.5 + 0.5 * data["hh_adults"] + 0.3 * data["hh_children"]
@@ -289,30 +308,45 @@ def _add_variables(data):
         data["equiv_net_inc"], approx_quartiles, labels=labels
     )
 
-    # =================================================================================
-    print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
-    liss_regions = [
-        "Groningen",
-        "Friesland",
-        "Drenthe",
-        "Overijssel",
-        "Flevoland",
-        "Gelderland",
-        "Utrecht",
-        "Noord-Holland",
-        "Zuid-Holland",
-        "Zeeland",
-        "Noord-Brabant",
-        "Limburg",
-    ]
-    mock_regions = np.random.choice(liss_regions, len(data))
-    data["prov"] = pd.Categorical(
-        values=mock_regions, categories=liss_regions, ordered=False
-    )
+    # add changes in each type and overall hours
+    data["change_workplace_h"] = data["workplace_h_after"] - data["workplace_h_before"]
+    data["change_home_h"] = data["home_h_after"] - data["home_h_before"]
+    data["hours_before"] = data["workplace_h_before"] + data["home_h_before"]
+    data["hours_after"] = data["workplace_h_after"] + data["home_h_after"]
+    data["change_all_hours"] = data["hours_after"] - data["hours_before"]
 
-    # # with real data
-    # provinces = pd.read_stata(path)
-    # hh_to_prov = provinces.set_index("nohouse_encr")["prov"].to_dict()
-    # data["prov"] = data["hh_id"].replace(hh_to_prov)
+    return data
 
+
+def _add_regions(data, path_to_regions):
+    if path_to_regions is None:
+        data = data.copy()
+        print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
+        liss_regions = [
+            "Groningen",
+            "Friesland",
+            "Drenthe",
+            "Overijssel",
+            "Flevoland",
+            "Gelderland",
+            "Utrecht",
+            "Noord-Holland",
+            "Zuid-Holland",
+            "Zeeland",
+            "Noord-Brabant",
+            "Limburg",
+        ]
+        mock_regions = np.random.choice(liss_regions, len(data))
+        data["prov"] = pd.Categorical(
+            values=mock_regions, categories=liss_regions, ordered=False
+        )
+    else:
+        prov = pd.read_pickle(path_to_regions)
+        data = pd.merge(
+            left=data,
+            right=prov,
+            left_on=['hh_id'],
+            right_index=True,
+            how="left",
+        )
     return data
