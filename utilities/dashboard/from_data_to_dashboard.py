@@ -8,9 +8,11 @@ from utilities.dashboard.liss.data_functions import prepare_liss_data
 from utilities.dashboard.create_description_table import create_description_table
 
 if __name__ == "__main__":
-    lang = sys.argv[1]
-    data_path = sys.argv[2]
-    path_to_regions = sys.argv[3] if len(sys.argv == 3) else None
+    if len(sys.argv) == 3:
+        lang, data_path = sys.argv[1:]
+        path_to_regions = None
+    elif len(sys.argv) == 4:
+        lang, data_path, path_to_regions = sys.argv[1:]
 
     if "liss" in data_path:
         data_name = "liss"

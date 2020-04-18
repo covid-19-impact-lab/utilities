@@ -17,12 +17,14 @@ def create_description_table(raw_desc, background_table, group_info, data, langu
     return desc.reset_index()
 
 
+
 def _reduce_description_table(raw_desc, language):
     keep_cols = [
         "new_name",
         f"group_{language}",
         f"label_{language}",
         f"nice_name_{language}",
+        "binned",
     ]
     desc = raw_desc[keep_cols]
     desc = desc[desc["new_name"].notnull()]

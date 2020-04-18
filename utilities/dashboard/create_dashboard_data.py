@@ -113,6 +113,7 @@ def _create_overview_tab_data(
             "Value": "Value",
             "Share": "Share",
             "Mean": "Mean",
+            "Most Common": "Most Common",
         }
     elif language == "german":
         translations = {
@@ -122,6 +123,7 @@ def _create_overview_tab_data(
             "Value": "Wert",
             "Share": "Anteil",
             "Mean": "Mittelwert",
+            "Most Common": "Häufigste Antwort",
         }
     map_data = {"tooltips": translations}
     for g in res["groups"]:

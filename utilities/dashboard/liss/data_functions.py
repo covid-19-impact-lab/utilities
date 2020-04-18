@@ -212,14 +212,14 @@ def _bin_variables(data):
         # cuts = [-1, 0.5, 50.0, 99, 110]
         # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
         cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
-        data[var] = pd.cut(data[var], cuts)
+        data[var + '_binned'] = pd.cut(data[var], cuts)
         nice_cats = {}
-        for intv in data[var].cat.categories:
+        for intv in data[var + "_binned"].cat.categories:
             if intv.right - intv.left < 1:
                 nice_cats[intv] = f"{int(intv.right)}%"
             else:
                 nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
-        data[var] = data[var].cat.rename_categories(nice_cats)
+        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
 
     work_hours = [
         "workplace_h_before",
@@ -230,37 +230,38 @@ def _bin_variables(data):
 
     for var in work_hours:
         cuts = [-1, 0.5, 10, 20, 30, 40, 100]
-        data[var] = pd.cut(data[var], cuts)
+        data[var + '_binned'] = pd.cut(data[var], cuts)
         nice_cats = {}
-        for intv in data[var].cat.categories:
+        for intv in data[var + "_binned"].cat.categories:
             if intv.left < 0:
                 nice_cats[intv] = "0h"
             elif intv.right > 40:
                 nice_cats[intv] = ">40h"
             else:
                 nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
-        data[var] = data[var].cat.rename_categories(nice_cats)
+        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
 
     return data
 
 
 def _zero_plus_quartiles(data, var):
     zeros = data[data[var] == 0].index
-    data[var] = pd.qcut(data[var][data[var] > 0], 4)
+    new_name = var + '_binned'
+    data[new_name] = pd.qcut(data[var][data[var] > 0], 4)
     nice_cats = {}
-    for intv in data[var].cat.categories:
+    for intv in data[new_name].cat.categories:
         nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
-    data[var] = data[var].cat.rename_categories(nice_cats)
-    data[var] = data[var].cat.add_categories(["0%"])
-    data.loc[zeros, var] = "0%"
-    right_order_cats = ["0%"] + data[var].cat.categories[:-1].tolist()
-    data[var] = data[var].cat.reorder_categories(
+    data[new_name] = data[new_name].cat.rename_categories(nice_cats)
+    data[new_name] = data[new_name].cat.add_categories(["0%"])
+    data.loc[zeros, new_name] = "0%"
+    right_order_cats = ["0%"] + data[new_name].cat.categories[:-1].tolist()
+    data[new_name] = data[new_name].cat.reorder_categories(
         new_categories=right_order_cats, ordered=True
     )
     return data
 
 
-def _add_variables(data):
+def _add_variables(data, path_to_regions):
     data = data.copy()
     data["hh_adults"] = data["hh_members"] - data["hh_children"]
     # we use the OECD factor, see https://bit.ly/2yu1cXs
@@ -289,8 +290,6 @@ def _add_variables(data):
         data["equiv_net_inc"], approx_quartiles, labels=labels
     )
 
-    # =================================================================================
-<<<<<<< HEAD
     if path_to_regions is None:
         print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
         liss_regions = [
