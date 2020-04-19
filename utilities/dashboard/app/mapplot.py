@@ -27,7 +27,7 @@ def prepare_map_data(data, variables, nice_names, labels, data_name):
         var_nice_name = nice_names[var]
         sr = data[var[:-7]] if binned else data[var]
         if is_categorical_dtype(sr):
-            types[var_nice_name] = "Most Common"
+            types[var_nice_name] = "Mean"    # Most Common for mode
         elif is_bool_dtype(sr):
             types[var_nice_name] = "Share"
         else:
@@ -52,7 +52,9 @@ def _add_entries_for_one_variable(data, provinces, data_var, label, typ, nice_na
     if typ == "Most Common":  # categorical
         dtyp = data[data_var].dtype
         values = gb.apply(lambda x: x.mode()[0]).astype(dtyp)
-    else:  # boolean and
+    elif is_categorical_dtype(data[data_var]):
+        values = gb.apply(lambda x: x.cat.codes.replace(-1, np.nan).mean() + 1)
+    else:
         values = gb.apply(lambda x: x.mean())
 
     color_dict = _get_color_dict(values)
@@ -64,12 +66,15 @@ def _add_entries_for_one_variable(data, provinces, data_var, label, typ, nice_na
             val_str = val
         elif typ == "Share":
             val_str = f"{100 * val:.0f}%"
-        elif data_var.startswith('p_'): # mean probability
+        elif is_categorical_dtype(data[data_var]):
+            cats = data[data_var].cat.categories
+            val_str = f"{val:.1f} ({cats[int(val)]})"
+        elif data_var.startswith('p_'):     # mean probability
             val_str = f"{val:.0f}%"
-        else: # mean and not probability
-            val_str = f"{val:.0f}"
+        else:
+            val_str = f"{val:.1f}"
 
-        no_str_name = nice_name.replace(" ", "_")
+        no_str_name = _compatible_str(nice_name)
         var_entries = {
             f"label_{no_str_name}": label,
             f"value_{no_str_name}": val_str,
@@ -127,7 +132,7 @@ def setup_map(map_data, group, var_nice_name):
     translations = map_data["tooltips"]
     geo_source = map_data[group][0]
     typ = map_data[group][1][var_nice_name]
-    var_nice_name = var_nice_name.replace(" ", "_")
+    var_nice_name = _compatible_str(var_nice_name)
 
     p = _styled_map_figure()
 
@@ -160,3 +165,16 @@ def _styled_map_figure():
     p.outline_line_color = None
     p.grid.grid_line_color = None
     return p
+
+
+def _compatible_str(s):
+    to_replace = {
+        "ä": "ae", "ö": "oe", "ü": "ue", " ": "_",
+        "Ä": "Ae", "Ö": "Oe", "Ü": "Ue", "ß": "ss",
+        ".": "_", "/": "_", ":": "_", "(": "_", ")": "_",
+        "-": "_",
+    }
+    new_s = s
+    for k, v in to_replace.items():
+        new_s = new_s.replace(k, v)
+    return new_s

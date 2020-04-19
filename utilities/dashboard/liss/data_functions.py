@@ -257,7 +257,6 @@ def _bin_variables(data):
             else:
                 nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
         data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
-
     return data
 
 

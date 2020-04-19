@@ -51,7 +51,7 @@ if __name__ == "__main__":
         data_name="liss",
     )
 
-    out_path = "dashboard_data_current.pickle"
+    out_path = f"dashboard_data_{data_name}_{lang}_current.pickle"
     with open(out_path, "wb") as f:
         pickle.dump(dashboard_data, f)
 
