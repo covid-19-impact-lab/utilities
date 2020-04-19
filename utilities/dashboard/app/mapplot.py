@@ -53,11 +53,11 @@ def _add_entries_for_one_variable(data, provinces, data_var, label, typ, nice_na
         dtyp = data[data_var].dtype
         values = gb.apply(lambda x: x.mode()[0]).astype(dtyp)
     elif is_categorical_dtype(data[data_var]):
-        values = gb.apply(lambda x: x.cat.codes.replace(-1, np.nan).mean() + 1)
+        values = gb.apply(lambda x: x.cat.codes.replace(-1, np.nan).mean())
     else:
         values = gb.apply(lambda x: x.mean())
 
-    color_dict = _get_color_dict(values)
+    color_dict = _get_color_dict(values, data[data_var])
 
     for prov_dict in provinces["features"]:
         prov_name = prov_dict["properties"]["name"]
@@ -86,7 +86,7 @@ def _add_entries_for_one_variable(data, provinces, data_var, label, typ, nice_na
     return provinces
 
 
-def _get_color_dict(sr):
+def _get_color_dict(sr, full_data):
     if is_categorical_dtype(sr):
         if sr.cat.ordered:
             colors = get_colors("blue-yellow", len(sr.cat.categories))
@@ -94,10 +94,17 @@ def _get_color_dict(sr):
             colors = get_colors("categorical", len(sr.cat.categories))
         color_dict = {cat: col for cat, col in zip(sr.cat.categories, colors)}
     elif is_numeric_dtype(sr):
-        colors = get_colors("blue-yellow", 12)
-        linspace = np.linspace(sr.min() - 0.05, sr.max() + 0.05, 12)
+        colors = get_colors("blue", 12)
+        if is_categorical_dtype(full_data):
+            full_data = full_data.cat.codes.replace(-1, np.nan).dropna()
+        q40 = full_data.quantile(0.25)
+        q60 = full_data.quantile(0.75)
+        min_ = min(q40, sr.min())
+        max_ = max(q60, sr.max())
+        linspace = np.linspace(min_ - 0.01, max_ + 0.01, 12)
         bins = pd.cut(sr, linspace)
-        bin_to_color = {bin_: color for bin_, color in zip(bins.cat.categories, colors)}
+        bin_cats = bins.cat.categories
+        bin_to_color = {bin_: color for bin_, color in zip(bin_cats, colors)}
         color_dict = {val: bin_to_color[bin_] for val, bin_ in zip(sr, bins)}
     else:
         raise AssertionError(f"{sr.name} is neihter categorical nor numeric")
