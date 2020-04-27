@@ -119,10 +119,14 @@ def create_overview_tab(
 
     map_page = Column(title, intro, Row(*map_selectors), country_map, map_caption)
 
-    _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func, create_caption)
+    _add_map_callbacks(
+        map_page, topic_to_groups, group_to_nicenames, map_func, create_caption
+    )
 
     plot_title = Div(text=groupby_title, style=TITLE_STYLE, margin=(30, 0, 10, 0))
-    plot_intro = Div(text=plot_intro, margin=(10, 0, 30, 0), style={"text-align": "justify"})
+    plot_intro = Div(
+        text=plot_intro, margin=(10, 0, 30, 0), style={"text-align": "justify"}
+    )
 
     plot_selectors = [
         Select(
@@ -151,7 +155,9 @@ def create_overview_tab(
     plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
 
-    plot_page = Column(plot_title, plot_intro, Row(*plot_selectors), plot, plot_caption, bg_info)
+    plot_page = Column(
+        plot_title, plot_intro, Row(*plot_selectors), plot, plot_caption, bg_info
+    )
 
     # plot callbacks
     topic_callback = partial(
@@ -187,7 +193,9 @@ def create_overview_tab(
     return page
 
 
-def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func, caption_func):
+def _add_map_callbacks(
+    map_page, topic_to_groups, group_to_nicenames, map_func, caption_func
+):
     map_selectors = map_page.children[2].children
     map_topic_callback = partial(
         _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=map_selectors[1],
@@ -199,7 +207,7 @@ def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func, 
         high_to_lower=group_to_nicenames,
         lower_selector=map_selectors[2],
         caption_func=caption_func,
-        map_page=map_page
+        map_page=map_page,
     )
     map_selectors[1].on_change("value", map_subtopic_callback)
 
@@ -207,7 +215,9 @@ def _add_map_callbacks(map_page, topic_to_groups, group_to_nicenames, map_func, 
     map_selectors[2].on_change("value", change_map)
 
 
-def _set_lower_vals(attr, old, new, high_to_lower, lower_selector, caption_func=None, map_page=None):
+def _set_lower_vals(
+    attr, old, new, high_to_lower, lower_selector, caption_func=None, map_page=None
+):
     """Adjust lower level select menu according to new higher level."""
     new_groups = high_to_lower[new]
     lower_selector.options = new_groups

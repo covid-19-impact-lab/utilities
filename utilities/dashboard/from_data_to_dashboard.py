@@ -33,7 +33,9 @@ if __name__ == "__main__":
         dashboard_path / data_name / "data_description.csv", sep=";", encoding="latin3"
     )
     bg_desc = pd.read_csv(
-        dashboard_path / data_name / "background_variables.csv", sep=";", encoding="latin3"
+        dashboard_path / data_name / "background_variables.csv",
+        sep=";",
+        encoding="latin3",
     )
     desc = create_description_table(
         raw_desc=raw_desc,

@@ -213,14 +213,14 @@ def _bin_variables(data):
         # cuts = [-1, 0.5, 50.0, 99, 110]
         # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
         cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
-        data[var + '_binned'] = pd.cut(data[var], cuts)
+        data[var + "_binned"] = pd.cut(data[var], cuts)
         nice_cats = {}
         for intv in data[var + "_binned"].cat.categories:
             if intv.right - intv.left < 1:
                 nice_cats[intv] = f"{int(intv.right)}%"
             else:
                 nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
-        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
+        data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
 
     work_hours = [
         "workplace_h_before",
@@ -233,7 +233,7 @@ def _bin_variables(data):
 
     cuts = [-1, 0.5, 10, 20, 30, 40, 100]
     for var in work_hours:
-        data[var + '_binned'] = pd.cut(data[var], cuts)
+        data[var + "_binned"] = pd.cut(data[var], cuts)
         nice_cats = {}
         for intv in data[var + "_binned"].cat.categories:
             if intv.left < 0:
@@ -242,12 +242,12 @@ def _bin_variables(data):
                 nice_cats[intv] = ">40h"
             else:
                 nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
-        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
+        data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
 
     hour_changes = ["change_workplace_h", "change_home_h", "change_all_hours"]
     cuts = [-np.inf, -20, -10, -5, 0, 15, np.inf]
     for var in hour_changes:
-        data[var + '_binned'] = pd.cut(data[var], cuts)
+        data[var + "_binned"] = pd.cut(data[var], cuts)
         nice_cats = {}
         for intv in data[var + "_binned"].cat.categories:
             if intv.left == -np.inf:
@@ -256,13 +256,13 @@ def _bin_variables(data):
                 nice_cats[intv] = ">15h increase"
             else:
                 nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
-        data[var + '_binned'] = data[var + '_binned'].cat.rename_categories(nice_cats)
+        data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
     return data
 
 
 def _zero_plus_quartiles(data, var):
     zeros = data[data[var] == 0].index
-    new_name = var + '_binned'
+    new_name = var + "_binned"
     data[new_name] = pd.qcut(data[var][data[var] > 0], 4)
     nice_cats = {}
     for intv in data[new_name].cat.categories:
@@ -342,10 +342,6 @@ def _add_regions(data, path_to_regions):
     else:
         prov = pd.read_pickle(path_to_regions)
         data = pd.merge(
-            left=data,
-            right=prov,
-            left_on=['hh_id'],
-            right_index=True,
-            how="left",
+            left=data, right=prov, left_on=["hh_id"], right_index=True, how="left",
         )
     return data

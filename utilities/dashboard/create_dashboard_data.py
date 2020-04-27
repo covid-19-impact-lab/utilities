@@ -95,7 +95,8 @@ def _create_overview_tab_data(
     res["variable_to_nice_name"] = nice_names
     res["nice_name_to_variable"] = {v: k for k, v in nice_names.items()}
     res["background_variables"] = [
-        nice_names[var] for var in internal_bg_vars if var != "prov"]
+        nice_names[var] for var in internal_bg_vars if var != "prov"
+    ]
     res["variable_to_label"] = data_desc.set_index("new_name")[
         f"label_{language}"
     ].to_dict()
@@ -173,8 +174,10 @@ def _language_specific_kwargs(language, data_name):
         res["nth_str"] = "Nothing"
         res["groupby_title"] = "Group Differences"
     elif language == "german":
-        res["title"] = "Was denken die Menschen zur Corona-Pandemie, wie stark " + \
-            "sind sie von ihr betroffen und wie passen sie ihr Verhalten an?"
+        res["title"] = (
+            "Was denken die Menschen zur Corona-Pandemie, wie stark "
+            + "sind sie von ihr betroffen und wie passen sie ihr Verhalten an?"
+        )
         res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach", "Frage")
         res["nth_str"] = "Nichts"
         res["groupby_title"] = "Unterschiede zwischen Bevölkerungsgruppen"
