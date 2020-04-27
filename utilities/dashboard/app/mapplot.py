@@ -105,9 +105,11 @@ def _get_color_dict(sr, full_data):
     elif is_numeric_dtype(sr):
         colors = get_colors("blue", 12)[::-1]
         if is_categorical_dtype(full_data):
-            full_data = full_data.cat.codes.replace(-1, np.nan).dropna()
-        q40 = full_data.quantile(0.25)
-        q60 = full_data.quantile(0.75)
+            num_full_data = full_data.cat.codes.replace(-1, np.nan).dropna()
+        else:
+            num_full_data = full_data
+        q40 = num_full_data.quantile(0.25)
+        q60 = num_full_data.quantile(0.75)
         min_ = min(q40, sr.min())
         max_ = max(q60, sr.max())
         linspace = np.linspace(min_ - 0.01, max_ + 0.01, 12)
@@ -115,7 +117,18 @@ def _get_color_dict(sr, full_data):
         bin_cats = bins.cat.categories
         bin_to_color = {bin_: color for bin_, color in zip(bin_cats, colors)}
         color_dict = {val: bin_to_color[bin_] for val, bin_ in zip(sr, bins)}
-        legend_colors = [(f"{bin_.mid:.2f}", bin_to_color[bin_]) for bin_ in bin_cats]
+        if is_categorical_dtype(full_data):
+            legend_colors = []
+            old_cat = None
+            for bin_, color in bin_to_color.items():
+                mid_int = int(bin_.mid)
+                new_cat = full_data.cat.categories[mid_int]
+                if new_cat != old_cat:
+                    legend_colors.append((str(new_cat.replace('- ', '')), color))
+                    old_cat = new_cat
+        else:
+            legend_colors = [
+                (f"{bin_.mid:.2f}", bin_to_color[bin_]) for bin_ in bin_cats]
     else:
         raise AssertionError(f"{sr.name} is neihter categorical nor numeric")
     return color_dict, legend_colors
