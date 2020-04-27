@@ -1,15 +1,31 @@
-CoViD-19 and what it means for us personally, our loved ones, the economy and society in general
-is on every one's mind.
-<br>
-However, to give meaningful answers to these questions it's important to know
-what the population as a whole knows, believes and how it behaves
-in response to the current epidemic.
-<br> <br>
-We asked more than 5000 men and women in the Netherlands a whole array of questions
-on what they know, believe, fear and do in response to the current epidemic.
-<br>
-Below you can explore their answers.
-<br>
-Simply choose a topic, subtopic and question to get started.
-To see the exact questions and more information just hover over the graph.
+The beliefs and behavior of a population are paramount to fight the CoViD-19 epidemic.
+Because of this, knowing and understanding people's attitudes and expectations on this topic
+are central for policy makers and scientists alike.
 
+The CoViD-19 Impact Lab conducted a comprehensive survey with over 5000 Dutch men and women on these topics.
+The results can be expected to be similar in Germany and other Western societies.
+
+The survey focused on questions regarding risk assessments and risk mitigation behaviors,
+opinions on the political actions taken and changes and expectations regarding job security
+and the economy in general.
+
+How have different groups adapted to the economic and social changes?
+How much do people follow the recommended behavior changes?
+How much have the new regulations affected their ability to work and how do they cope with closure of schools at the same time?
+
+<br> <br>
+
+You can explore the answers in two different ways. Firstly, there is a tab with maps,
+where you can see how different regions of the Netherlands answered these questions.
+
+If you are more interested in the behavior of different groups, such as whether the elderly
+practice more social distancing, you can go to the Group Differences tab.
+In each you can choose different topics and subtopics that interest you.
+To get additional information on the question and answers,
+hover your mouse over the map or plot.
+
+<br> <br>
+
+A <a href="https://www.iza.org/publications/dp/13159"> first systematic analysis of the survey</a> has shown that less qualified workers who are less able to work from home
+have suffered more from the current crisis than more educated workers who have succesfully
+started working more from home.

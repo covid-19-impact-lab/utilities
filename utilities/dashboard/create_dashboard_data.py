@@ -173,6 +173,7 @@ def _language_specific_kwargs(language, data_name):
         res["menu_titles"] = ("Topic", "Subtopic", "Split By", "Question")
         res["nth_str"] = "Nothing"
         res["groupby_title"] = "Group Differences"
+        res["tab_names"] = ["Introduction", "Maps", "Group Differences"]
     elif language == "german":
         res["title"] = (
             "Was denken die Menschen zur Corona-Pandemie, wie stark "
@@ -181,6 +182,7 @@ def _language_specific_kwargs(language, data_name):
         res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach", "Frage")
         res["nth_str"] = "Nichts"
         res["groupby_title"] = "Unterschiede zwischen Bevölkerungsgruppen"
+        res["tab_names"] = ["Einleitung", "Karten", "Unterschiede zw. Gruppen"]
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
     return res

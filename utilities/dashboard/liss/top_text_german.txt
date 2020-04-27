@@ -9,7 +9,11 @@ wie sehr sind sie von den Einschränkungen betroffen?
 
 <br> <br>
 
-Um sich die prozentuale Verteilung der gegebenen Antworten im Detail anzusehen, wählen Sie bitte einen übergeordneten Fragenbereich, ein Thema und ein Fragestichwort aus. Bewegen sie die Maus über die Karte, um sich die genauen Resultate für einzelne niederländische Provinzen anzeigen zu lassen.
+Um sich die Verteilung der gegebenen Antworten im Detail anzusehen,
+wählen Sie einen der Reiter "Karten" oder "Unterschiede zw. Gruppen"  aus.
+Dort können Sie einen übergeordneten Fragenbereich, ein Thema und ein Fragestichwort auswählen,
+das sie interessiert.
+Bewegen sie die Maus über die Karte oder graphische Darstellung, um mehr zu erfahren.
 
 <br> <br>
 

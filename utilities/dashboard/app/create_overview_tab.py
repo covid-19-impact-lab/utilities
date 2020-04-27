@@ -2,6 +2,8 @@ from functools import partial
 
 from bokeh.layouts import Column
 from bokeh.layouts import Row
+from bokeh.models.widgets import Panel
+from bokeh.models.widgets import Tabs
 from bokeh.models import Select
 from bokeh.models.widgets import Div
 
@@ -40,6 +42,7 @@ def create_overview_tab(
     nice_name_to_variable,
     menu_titles,
     nth_str,
+    tab_names,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -79,9 +82,6 @@ def create_overview_tab(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
     # map elements
-    title = Div(text=title, style=TITLE_STYLE, margin=(10, 0, 10, 0))
-    intro = Div(text=top_text, margin=(10, 0, 30, 0), style={"text-align": "justify"})
-
     map_selectors = [
         Select(
             title=menu_titles[0],
@@ -117,15 +117,9 @@ def create_overview_tab(
     )
     map_caption = create_caption(group=group)
 
-    map_page = Column(title, intro, Row(*map_selectors), country_map, map_caption)
-
+    map_page = Column(Row(*map_selectors), country_map, map_caption)
     _add_map_callbacks(
         map_page, topic_to_groups, group_to_nicenames, map_func, create_caption
-    )
-
-    plot_title = Div(text=groupby_title, style=TITLE_STYLE, margin=(30, 0, 10, 0))
-    plot_intro = Div(
-        text=plot_intro, margin=(10, 0, 30, 0), style={"text-align": "justify"}
     )
 
     plot_selectors = [
@@ -151,13 +145,13 @@ def create_overview_tab(
         ),
     ]
 
-    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)
+    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str) # noqa
     plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
 
     plot_page = Column(
-        plot_title, plot_intro, Row(*plot_selectors), plot, plot_caption, bg_info
-    )
+        # plot_title, plot_intro,
+        Row(*plot_selectors), plot, plot_caption, bg_info)
 
     # plot callbacks
     topic_callback = partial(
@@ -189,14 +183,27 @@ def create_overview_tab(
     )
     plot_selectors[2].on_change("value", background_var_callback)
 
-    page = Column(map_page, plot_page)
+    # intro
+    plot_width = plot.children[1].plot_width
+    title = Div(text=title, style=TITLE_STYLE, margin=(10, 0, 10, 0), width=plot_width)
+    intro = Div(text=top_text, margin=(10, 0, 10, 0), style={"text-align": "justify"})
+    plot_title = Div(text=groupby_title, style=TITLE_STYLE, margin=(30, 0, 10, 0))
+    plot_intro = Div(
+        text=plot_intro, margin=(10, 0, 30, 0), style={"text-align": "justify"}
+    )
+
+    page = Tabs(tabs=[
+        Panel(child=Column(title, intro, plot_title, plot_intro), title=tab_names[0]),
+        Panel(child=map_page, title=tab_names[1]),
+        Panel(child=plot_page, title=tab_names[2]),
+    ])
     return page
 
 
 def _add_map_callbacks(
     map_page, topic_to_groups, group_to_nicenames, map_func, caption_func
 ):
-    map_selectors = map_page.children[2].children
+    map_selectors = map_page.children[0].children
     map_topic_callback = partial(
         _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=map_selectors[1],
     )
@@ -227,9 +234,9 @@ def _set_lower_vals(
 
 
 def set_question(attr, old, new, map_func, map_page):
-    group = map_page.children[2].children[1].value
+    group = map_page.children[0].children[1].value
     new_map = map_func(group=group, var_nice_name=new)
-    map_page.children[3] = new_map
+    map_page.children[1] = new_map
 
 
 def _create_caption(
