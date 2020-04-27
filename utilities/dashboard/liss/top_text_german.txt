@@ -1,14 +1,16 @@
-Die Corona-Epidemie und was sie für uns, unsere Familie und Freunde, die Wirtschaft und
-unsere Gesellschaft bedeutet, beschäftigt uns alle.
-<br>
-Um fundierte Antworten auf diese Fragen geben zu können, ist es wichtig zu wissen,
-was der Rest der Bevölkerung weiß und glaubt und sich verhält.
+Die rasche und erfolgreiche Bekämpfung von CoVid-19 hängt vor allem von den richtigen Verhaltensweisen der Bevölkerung ab.
+Deshalb sind ihre Einstellungen und Erwartungen zu diesem Thema von zentraler Bedeutung für Politik und Wissenschaft.
+Das CoViD-19 Impact Lab hat in einer umfangreichen Befragung mehr als 5000 Personen in den Niederlanden interviewt.
+Die Ergebnisse können als vergleichbar zu Deutschland und anderen westlichen Gesellschaften gelten.
+Im Zentrum standen Fragen zu Risikobewertung und -verhalten, nach den eigenen Gesundheitserwartungen, nach der subjektiven Bewertung politischer Gegenmaßnahmen und zu den Zukunftserwartungen mit Blick auf Arbeitsplatz und wirtschaftliche Entwicklung.
+Wie haben sich unterschiedliche Bevölkerungsgruppen an die veränderten Lebensbedingungen angepasst,
+wie stark die vorgegebenen Verhaltensregeln befolgt,
+wie sehr sind sie von den Einschränkungen betroffen?
+
 <br> <br>
-Wir haben über 5000 Männern und Frauen in den Niederlanden eine Großzahl an Fragen
-darüber gestellt, was sie über die Krankheit und mögliche Politiken wissen und denken,
-was sie befürchten und wie sich ihr Leben verändert hat.
-<br>
-Unten können Sie sich ihre Antworten anschauen.
-<br>
-Wählen Sie einfach einen Bereich, ein Thema und eine Frage.
-Um die exakten Fragen und mehr Informationen zu sehen, schweben Sie mit der Maus über die Karte.
+
+Um sich die prozentuale Verteilung der gegebenen Antworten im Detail anzusehen, wählen Sie bitte einen übergeordneten Fragenbereich, ein Thema und ein Fragestichwort aus. Bewegen sie die Maus über die Karte, um sich die genauen Resultate für einzelne niederländische Provinzen anzeigen zu lassen.
+
+<br> <br>
+
+Eine <a href="https://www.iza.org/publications/dp/13159"> erste systematische Auswertung der Befragung</a> zeigt unter anderem, dass geringer qualifizierte, auf einen lokalen Arbeitsplatz angewiesene Personen stärker unter der Krise zu leiden haben als Höherqualifizierte, die leichter in Homeoffice-Tätigkeiten ausweichen können.

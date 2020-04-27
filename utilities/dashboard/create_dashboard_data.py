@@ -173,7 +173,8 @@ def _language_specific_kwargs(language, data_name):
         res["nth_str"] = "Nothing"
         res["groupby_title"] = "Group Differences"
     elif language == "german":
-        res["title"] = "Was andere angesichts der Corona-Epidemie glauben und tun"
+        res["title"] = "Was denken die Menschen zur Corona-Pandemie, wie stark " + \
+            "sind sie von ihr betroffen und wie passen sie ihr Verhalten an?"
         res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach", "Frage")
         res["nth_str"] = "Nichts"
         res["groupby_title"] = "Unterschiede zwischen Bevölkerungsgruppen"
