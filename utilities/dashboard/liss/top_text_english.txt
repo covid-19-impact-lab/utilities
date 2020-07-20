@@ -26,6 +26,6 @@ hover your mouse over the map or plot.
 
 <br> <br>
 
-A <a href="https://www.iza.org/publications/dp/13159"> first systematic analysis of the survey</a> has shown that less qualified workers who are less able to work from home
+A <a href="https://www.iza.org/publications/dp/13158/labour-supply-in-the-early-stages-of-the-covid-19-pandemic-empirical-evidence-on-hours-home-office-and-expectations"> first systematic analysis of the survey</a> has shown that less qualified workers who are less able to work from home
 have suffered more from the current crisis than more educated workers who have succesfully
 started working more from home.

@@ -17,4 +17,4 @@ Bewegen sie die Maus über die Karte oder graphische Darstellung, um mehr zu erf
 
 <br> <br>
 
-Eine <a href="https://www.iza.org/publications/dp/13159"> erste systematische Auswertung der Befragung</a> zeigt unter anderem, dass geringer qualifizierte, auf einen lokalen Arbeitsplatz angewiesene Personen stärker unter der Krise zu leiden haben als Höherqualifizierte, die leichter in Homeoffice-Tätigkeiten ausweichen können.
+Eine <a href="https://www.iza.org/publications/dp/13158/labour-supply-in-the-early-stages-of-the-covid-19-pandemic-empirical-evidence-on-hours-home-office-and-expectations"> erste systematische Auswertung der Befragung</a> zeigt unter anderem, dass geringer qualifizierte, auf einen lokalen Arbeitsplatz angewiesene Personen stärker unter der Krise zu leiden haben als Höherqualifizierte, die leichter in Homeoffice-Tätigkeiten ausweichen können.
