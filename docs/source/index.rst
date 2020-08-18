@@ -1,6 +1,17 @@
 
 COVID-19 Impact Lab Dashboard
 =============================
+The Covid Impact Lab Dashboard
+================================
+
+Installation
+-------------
+
+The package is available in the Anaconda Cloud.
+
+The package relies on the covid-main environment.
+To add the dashboard package to the environment use `pip install -e .` in the base
+utilities folder.
 
 
 Running the Dashboard
