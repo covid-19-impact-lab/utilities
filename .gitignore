@@ -133,3 +133,5 @@ dmypy.json
 *.sublime-workspace
 
 *data/
+
+*dashboard_data_*.pickle

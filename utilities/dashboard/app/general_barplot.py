@@ -68,6 +68,7 @@ def prepare_data(data, variables, bg_vars, nice_names, labels, keep_last, nth_st
         # conditional shares
         for bg_var in bg_vars:
             df = data.groupby(bg_var)[var].value_counts(normalize=True).unstack()
+            df.columns = df.columns.astype(str)
             df["Observations"] = data[var].notnull().groupby(data[bg_var]).sum()
             df.reset_index(inplace=True)
             df.rename(columns={bg_var: "label"}, inplace=True)

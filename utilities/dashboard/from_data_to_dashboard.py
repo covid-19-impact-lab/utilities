@@ -56,10 +56,3 @@ if __name__ == "__main__":
     out_path = f"dashboard_data_{data_name}_{lang}_current.pickle"
     with open(out_path, "wb") as f:
         pickle.dump(dashboard_data, f)
-
-    import os
-    from pathlib import Path
-
-    path_to_app = dashboard_path / "app"
-    command = f"bokeh serve --show {path_to_app} --args {out_path}"  # noqa
-    os.system(command)
