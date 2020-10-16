@@ -21,7 +21,7 @@ requirements:
     - python >=3.6
 
   run:
-    - python >=3.6,<3.8
+    - python >=3.6
     - numpy >=1.16
     - pandas >=1
     - scipy
