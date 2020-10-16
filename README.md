@@ -14,8 +14,7 @@ the bokeh app. To do so, call the `from_data_to_dashboard.py` with the following
 
 This will create a `dashboard_data_liss_{lang}_current.pickle` file in the folder you are in.
 
-Only Hans-Martin has the true region codes. He passes a third argument to the command
-that is the path to the regions identifiers. If no third argument is passed, mock regions
+The third argument is the path to the regions identifiers. If no third argument is passed, mock regions
 are created and you are warned about this.
 
 Secondly, you must start the bokeh server passing the created pickle to it. To do so, run:
