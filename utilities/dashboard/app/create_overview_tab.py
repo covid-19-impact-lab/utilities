@@ -2,15 +2,17 @@ from functools import partial
 
 from bokeh.layouts import Column
 from bokeh.layouts import Row
-from bokeh.models.widgets import Panel
-from bokeh.models.widgets import Tabs
 from bokeh.models import Select
 from bokeh.models.widgets import Div
+from bokeh.models.widgets import Panel
+from bokeh.models.widgets import Tabs
 
-from utilities.dashboard.app import barplot
 from utilities.dashboard.app import distplot
-from utilities.dashboard.app import stacked_barplot
-from utilities.dashboard.app.mapplot import setup_map
+from utilities.dashboard.dashboard_components.maps.mapplot import setup_map
+from utilities.dashboard.dashboard_components.univariate_distributions import barplot
+from utilities.dashboard.dashboard_components.univariate_distributions import (
+    stacked_barplot,
+)
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -145,13 +147,17 @@ def create_overview_tab(
         ),
     ]
 
-    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str) # noqa
+    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)  # noqa
     plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
 
     plot_page = Column(
         # plot_title, plot_intro,
-        Row(*plot_selectors), plot, plot_caption, bg_info)
+        Row(*plot_selectors),
+        plot,
+        plot_caption,
+        bg_info,
+    )
 
     # plot callbacks
     topic_callback = partial(
@@ -192,11 +198,15 @@ def create_overview_tab(
         text=plot_intro, margin=(10, 0, 30, 0), style={"text-align": "justify"}
     )
 
-    page = Tabs(tabs=[
-        Panel(child=Column(title, intro, plot_title, plot_intro), title=tab_names[0]),
-        Panel(child=map_page, title=tab_names[1]),
-        Panel(child=plot_page, title=tab_names[2]),
-    ])
+    page = Tabs(
+        tabs=[
+            Panel(
+                child=Column(title, intro, plot_title, plot_intro), title=tab_names[0]
+            ),
+            Panel(child=map_page, title=tab_names[1]),
+            Panel(child=plot_page, title=tab_names[2]),
+        ]
+    )
     return page
 
 

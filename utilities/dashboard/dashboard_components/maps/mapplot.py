@@ -1,14 +1,19 @@
 import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from bokeh.models import GeoJSONDataSource
-from utilities.colors import get_colors
-from bokeh.plotting import figure
-from bokeh.models import HoverTool, Div
-from pandas.api.types import is_categorical_dtype, is_bool_dtype, is_numeric_dtype
-from pathlib import Path
 from bokeh.layouts import Column
 from bokeh.layouts import Row
+from bokeh.models import Div
+from bokeh.models import GeoJSONDataSource
+from bokeh.models import HoverTool
+from bokeh.plotting import figure
+from pandas.api.types import is_bool_dtype
+from pandas.api.types import is_categorical_dtype
+from pandas.api.types import is_numeric_dtype
+
+from utilities.colors import get_colors
 
 
 def prepare_map_data(data, variables, nice_names, labels, data_name):
@@ -124,11 +129,12 @@ def _get_color_dict(sr, full_data):
                 mid_int = int(bin_.mid)
                 new_cat = full_data.cat.categories[mid_int]
                 if new_cat != old_cat:
-                    legend_colors.append((str(new_cat.replace('- ', '')), color))
+                    legend_colors.append((str(new_cat.replace("- ", "")), color))
                     old_cat = new_cat
         else:
             legend_colors = [
-                (f"{bin_.mid:.2f}", bin_to_color[bin_]) for bin_ in bin_cats]
+                (f"{bin_.mid:.2f}", bin_to_color[bin_]) for bin_ in bin_cats
+            ]
     else:
         raise AssertionError(f"{sr.name} is neihter categorical nor numeric")
     return color_dict, legend_colors
