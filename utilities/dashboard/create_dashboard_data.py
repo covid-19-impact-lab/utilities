@@ -1,13 +1,11 @@
 from itertools import product
 from pathlib import Path
 
-from utilities.dashboard.app import distplot
-from utilities.dashboard.app import no_plot
-from utilities.dashboard.dashboard_components.maps.mapplot import prepare_map_data
-from utilities.dashboard.dashboard_components.univariate_distributions import barplot
-from utilities.dashboard.dashboard_components.univariate_distributions import (
-    stacked_barplot,
-)
+from utilities.dashboard.components.debugging import no_plot
+from utilities.dashboard.components.maps.mapplot import prepare_map_data
+from utilities.dashboard.components.univariate_distributions import barplot
+from utilities.dashboard.components.univariate_distributions import distplot
+from utilities.dashboard.components.univariate_distributions import stacked_barplot
 
 
 plot_modules = {

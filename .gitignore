@@ -135,3 +135,5 @@ dmypy.json
 *data/
 
 *dashboard_data_*.pickle
+
+.idea/

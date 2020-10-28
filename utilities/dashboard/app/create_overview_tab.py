@@ -7,12 +7,10 @@ from bokeh.models.widgets import Div
 from bokeh.models.widgets import Panel
 from bokeh.models.widgets import Tabs
 
-from utilities.dashboard.app import distplot
-from utilities.dashboard.dashboard_components.maps.mapplot import setup_map
-from utilities.dashboard.dashboard_components.univariate_distributions import barplot
-from utilities.dashboard.dashboard_components.univariate_distributions import (
-    stacked_barplot,
-)
+from utilities.dashboard.components.maps.mapplot import setup_map
+from utilities.dashboard.components.univariate_distributions import barplot
+from utilities.dashboard.components.univariate_distributions import distplot
+from utilities.dashboard.components.univariate_distributions import stacked_barplot
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
