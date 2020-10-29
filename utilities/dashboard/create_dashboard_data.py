@@ -19,31 +19,7 @@ plot_modules = {
 def create_dashboard_data(
     data, data_desc, group_info, language, data_name, kde_cutoff=7
 ):
-    """Create a dict with all data needed for the dashboard.
-
-    Args:
-        data (pd.DataFrame): The empirical dataset.
-        data_decs (pd.DataFrame): Description of the dataset.
-        group_info (pd.DataFrame): Description of groups.
-        language (pd.DataFrame): One of ["english", "german", "dutch"]
-
-    Returns:
-        dict: Dictionary with one entry for the overview tab, the correlation tab and
-            the timeline tab.
-
-    """
-    dashboard_data = {
-        "overview": _create_overview_tab_data(
-            data, data_desc, group_info, language, data_name, kde_cutoff
-        )
-    }
-    return dashboard_data
-
-
-def _create_overview_tab_data(
-    data, data_desc, group_info, language, data_name, kde_cutoff
-):
-    """Create a dict with all data needed in the overview tab.
+    """Create a dict with all data needed in the dashboard.
 
     Args:
         data (pd.DataFrame): The empirical dataset.
@@ -73,7 +49,7 @@ def _create_overview_tab_data(
     )
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
-    res["groups"] = [group for group in raw_groups if group not in bg_var_groups]
+    groups = [group for group in raw_groups if group not in bg_var_groups]
     raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
     res["topics"] = [topic for topic in raw_topics if topic != "Background Variables"]
 
@@ -128,7 +104,7 @@ def _create_overview_tab_data(
             "Most Common": "Häufigste Antwort",
         }
     map_data = {"tooltips": translations}
-    for g in res["groups"]:
+    for g in groups:
         plot_type = res["group_to_plot_type"][g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
         variables = res["group_to_variables"][g]

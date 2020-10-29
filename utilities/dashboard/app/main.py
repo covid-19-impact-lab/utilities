@@ -18,7 +18,6 @@ from utilities.dashboard.components.univariate_distributions.create_component im
 
 
 def assemble_dashboard_components(
-    groups,
     topics,
     topic_to_groups,
     group_to_header,
@@ -115,13 +114,13 @@ data_dir = Path(sys.argv[1]).resolve()
 dashboard_data = pd.read_pickle(data_dir / "dashboard_data.pickle")
 
 doc = curdoc()
-if dashboard_data["overview"]["nth_str"] == "Nothing":
+if dashboard_data["nth_str"] == "Nothing":
     doc.title = "Explore What People Believe and Do in Response to CoViD-19"
-elif dashboard_data["overview"]["nth_str"] == "Nichts":
+elif dashboard_data["nth_str"] == "Nichts":
     doc.title = "Was Menschen zur Corona-Epidemie wissen, erwarten und tun"
 
 
-overview_tab = assemble_dashboard_components(**dashboard_data["overview"])
+overview_tab = assemble_dashboard_components(**dashboard_data)
 # corr_tab = create_corr_tab(dashboard_data["correlation"])
 # timeline_tab = create_timeline_tab(dashboard_data["timeline"])
 # tabs = Tabs(tabs=[overview_tab, corr_tab], name="tabs")
