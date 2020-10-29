@@ -35,9 +35,7 @@ def create_dashboard_data(
     dashboard_data = {
         "overview": _create_overview_tab_data(
             data, data_desc, group_info, language, data_name, kde_cutoff
-        ),
-        "correlation": _create_correlation_tab_data(data, data_desc, language),
-        "timeline": _create_timeline_tab_data(language),
+        )
     }
     return dashboard_data
 
@@ -187,43 +185,3 @@ def _language_specific_kwargs(language, data_name):
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
     return res
-
-
-# =====================================================================================
-
-
-def _create_correlation_tab_data(data, data_desc, language):
-    # might make sense to just have one function determining all three lists
-    axis_vars = _determine_axis_vars(data, data_desc, language)
-    groupby_vars = _determine_groupby_vars(data_desc, language)
-    color_vars = _determine_color_vars(data, data_desc, language)
-
-    corr_data = {}
-    for x, y, g, c in product(axis_vars, axis_vars, groupby_vars, color_vars):
-        corr_data[(x, y, g, c)] = _corr_plot(data=data, x=x, y=y, g=g, c=c)
-
-    return corr_data
-
-
-def _determine_axis_vars(data, data_desc, laungage):
-    return ["A Long Variable Name", "Another Long Variable", "Short Name"]
-
-
-def _determine_groupby_vars(data_desc, language):
-    bg_corr_slice = data_desc[
-        data_desc[f"group_{language}"] == "Background Correlation"
-    ]
-    groupby_vars = bg_corr_slice[f"nice_name_{language}"].tolist()
-    return groupby_vars
-
-
-def _determine_color_vars(data, data_desc, language):
-    return ["Gender", "Age Group"]
-
-
-def _corr_plot(data, x, y, g, c):
-    return {"xs": [0, 1, 2], "ys": [3, 0, 1]}
-
-
-def _create_timeline_tab_data(language):
-    return {}
