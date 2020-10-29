@@ -1,18 +1,19 @@
 import pickle
 import sys
-import pandas as pd
 from pathlib import Path
 
+import pandas as pd
+
 from utilities.dashboard.create_dashboard_data import create_dashboard_data
-from utilities.dashboard.liss.data_functions import prepare_liss_data
 from utilities.dashboard.create_description_table import create_description_table
+from utilities.dashboard.liss.data_functions import prepare_liss_data
 
 if __name__ == "__main__":
-    if len(sys.argv) == 3:
-        lang, data_path = sys.argv[1:]
+    if len(sys.argv) == 4:
+        lang, data_path, out_dir = sys.argv[1:]
         path_to_regions = None
-    elif len(sys.argv) == 4:
-        lang, data_path, path_to_regions = sys.argv[1:]
+    elif len(sys.argv) == 5:
+        lang, data_path, out_dir, path_to_regions = sys.argv[1:]
 
     if "liss" in data_path:
         data_name = "liss"
@@ -53,6 +54,7 @@ if __name__ == "__main__":
         data_name="liss",
     )
 
-    out_path = f"dashboard_data_{data_name}_{lang}_current.pickle"
-    with open(out_path, "wb") as f:
-        pickle.dump(dashboard_data, f)
+    out_subdir = Path(out_dir).resolve() / data_name / lang
+    out_subdir.mkdir(parents=True, exist_ok=True)
+
+    pd.to_pickle(dashboard_data, out_subdir / "dashboard_data.pickle")

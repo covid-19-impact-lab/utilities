@@ -2,17 +2,19 @@
 usage: bokeh serve run_dashboard.py --show --args path/to/overview_tab_data_dict.pickle
 
 """
-import pickle
 import sys
 from pathlib import Path
+
+import pandas as pd
 from bokeh.plotting import curdoc
+
 from utilities.dashboard.app.create_overview_tab import create_overview_tab
+
 
 template_dir = Path(__file__).resolve().parent
 
-dashboard_data_path = sys.argv[1]
-with open(dashboard_data_path, "rb") as f:
-    dashboard_data = pickle.load(f)
+data_dir = Path(sys.argv[1]).resolve()
+dashboard_data = pd.read_pickle(data_dir / "dashboard_data.pickle")
 
 doc = curdoc()
 if dashboard_data["overview"]["nth_str"] == "Nothing":

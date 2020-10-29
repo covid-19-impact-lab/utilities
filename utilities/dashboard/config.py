@@ -9,4 +9,4 @@ UNIVARIATE_DISTRIBUTIONS_DIR = (
     DASHBOARD_ROOT / "components" / "univariate_distributions"
 )
 
-APP_PATH = DASHBOARD_ROOT / "app"
+APP_DIR = DASHBOARD_ROOT / "app"
