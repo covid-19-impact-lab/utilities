@@ -6,6 +6,7 @@ from utilities.dashboard.components.maps.mapplot import prepare_map_data
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
+from utilities.dashboard.config import INTRO_PAGE_DIR
 
 
 plot_modules = {
@@ -139,11 +140,12 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
 
 def _get_language_specific_text_snippets(language, dataset_name):
     """Create a dictionary with several dataset and language specific text snippets and headers."""
-    module_path = Path(__file__).resolve().parent
+    metadata_path = INTRO_PAGE_DIR / "metadata" / dataset_name
+
     res = {}
-    with open(module_path / dataset_name / f"top_text_{language}.txt", "r") as f:
+    with open(metadata_path / f"top_text_{language}.txt", "r") as f:
         res["top_text"] = f.read()
-    with open(module_path / dataset_name / f"plot_intro_{language}.txt", "r") as f:
+    with open(metadata_path / f"plot_intro_{language}.txt", "r") as f:
         res["plot_intro"] = f.read()
 
     if language == "english":
