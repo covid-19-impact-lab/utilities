@@ -68,7 +68,9 @@ def _create_overview_tab_data(
             - "map_data": A dict with geojson data sources for each group
 
     """
-    res = _language_specific_kwargs(language=language, data_name=data_name)
+    res = _get_language_specific_text_snippets(
+        language=language, dataset_name=data_name
+    )
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     res["groups"] = [group for group in raw_groups if group not in bg_var_groups]
@@ -159,12 +161,13 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
     return {k: val.tolist() for k, val in raw.items()}
 
 
-def _language_specific_kwargs(language, data_name):
+def _get_language_specific_text_snippets(language, dataset_name):
+    """Create a dictionary with several dataset and language specific text snippets and headers."""
     module_path = Path(__file__).resolve().parent
     res = {}
-    with open(module_path / data_name / f"top_text_{language}.txt", "r") as f:
+    with open(module_path / dataset_name / f"top_text_{language}.txt", "r") as f:
         res["top_text"] = f.read()
-    with open(module_path / data_name / f"plot_intro_{language}.txt", "r") as f:
+    with open(module_path / dataset_name / f"plot_intro_{language}.txt", "r") as f:
         res["plot_intro"] = f.read()
 
     if language == "english":
