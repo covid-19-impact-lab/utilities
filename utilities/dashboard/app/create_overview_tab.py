@@ -107,35 +107,8 @@ def assemble_dashboard_components(
     topic = topics[0]
     subtopics = topic_to_groups[topic]
     group = subtopics[0]
-    var_nice_name = group_to_nicenames[group][0]
     plot_type = group_to_plot_type[group]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
-
-    # map elements
-    map_selectors = [
-        Select(
-            title=menu_titles[0],
-            options=topics,
-            value=topic,
-            name="topic_selector",
-            width=220,
-        ),
-        Select(
-            title=menu_titles[1],
-            options=subtopics,
-            value=group,
-            name="subtopic_selector",
-            width=220,
-        ),
-        Select(
-            title=menu_titles[3],
-            options=group_to_nicenames[group],
-            value=group_to_nicenames[group][0],
-            width=160,
-        ),
-    ]
-    map_func = partial(setup_map, map_data=map_data)
-    country_map = map_func(group=group, var_nice_name=var_nice_name)
 
     create_caption = partial(
         _create_caption,
@@ -269,14 +242,6 @@ def create_maps(
         page (bokeh Column)
 
     """
-
-    intro_page = create_intro_page(
-        title=title,
-        top_text=top_text,
-        plot_intro=plot_intro,
-        groupby_title=groupby_title,
-    )
-
     group_to_nicenames = {}
     for g, variables in group_to_variables.items():
         group_to_nicenames[g] = [variable_to_nice_name[var] for var in variables]
@@ -285,11 +250,8 @@ def create_maps(
     subtopics = topic_to_groups[topic]
     group = subtopics[0]
     var_nice_name = group_to_nicenames[group][0]
-    plot_type = group_to_plot_type[group]
-    setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
-    # map elements
-    map_selectors = [
+    selection_menus = [
         Select(
             title=menu_titles[0],
             options=topics,
@@ -324,75 +286,10 @@ def create_maps(
     )
     map_caption = create_caption(group=group)
 
-    map_page = Column(Row(*map_selectors), country_map, map_caption)
+    map_page = Column(Row(*selection_menus), country_map, map_caption)
     _add_map_callbacks(
         map_page, topic_to_groups, group_to_nicenames, map_func, create_caption
     )
-
-    plot_selectors = [
-        Select(
-            title=menu_titles[0],
-            options=topics,
-            value=topic,
-            name="topic_selector",
-            width=200,
-        ),
-        Select(
-            title=menu_titles[1],
-            options=subtopics,
-            value=group,
-            name="subtopic_selector",
-            width=250,
-        ),
-        Select(
-            title=menu_titles[2],
-            options=[nth_str] + background_variables,
-            value=nth_str,
-            width=100,
-        ),
-    ]
-
-    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)  # noqa
-    plot_caption = create_caption(group=group)
-    bg_info = Div(text="", margin=(10, 0, 10, 0), style=HEADER_STYLE)
-
-    plot_page = Column(
-        # plot_title, plot_intro,
-        Row(*plot_selectors),
-        plot,
-        plot_caption,
-        bg_info,
-    )
-
-    # plot callbacks
-    topic_callback = partial(
-        _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=plot_selectors[1]
-    )
-    plot_selectors[0].on_change("value", topic_callback)
-
-    subtopic_callback = partial(
-        set_subtopic,
-        plot_data=plot_data,
-        page=plot_page,
-        background_selector=plot_selectors[2],
-        group_to_plot_type=group_to_plot_type,
-        caption_callback=create_caption,
-        nth_str=nth_str,
-    )
-    plot_selectors[1].on_change("value", subtopic_callback)
-
-    background_var_callback = partial(
-        condition_on_background_var,
-        subtopic_selector=plot_selectors[1],
-        plot_data=plot_data,
-        page=plot_page,
-        group_to_plot_type=group_to_plot_type,
-        variable_to_label=variable_to_label,
-        group_to_variables=group_to_variables,
-        nice_name_to_variable=nice_name_to_variable,
-        nth_str=nth_str,
-    )
-    plot_selectors[2].on_change("value", background_var_callback)
 
     return map_page
 
