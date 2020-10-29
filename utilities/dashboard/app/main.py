@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 from bokeh.plotting import curdoc
 
-from utilities.dashboard.app.create_overview_tab import create_overview_tab
+from utilities.dashboard.app.create_overview_tab import assemble_dashboard_components
 
 
 template_dir = Path(__file__).resolve().parent
@@ -22,7 +22,7 @@ if dashboard_data["overview"]["nth_str"] == "Nothing":
 elif dashboard_data["overview"]["nth_str"] == "Nichts":
     doc.title = "Was Menschen zur Corona-Epidemie wissen, erwarten und tun"
 
-overview_tab = create_overview_tab(**dashboard_data["overview"])
+overview_tab = assemble_dashboard_components(**dashboard_data["overview"])
 # corr_tab = create_corr_tab(dashboard_data["correlation"])
 # timeline_tab = create_timeline_tab(dashboard_data["timeline"])
 # tabs = Tabs(tabs=[overview_tab, corr_tab], name="tabs")

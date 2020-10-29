@@ -22,7 +22,7 @@ header_style = {"color": "#808080"}
 TITLE_STYLE = {"font-size": "150%", "text-align": "left"}
 
 
-def create_overview_tab(
+def assemble_dashboard_components(
     groups,
     topics,
     topic_to_groups,
