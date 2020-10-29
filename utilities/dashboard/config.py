@@ -13,3 +13,6 @@ APP_DIR = DASHBOARD_ROOT / "app"
 
 
 PLOT_WIDTH = 600
+
+
+TITLE_STYLE = {"font-size": "150%", "text-align": "left"}

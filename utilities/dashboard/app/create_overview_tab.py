@@ -7,11 +7,11 @@ from bokeh.models.widgets import Div
 from bokeh.models.widgets import Panel
 from bokeh.models.widgets import Tabs
 
+from utilities.dashboard.components.intro_page.create_component import create_intro_page
 from utilities.dashboard.components.maps.mapplot import setup_map
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
-from utilities.dashboard.config import PLOT_WIDTH
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -20,7 +20,6 @@ plot_modules = {
 }
 
 header_style = {"color": "#808080"}
-TITLE_STYLE = {"font-size": "150%", "text-align": "left"}
 
 
 def assemble_dashboard_components(
@@ -73,26 +72,10 @@ def assemble_dashboard_components(
     """
 
     intro_page = create_intro_page(
-        groups=groups,
-        topics=topics,
-        topic_to_groups=topic_to_groups,
-        group_to_header=group_to_header,
-        group_to_plot_type=group_to_plot_type,
-        background_variables=background_variables,
-        plot_data=plot_data,
-        map_data=map_data,
-        group_to_variables=group_to_variables,
-        variable_to_label=variable_to_label,
-        variable_to_nice_name=variable_to_nice_name,
-        group_to_caption=group_to_caption,
         title=title,
         top_text=top_text,
         plot_intro=plot_intro,
         groupby_title=groupby_title,
-        nice_name_to_variable=nice_name_to_variable,
-        menu_titles=menu_titles,
-        nth_str=nth_str,
-        tab_names=tab_names,
     )
 
     group_to_nicenames = {}
@@ -220,65 +203,6 @@ def assemble_dashboard_components(
         ]
     )
     return page
-
-
-def create_intro_page(
-    groups,
-    topics,
-    topic_to_groups,
-    group_to_header,
-    group_to_plot_type,
-    background_variables,
-    plot_data,
-    map_data,
-    group_to_variables,
-    variable_to_label,
-    variable_to_nice_name,
-    group_to_caption,
-    title,
-    top_text,
-    plot_intro,
-    groupby_title,
-    nice_name_to_variable,
-    menu_titles,
-    nth_str,
-    tab_names,
-):
-    """Create the overview tab showing the distribution of any group of variables.
-
-    Args:
-        groups (list)
-        topics (list)
-        topic_to_groups (dict)
-        group_to_header (dict)
-        group_to_plot_type (dict)
-        background_variables (list)
-        plot_data (dict)
-        group_to_variables (dict)
-        variable_to_label (dict)
-        variable_to_nice_name (dict)
-        nice_name_to_variable (dict)
-        group_to_caption (dict)
-        title (str)
-        groupby_title (str)
-        top_text (str)
-        plot_intro (str)
-        menu_titles (tuple)
-        nth_str (str): name of the "Nothing" category in English
-
-    Returns:
-        page (bokeh Column)
-
-    """
-    title = Div(text=title, style=TITLE_STYLE, margin=(10, 0, 10, 0), width=PLOT_WIDTH)
-    intro = Div(text=top_text, margin=(10, 0, 10, 0), style={"text-align": "justify"})
-    plot_title = Div(text=groupby_title, style=TITLE_STYLE, margin=(30, 0, 10, 0))
-    plot_intro = Div(
-        text=plot_intro, margin=(10, 0, 30, 0), style={"text-align": "justify"}
-    )
-
-    intro_page = Column(title, intro, plot_title, plot_intro)
-    return intro_page
 
 
 def _add_map_callbacks(
