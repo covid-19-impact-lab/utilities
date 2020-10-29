@@ -1,13 +1,9 @@
-from itertools import product
-from pathlib import Path
-
 from utilities.dashboard.components.debugging import no_plot
+from utilities.dashboard.components.intro_page.create_data import create_intro_page_data
 from utilities.dashboard.components.maps.mapplot import prepare_map_data
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
-from utilities.dashboard.config import INTRO_PAGE_DIR
-
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -154,30 +150,6 @@ def _get_language_specific_text_snippets(language, dataset_name):
             "nth_str": "Nichts",
             "tab_names": ["Einleitung", "Karten", "Unterschiede zw. Gruppen"],
         }
-    else:
-        raise NotImplementedError("The language you supplied is not supported yet.")
-    return res
-
-
-def create_intro_page_data(language, dataset_name):
-    """Create a dictionary with several dataset and language specific text snippets and headers."""
-    metadata_path = INTRO_PAGE_DIR / "metadata" / dataset_name
-
-    res = {}
-    with open(metadata_path / f"top_text_{language}.txt", "r") as f:
-        res["top_text"] = f.read()
-    with open(metadata_path / f"plot_intro_{language}.txt", "r") as f:
-        res["plot_intro"] = f.read()
-
-    if language == "english":
-        res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
-        res["groupby_title"] = "Group Differences"
-    elif language == "german":
-        res["title"] = (
-            "Was denken die Menschen zur Corona-Pandemie, wie stark "
-            + "sind sie von ihr betroffen und wie passen sie ihr Verhalten an?"
-        )
-        res["groupby_title"] = "Unterschiede zwischen Bevölkerungsgruppen"
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
     return res
