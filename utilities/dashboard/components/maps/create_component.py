@@ -10,15 +10,7 @@ from utilities.dashboard.shared import create_caption_for_variable_group
 
 
 def create_maps(
-    topics,
-    topic_to_groups,
-    group_to_header,
-    map_data,
-    group_to_variables,
-    variable_to_label,
-    variable_to_nice_name,
-    group_to_caption,
-    menu_titles,
+    map_data, variable_mappings, menu_titles,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -46,6 +38,14 @@ def create_maps(
         page (bokeh Column)
 
     """
+    topics = variable_mappings["topics"]
+    group_to_variables = variable_mappings["group_to_variables"]
+    variable_to_nice_name = variable_mappings["variable_to_nice_name"]
+    topic_to_groups = variable_mappings["topic_to_groups"]
+    group_to_header = variable_mappings["group_to_header"]
+    group_to_caption = variable_mappings["group_to_caption"]
+    variable_to_label = variable_mappings["variable_to_label"]
+
     group_to_nicenames = {}
     for g, variables in group_to_variables.items():
         group_to_nicenames[g] = [variable_to_nice_name[var] for var in variables]

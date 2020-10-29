@@ -19,18 +19,11 @@ from utilities.dashboard.components.univariate_distributions.create_component im
 
 def assemble_dashboard_components(
     intro_page_data,
-    topics,
-    topic_to_groups,
-    group_to_header,
+    general_variable_mappings,
     group_to_plot_type,
     background_variables,
     plot_data,
     map_data,
-    group_to_variables,
-    variable_to_label,
-    variable_to_nice_name,
-    group_to_caption,
-    nice_name_to_variable,
     menu_titles,
     nth_str,
     tab_names,
@@ -65,29 +58,16 @@ def assemble_dashboard_components(
     intro_page = create_intro_page(**intro_page_data)
 
     map_page = create_maps(
-        topics=topics,
-        topic_to_groups=topic_to_groups,
-        group_to_header=group_to_header,
         map_data=map_data,
-        group_to_variables=group_to_variables,
-        variable_to_label=variable_to_label,
-        variable_to_nice_name=variable_to_nice_name,
-        group_to_caption=group_to_caption,
         menu_titles=menu_titles,
+        variable_mappings=general_variable_mappings,
     )
 
     univariate_distributions_page = create_univariate_distributions(
-        topics=topics,
-        topic_to_groups=topic_to_groups,
-        group_to_header=group_to_header,
         group_to_plot_type=group_to_plot_type,
         background_variables=background_variables,
+        variable_mappings=general_variable_mappings,
         plot_data=plot_data,
-        group_to_variables=group_to_variables,
-        variable_to_label=variable_to_label,
-        variable_to_nice_name=variable_to_nice_name,
-        group_to_caption=group_to_caption,
-        nice_name_to_variable=nice_name_to_variable,
         menu_titles=menu_titles,
         nth_str=nth_str,
     )

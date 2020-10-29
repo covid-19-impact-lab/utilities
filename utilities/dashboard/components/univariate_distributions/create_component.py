@@ -21,17 +21,10 @@ plot_modules = {
 
 
 def create_univariate_distributions(
-    topics,
-    topic_to_groups,
-    group_to_header,
     group_to_plot_type,
     background_variables,
+    variable_mappings,
     plot_data,
-    group_to_variables,
-    variable_to_label,
-    variable_to_nice_name,
-    group_to_caption,
-    nice_name_to_variable,
     menu_titles,
     nth_str,
 ):
@@ -61,6 +54,15 @@ def create_univariate_distributions(
         page (bokeh Column)
 
     """
+    topics = variable_mappings["topics"]
+    group_to_variables = variable_mappings["group_to_variables"]
+    variable_to_nice_name = variable_mappings["variable_to_nice_name"]
+    topic_to_groups = variable_mappings["topic_to_groups"]
+    group_to_header = variable_mappings["group_to_header"]
+    group_to_caption = variable_mappings["group_to_caption"]
+    variable_to_label = variable_mappings["variable_to_label"]
+    nice_name_to_variable = variable_mappings["nice_name_to_variable"]
+
     group_to_nicenames = {}
     for g, variables in group_to_variables.items():
         group_to_nicenames[g] = [variable_to_nice_name[var] for var in variables]
