@@ -12,14 +12,13 @@ from utilities.dashboard.components.maps.mapplot import setup_map
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
+from utilities.dashboard.config import HEADER_STYLE
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
     "barplot": barplot,
     "distplot": distplot,
 }
-
-header_style = {"color": "#808080"}
 
 
 def assemble_dashboard_components(
@@ -155,7 +154,7 @@ def assemble_dashboard_components(
 
     plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)  # noqa
     plot_caption = create_caption(group=group)
-    bg_info = Div(text="", margin=(10, 0, 10, 0), style=header_style)
+    bg_info = Div(text="", margin=(10, 0, 10, 0), style=HEADER_STYLE)
 
     plot_page = Column(
         # plot_title, plot_intro,
@@ -263,7 +262,7 @@ def _create_caption(
     if isinstance(group_to_caption[group], str):
         text += "<br> <br>" + group_to_caption[group]
 
-    element = Div(text=text, name="bottom", margin=(20, 0, 10, 0), style=header_style)
+    element = Div(text=text, name="bottom", margin=(20, 0, 10, 0), style=HEADER_STYLE)
     return element
 
 
