@@ -14,6 +14,7 @@ from pandas.api.types import is_categorical_dtype
 from pandas.api.types import is_numeric_dtype
 
 from utilities.colors import get_colors
+from utilities.dashboard.config import MAPS_DIR
 
 
 def prepare_map_data(data, variables, nice_names, labels, data_name):
@@ -149,8 +150,7 @@ def _load_map_coordinates(data_name):
     source for Germany:
     https://public.opendatasoft.com/explore/dataset/landkreise-in-germany/export/
     """
-    dashboard_path = Path(__file__).resolve().parent.parent
-    with open(dashboard_path / data_name / "provinces.geojson", "r") as f:
+    with open(MAPS_DIR / f"{data_name}_provinces.geojson", "r") as f:
         provinces = json.load(f)
 
     if data_name == "liss":
