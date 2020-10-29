@@ -78,26 +78,15 @@ def assemble_dashboard_components(
     )
 
     map_page = create_maps(
-        groups=groups,
         topics=topics,
         topic_to_groups=topic_to_groups,
         group_to_header=group_to_header,
-        group_to_plot_type=group_to_plot_type,
-        background_variables=background_variables,
-        plot_data=plot_data,
         map_data=map_data,
         group_to_variables=group_to_variables,
         variable_to_label=variable_to_label,
         variable_to_nice_name=variable_to_nice_name,
         group_to_caption=group_to_caption,
-        title=title,
-        top_text=top_text,
-        plot_intro=plot_intro,
-        groupby_title=groupby_title,
-        nice_name_to_variable=nice_name_to_variable,
         menu_titles=menu_titles,
-        nth_str=nth_str,
-        tab_names=tab_names,
     )
 
     group_to_nicenames = {}
@@ -195,26 +184,15 @@ def assemble_dashboard_components(
 
 
 def create_maps(
-    groups,
     topics,
     topic_to_groups,
     group_to_header,
-    group_to_plot_type,
-    background_variables,
-    plot_data,
     map_data,
     group_to_variables,
     variable_to_label,
     variable_to_nice_name,
     group_to_caption,
-    title,
-    top_text,
-    plot_intro,
-    groupby_title,
-    nice_name_to_variable,
     menu_titles,
-    nth_str,
-    tab_names,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
