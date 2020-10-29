@@ -18,6 +18,7 @@ from utilities.dashboard.components.univariate_distributions.create_component im
 
 
 def assemble_dashboard_components(
+    intro_page_data,
     topics,
     topic_to_groups,
     group_to_header,
@@ -29,10 +30,6 @@ def assemble_dashboard_components(
     variable_to_label,
     variable_to_nice_name,
     group_to_caption,
-    title,
-    top_text,
-    plot_intro,
-    groupby_title,
     nice_name_to_variable,
     menu_titles,
     nth_str,
@@ -65,12 +62,7 @@ def assemble_dashboard_components(
 
     """
 
-    intro_page = create_intro_page(
-        title=title,
-        top_text=top_text,
-        plot_intro=plot_intro,
-        groupby_title=groupby_title,
-    )
+    intro_page = create_intro_page(**intro_page_data)
 
     map_page = create_maps(
         topics=topics,

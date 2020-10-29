@@ -128,6 +128,8 @@ def create_dashboard_data(
             data_name=data_name,
         )
 
+    res["intro_page_data"] = create_intro_page_data(language, data_name)
+
     res["plot_data"] = plot_data
     res["map_data"] = map_data
     return res
@@ -140,6 +142,25 @@ def _dict_of_uniques_from_df(df, key_col, val_col):
 
 def _get_language_specific_text_snippets(language, dataset_name):
     """Create a dictionary with several dataset and language specific text snippets and headers."""
+    if language == "english":
+        res = {
+            "menu_titles": ("Topic", "Subtopic", "Split By", "Question"),
+            "nth_str": "Nothing",
+            "tab_names": ["Introduction", "Maps", "Group Differences"],
+        }
+    elif language == "german":
+        res = {
+            "menu_titles": ("Bereich", "Thema", "Gruppieren nach", "Frage"),
+            "nth_str": "Nichts",
+            "tab_names": ["Einleitung", "Karten", "Unterschiede zw. Gruppen"],
+        }
+    else:
+        raise NotImplementedError("The language you supplied is not supported yet.")
+    return res
+
+
+def create_intro_page_data(language, dataset_name):
+    """Create a dictionary with several dataset and language specific text snippets and headers."""
     metadata_path = INTRO_PAGE_DIR / "metadata" / dataset_name
 
     res = {}
@@ -150,19 +171,13 @@ def _get_language_specific_text_snippets(language, dataset_name):
 
     if language == "english":
         res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
-        res["menu_titles"] = ("Topic", "Subtopic", "Split By", "Question")
-        res["nth_str"] = "Nothing"
         res["groupby_title"] = "Group Differences"
-        res["tab_names"] = ["Introduction", "Maps", "Group Differences"]
     elif language == "german":
         res["title"] = (
             "Was denken die Menschen zur Corona-Pandemie, wie stark "
             + "sind sie von ihr betroffen und wie passen sie ihr Verhalten an?"
         )
-        res["menu_titles"] = ("Bereich", "Thema", "Gruppieren nach", "Frage")
-        res["nth_str"] = "Nichts"
         res["groupby_title"] = "Unterschiede zwischen Bevölkerungsgruppen"
-        res["tab_names"] = ["Einleitung", "Karten", "Unterschiede zw. Gruppen"]
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
     return res
