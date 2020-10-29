@@ -8,11 +8,13 @@ from bokeh.models.widgets import Panel
 from bokeh.models.widgets import Tabs
 
 from utilities.dashboard.components.intro_page.create_component import create_intro_page
-from utilities.dashboard.components.maps.mapplot import setup_map
+from utilities.dashboard.components.maps.create_component import create_maps
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
 from utilities.dashboard.config import HEADER_STYLE
+from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_higher_level
+from utilities.dashboard.shared import create_caption_for_variable_group
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -100,7 +102,7 @@ def assemble_dashboard_components(
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
     create_caption = partial(
-        _create_caption,
+        create_caption_for_variable_group,
         group_to_header=group_to_header,
         group_to_caption=group_to_caption,
         group_to_variables=group_to_variables,
@@ -145,7 +147,9 @@ def assemble_dashboard_components(
 
     # plot callbacks
     topic_callback = partial(
-        _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=plot_selectors[1]
+        adjust_lower_level_selection_menu_to_higher_level,
+        high_to_lower=topic_to_groups,
+        lower_selector=plot_selectors[1],
     )
     plot_selectors[0].on_change("value", topic_callback)
 
@@ -181,157 +185,6 @@ def assemble_dashboard_components(
         ]
     )
     return page
-
-
-def create_maps(
-    topics,
-    topic_to_groups,
-    group_to_header,
-    map_data,
-    group_to_variables,
-    variable_to_label,
-    variable_to_nice_name,
-    group_to_caption,
-    menu_titles,
-):
-    """Create the overview tab showing the distribution of any group of variables.
-
-    Args:
-        groups (list)
-        topics (list)
-        topic_to_groups (dict)
-        group_to_header (dict)
-        group_to_plot_type (dict)
-        background_variables (list)
-        plot_data (dict)
-        group_to_variables (dict)
-        variable_to_label (dict)
-        variable_to_nice_name (dict)
-        nice_name_to_variable (dict)
-        group_to_caption (dict)
-        title (str)
-        groupby_title (str)
-        top_text (str)
-        plot_intro (str)
-        menu_titles (tuple)
-        nth_str (str): name of the "Nothing" category in English
-
-    Returns:
-        page (bokeh Column)
-
-    """
-    group_to_nicenames = {}
-    for g, variables in group_to_variables.items():
-        group_to_nicenames[g] = [variable_to_nice_name[var] for var in variables]
-    # start values
-    topic = topics[0]
-    subtopics = topic_to_groups[topic]
-    group = subtopics[0]
-    var_nice_name = group_to_nicenames[group][0]
-
-    selection_menus = [
-        Select(
-            title=menu_titles[0],
-            options=topics,
-            value=topic,
-            name="topic_selector",
-            width=220,
-        ),
-        Select(
-            title=menu_titles[1],
-            options=subtopics,
-            value=group,
-            name="subtopic_selector",
-            width=220,
-        ),
-        Select(
-            title=menu_titles[3],
-            options=group_to_nicenames[group],
-            value=group_to_nicenames[group][0],
-            width=160,
-        ),
-    ]
-    map_func = partial(setup_map, map_data=map_data)
-    country_map = map_func(group=group, var_nice_name=var_nice_name)
-
-    create_caption = partial(
-        _create_caption,
-        group_to_header=group_to_header,
-        group_to_caption=group_to_caption,
-        group_to_variables=group_to_variables,
-        variable_to_nice_name=variable_to_nice_name,
-        variable_to_label=variable_to_label,
-    )
-    map_caption = create_caption(group=group)
-
-    map_page = Column(Row(*selection_menus), country_map, map_caption)
-    _add_map_callbacks(
-        map_page, topic_to_groups, group_to_nicenames, map_func, create_caption
-    )
-
-    return map_page
-
-
-def _add_map_callbacks(
-    map_page, topic_to_groups, group_to_nicenames, map_func, caption_func
-):
-    map_selectors = map_page.children[0].children
-    map_topic_callback = partial(
-        _set_lower_vals, high_to_lower=topic_to_groups, lower_selector=map_selectors[1],
-    )
-    map_selectors[0].on_change("value", map_topic_callback)
-
-    map_subtopic_callback = partial(
-        _set_lower_vals,
-        high_to_lower=group_to_nicenames,
-        lower_selector=map_selectors[2],
-        caption_func=caption_func,
-        map_page=map_page,
-    )
-    map_selectors[1].on_change("value", map_subtopic_callback)
-
-    change_map = partial(set_question, map_func=map_func, map_page=map_page)
-    map_selectors[2].on_change("value", change_map)
-
-
-def _set_lower_vals(
-    attr, old, new, high_to_lower, lower_selector, caption_func=None, map_page=None
-):
-    """Adjust lower level select menu according to new higher level."""
-    new_groups = high_to_lower[new]
-    lower_selector.options = new_groups
-    lower_selector.value = new_groups[0]
-    if caption_func is not None:
-        map_page.children[-1] = caption_func(group=new)
-
-
-def set_question(attr, old, new, map_func, map_page):
-    group = map_page.children[0].children[1].value
-    new_map = map_func(group=group, var_nice_name=new)
-    map_page.children[1] = new_map
-
-
-def _create_caption(
-    group,
-    group_to_header,
-    group_to_caption,
-    group_to_variables,
-    variable_to_nice_name,
-    variable_to_label,
-):
-    variables = group_to_variables[group]
-    nice_vars = [variable_to_nice_name[var] for var in variables]
-    labels = [variable_to_label[var] for var in variables]
-    text = group_to_header[group]
-    if len(variables) > 1:
-        text += "<br> <br>" + "<br>".join(
-            f"<b>{name}</b>: {label}" for name, label in zip(nice_vars, labels)
-        )
-    if isinstance(group_to_caption[group], str):
-        text += "<br> <br>" + group_to_caption[group]
-
-    element = Div(text=text, name="bottom", margin=(20, 0, 10, 0), style=HEADER_STYLE)
-    return element
 
 
 def set_subtopic(
