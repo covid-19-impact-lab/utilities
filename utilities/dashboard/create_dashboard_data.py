@@ -65,13 +65,6 @@ def create_dashboard_data(
     res["menu_labels"] = menu_labels
 
     nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
-    res["background_variables"] = [
-        nice_names[var] for var in internal_bg_vars if var != "prov"
-    ]
-
-    res["group_to_plot_type"] = group_info.set_index(f"group_{language}")[
-        "plot_type"
-    ].to_dict()
 
     if language == "english":
         translations = {
@@ -105,10 +98,17 @@ def create_dashboard_data(
         )
 
     univariate_distributions_data = {}
+    group_to_plot_type = group_info.set_index(f"group_{language}")[
+        "plot_type"
+    ].to_dict()
+    univariate_distributions_data["group_to_plot_type"] = group_to_plot_type
+
+    plot_data = {}
+
     for g in groups:
-        plot_type = res["group_to_plot_type"][g]
+        plot_type = group_to_plot_type[g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
-        univariate_distributions_data[g] = prepare_data(
+        plot_data[g] = prepare_data(
             data=data,
             variables=vm["group_to_variables"][g],
             bg_vars=[x for x in internal_bg_vars if x != "prov"],
@@ -116,6 +116,11 @@ def create_dashboard_data(
             labels=vm["variable_to_label"],
             nothing_string=menu_labels["nothing_category"],
         )
+
+    univariate_distributions_data["plot_data"] = plot_data
+    univariate_distributions_data["background_variables"] = [
+        nice_names[var] for var in internal_bg_vars if var != "prov"
+    ]
 
     res["intro_page_data"] = create_intro_page_data(language, data_name)
 

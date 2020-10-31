@@ -19,11 +19,9 @@ from utilities.dashboard.components.univariate_distributions.create_component im
 
 def assemble_dashboard_components(
     intro_page_data,
-    general_variable_mappings,
-    group_to_plot_type,
-    background_variables,
     univariate_distributions_data,
     maps_data,
+    general_variable_mappings,
     menu_labels,
     language,
 ):
@@ -46,10 +44,8 @@ def assemble_dashboard_components(
     )
 
     univariate_distributions_page = create_univariate_distributions(
-        group_to_plot_type=group_to_plot_type,
-        background_variables=background_variables,
+        **univariate_distributions_data,
         variable_mappings=general_variable_mappings,
-        plot_data=univariate_distributions_data,
         menu_labels=menu_labels,
     )
 
