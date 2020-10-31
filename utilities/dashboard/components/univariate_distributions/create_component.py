@@ -102,7 +102,7 @@ def create_univariate_distributions(
     plot = setup_plot(
         **plot_data[group],
         bg_var=menu_labels["nothing_category"],
-        nth_str=menu_labels["nothing_category"],
+        nothing_string=menu_labels["nothing_category"],
     )  # noqa
     plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=HEADER_STYLE)
@@ -130,7 +130,7 @@ def create_univariate_distributions(
         background_selector=plot_selectors[2],
         group_to_plot_type=group_to_plot_type,
         caption_callback=create_caption,
-        nth_str=menu_labels["nothing_category"],
+        nothing_string=menu_labels["nothing_category"],
     )
     plot_selectors[1].on_change("value", subtopic_callback)
 
@@ -143,7 +143,7 @@ def create_univariate_distributions(
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
-        nth_str=menu_labels["nothing_category"],
+        nothing_string=menu_labels["nothing_category"],
     )
     plot_selectors[2].on_change("value", background_var_callback)
 
@@ -159,7 +159,7 @@ def set_subtopic(
     page,
     background_selector,
     caption_callback,
-    nth_str,
+    nothing_string,
 ):
     """Adjust title, header and plot to new subtopic."""
     plot, caption, bg_info = page.children[-3:]
@@ -167,12 +167,14 @@ def set_subtopic(
     plot_type = group_to_plot_type[new]
     setup_plot = getattr(plot_modules[plot_type], "setup_plot")
 
-    new_p = setup_plot(**plot_data[new], bg_var=nth_str, nth_str=nth_str)
+    new_p = setup_plot(
+        **plot_data[new], bg_var=nothing_string, nothing_string=nothing_string
+    )
     new_caption = caption_callback(group=new)
 
     page.children[-3] = new_p
     page.children[-2] = new_caption
-    background_selector.value = nth_str
+    background_selector.value = nothing_string
 
 
 def condition_on_background_var(
@@ -186,7 +188,7 @@ def condition_on_background_var(
     variable_to_label,
     group_to_variables,
     nice_name_to_variable,
-    nth_str,
+    nothing_string,
 ):
     plot, caption, bg_info = page.children[-3:]
     page.children = page.children[:-3]
@@ -195,10 +197,10 @@ def condition_on_background_var(
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
     condition_plot(
-        plot, **plot_data[group], bg_var=new, nth_str=nth_str,
+        plot, **plot_data[group], bg_var=new, nothing_string=nothing_string,
     )
 
-    if new == nth_str:
+    if new == nothing_string:
         bg_info.text = ""
     else:
         bg_info.text = variable_to_label[nice_name_to_variable[new]]
