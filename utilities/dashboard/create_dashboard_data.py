@@ -44,11 +44,6 @@ def create_dashboard_data(
 
     """
 
-    # ==================================================================================
-    # Create intermediate variables that won't be part of the dashboard data dictionary
-    # ==================================================================================
-    groups = _get_groups(group_info, language)
-
     vm = create_general_variable_mappings(
         data=data,
         data_desc=data_desc,
@@ -56,13 +51,19 @@ def create_dashboard_data(
         language=language,
         data_name=data_name,
     )
+    groups = _get_groups(group_info, language)
+
     internal_bg_vars = vm["group_to_variables"]["Background Overview"]
-    # ==================================================================================
-    # Create the dashboard data dictionary
-    # ==================================================================================
-    res = {"language": language}
+
     menu_labels = get_menu_labels(language)
-    res["menu_labels"] = menu_labels
+    res = {}
+    shared_data = {
+        "language": language,
+        "variable_mappings": vm,
+        "menu_labels": menu_labels,
+    }
+
+    res["shared_data"] = shared_data
 
     nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
 
@@ -123,10 +124,6 @@ def create_dashboard_data(
     ]
 
     res["intro_page_data"] = create_intro_page_data(language, data_name)
-
-    res["general_variable_mappings"] = create_general_variable_mappings(
-        data, data_desc, group_info, language, data_name
-    )
 
     res["univariate_distributions_data"] = univariate_distributions_data
     res["maps_data"] = maps_data

@@ -18,12 +18,7 @@ from utilities.dashboard.components.univariate_distributions.create_component im
 
 
 def assemble_dashboard_components(
-    intro_page_data,
-    univariate_distributions_data,
-    maps_data,
-    general_variable_mappings,
-    menu_labels,
-    language,
+    intro_page_data, univariate_distributions_data, maps_data, shared_data,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -35,18 +30,18 @@ def assemble_dashboard_components(
 
     """
 
-    intro_page = create_intro_page(**intro_page_data, language=language)
+    intro_page = create_intro_page(**intro_page_data, language=shared_data["language"])
 
     map_page = create_maps(
         maps_data=maps_data,
-        menu_labels=menu_labels,
-        variable_mappings=general_variable_mappings,
+        menu_labels=shared_data["menu_labels"],
+        variable_mappings=shared_data["variable_mappings"],
     )
 
     univariate_distributions_page = create_univariate_distributions(
         **univariate_distributions_data,
-        variable_mappings=general_variable_mappings,
-        menu_labels=menu_labels,
+        menu_labels=shared_data["menu_labels"],
+        variable_mappings=shared_data["variable_mappings"],
     )
 
     if language == "german":
@@ -72,7 +67,7 @@ def assemble_dashboard_components(
 data_dir = Path(sys.argv[1]).resolve()
 dashboard_data = pd.read_pickle(data_dir / "dashboard_data.pickle")
 
-language = dashboard_data["language"]
+language = dashboard_data["shared_data"]["language"]
 
 doc = curdoc()
 if language == "english":
