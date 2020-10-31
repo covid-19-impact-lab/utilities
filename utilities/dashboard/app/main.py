@@ -26,36 +26,19 @@ def assemble_dashboard_components(
     map_data,
     menu_titles,
     nth_str,
-    tab_names,
+    language,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
     Args:
-        groups (list)
-        topics (list)
-        topic_to_groups (dict)
-        group_to_header (dict)
-        group_to_plot_type (dict)
-        background_variables (list)
-        plot_data (dict)
-        group_to_variables (dict)
-        variable_to_label (dict)
-        variable_to_nice_name (dict)
-        nice_name_to_variable (dict)
-        group_to_caption (dict)
-        title (str)
-        groupby_title (str)
-        top_text (str)
-        plot_intro (str)
-        menu_titles (tuple)
-        nth_str (str): name of the "Nothing" category in English
+
 
     Returns:
         page (bokeh Column)
 
     """
 
-    intro_page = create_intro_page(**intro_page_data)
+    intro_page = create_intro_page(**intro_page_data, language=language)
 
     map_page = create_maps(
         map_data=map_data,
@@ -72,6 +55,11 @@ def assemble_dashboard_components(
         nth_str=nth_str,
     )
 
+    if language == "german":
+        tab_names = ["Einleitung", "Karten", "Unterschiede zw. Gruppen"]
+    elif language == "english":
+        tab_names = ["Introduction", "Maps", "Group Differences"]
+
     page = Tabs(
         tabs=[
             Panel(child=intro_page, title=tab_names[0]),
@@ -85,10 +73,12 @@ def assemble_dashboard_components(
 data_dir = Path(sys.argv[1]).resolve()
 dashboard_data = pd.read_pickle(data_dir / "dashboard_data.pickle")
 
+language = dashboard_data["language"]
+
 doc = curdoc()
-if dashboard_data["nth_str"] == "Nothing":
+if language == "english":
     doc.title = "Explore What People Believe and Do in Response to CoViD-19"
-elif dashboard_data["nth_str"] == "Nichts":
+elif language == "german":
     doc.title = "Was Menschen zur Corona-Epidemie wissen, erwarten und tun"
 
 

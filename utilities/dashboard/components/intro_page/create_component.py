@@ -5,28 +5,8 @@ from utilities.dashboard.config import PLOT_WIDTH
 from utilities.dashboard.config import TITLE_STYLE
 
 
-def create_intro_page(title, top_text, plot_intro, groupby_title):
+def create_intro_page(title, top_text, plot_intro, groupby_title, language):
     """Create the overview tab showing the distribution of any group of variables.
-
-    Args:
-        groups (list)
-        topics (list)
-        topic_to_groups (dict)
-        group_to_header (dict)
-        group_to_plot_type (dict)
-        background_variables (list)
-        plot_data (dict)
-        group_to_variables (dict)
-        variable_to_label (dict)
-        variable_to_nice_name (dict)
-        nice_name_to_variable (dict)
-        group_to_caption (dict)
-        title (str)
-        groupby_title (str)
-        top_text (str)
-        plot_intro (str)
-        menu_titles (tuple)
-        nth_str (str): name of the "Nothing" category in English
 
     Returns:
         page (bokeh Column)

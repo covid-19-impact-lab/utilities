@@ -52,6 +52,9 @@ def create_dashboard_data(
     res = _get_language_specific_text_snippets(
         language=language, dataset_name=data_name
     )
+
+    res["language"] = language
+
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     groups = [group for group in raw_groups if group not in bg_var_groups]
@@ -128,13 +131,11 @@ def _get_language_specific_text_snippets(language, dataset_name):
         res = {
             "menu_titles": ("Topic", "Subtopic", "Split By", "Question"),
             "nth_str": "Nothing",
-            "tab_names": ["Introduction", "Maps", "Group Differences"],
         }
     elif language == "german":
         res = {
             "menu_titles": ("Bereich", "Thema", "Gruppieren nach", "Frage"),
             "nth_str": "Nichts",
-            "tab_names": ["Einleitung", "Karten", "Unterschiede zw. Gruppen"],
         }
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
