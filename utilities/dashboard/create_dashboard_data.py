@@ -38,7 +38,7 @@ def create_dashboard_data(
             - "background_vars": List of strings
             - "group_to_variables": Dictionary
             - "variable_to_label": Dictionary
-            - "plot_data": A dict with data for the plots
+            - "univariate_distributions_data": A dict with data for the plots
             - "variable_to_nice_name": Dictionary
             - "maps_data": A dict with geojson data sources for each group
 
@@ -95,14 +95,14 @@ def create_dashboard_data(
         }
     maps_data = {"tooltips": translations}
 
-    plot_data = {}
+    univariate_distributions_data = {}
     for g in groups:
         plot_type = res["group_to_plot_type"][g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
         variables = vm["group_to_variables"][g]
         nice_names = nice_names
         labels = vm["variable_to_label"]
-        plot_data[g] = prepare_data(
+        univariate_distributions_data[g] = prepare_data(
             data=data,
             variables=variables,
             bg_vars=[x for x in internal_bg_vars if x != "prov"],
@@ -125,7 +125,7 @@ def create_dashboard_data(
         data, data_desc, group_info, language, data_name
     )
 
-    res["plot_data"] = plot_data
+    res["univariate_distributions_data"] = univariate_distributions_data
     res["maps_data"] = maps_data
     return res
 

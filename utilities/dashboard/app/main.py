@@ -22,7 +22,7 @@ def assemble_dashboard_components(
     general_variable_mappings,
     group_to_plot_type,
     background_variables,
-    plot_data,
+    univariate_distributions_data,
     maps_data,
     menu_labels,
     language,
@@ -49,7 +49,7 @@ def assemble_dashboard_components(
         group_to_plot_type=group_to_plot_type,
         background_variables=background_variables,
         variable_mappings=general_variable_mappings,
-        plot_data=plot_data,
+        plot_data=univariate_distributions_data,
         menu_labels=menu_labels,
     )
 
