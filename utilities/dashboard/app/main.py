@@ -68,6 +68,11 @@ def assemble_dashboard_components(
     return page
 
 
+# ======================================================================================
+# The actual app
+# ======================================================================================
+
+
 data_dir = Path(sys.argv[1]).resolve()
 dashboard_data = pd.read_pickle(data_dir / "dashboard_data.pickle")
 
