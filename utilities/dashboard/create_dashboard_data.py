@@ -4,6 +4,7 @@ from utilities.dashboard.components.maps.mapplot import prepare_map_data
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
+from utilities.dashboard.shared import create_general_variable_mappings
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -121,11 +122,6 @@ def create_dashboard_data(
     return res
 
 
-def _dict_of_uniques_from_df(df, key_col, val_col):
-    raw = df.groupby(key_col)[val_col].unique().to_dict()
-    return {k: val.tolist() for k, val in raw.items()}
-
-
 def _get_language_specific_text_snippets(language, dataset_name):
     """Create a dictionary with several dataset and language specific text snippets and headers."""
     if language == "english":
@@ -142,71 +138,4 @@ def _get_language_specific_text_snippets(language, dataset_name):
         }
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
-    return res
-
-
-def create_general_variable_mappings(
-    data, data_desc, group_info, language, data_name,
-):
-    """Create a dict of dicts that allows to look up metadata of variables.
-
-    We use the following terminology:
-
-    topic: A section of the questionnaire. All variables in that section
-        are somehow related.
-
-    groups: A set of variables. All variables in a group belong to the same topic
-        and take the same values.
-
-
-    Note: This applies to the very first wave of the covid data and might not be
-    useful for components that make use of several waves.
-
-
-    Args:
-        data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of the dataset.
-        group_info (pd.DataFrame): Description of groups.
-        language (str): One of ["english", "german", "dutch"]
-        data_name (str): "liss" or "gesis"
-
-    Returns:
-        dict: Dictionary with the following entries:
-            - "topics": List of strings
-            - "topic_to_groups": dict
-            - "group_to_header": dict
-            - "group_to_caption": dict
-            - "group_to_variables": dict
-            - "variable_to_label": dict
-            - "variable_to_nice_name": dict
-            - "nice_name_to_variable": dict
-
-    """
-    res = {}
-    raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
-    raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
-    res["topics"] = [topic for topic in raw_topics if topic != "Background Variables"]
-
-    res["topic_to_groups"] = _dict_of_uniques_from_df(
-        group_info, f"topic_{language}", f"group_{language}"
-    )
-
-    res["group_to_header"] = group_info.set_index(f"group_{language}")[
-        f"header_{language}"
-    ].to_dict()
-    res["group_to_caption"] = group_info.set_index(f"group_{language}")[
-        f"caption_{language}"
-    ].to_dict()
-    res["group_to_variables"] = _dict_of_uniques_from_df(
-        data_desc, f"group_{language}", "new_name"
-    )
-
-    nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
-    res["variable_to_nice_name"] = nice_names
-    res["variable_to_label"] = data_desc.set_index("new_name")[
-        f"label_{language}"
-    ].to_dict()
-
-    res["nice_name_to_variable"] = {v: k for k, v in nice_names.items()}
-
     return res
