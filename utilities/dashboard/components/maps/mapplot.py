@@ -17,7 +17,7 @@ from utilities.colors import get_colors
 from utilities.dashboard.config import MAPS_DIR
 
 
-def prepare_map_data(data, variables, nice_names, labels, data_name):
+def prepare_maps_data(data, variables, nice_names, labels, data_name):
     """Prepare the map data for one group.
 
     Args:
@@ -164,10 +164,10 @@ def _load_map_coordinates(data_name):
     return provinces
 
 
-def setup_map(map_data, group, var_nice_name):
-    translations = map_data["tooltips"]
-    geo_source = map_data[group][0]
-    typ = map_data[group][1][var_nice_name]
+def setup_map(maps_data, group, var_nice_name):
+    translations = maps_data["tooltips"]
+    geo_source = maps_data[group][0]
+    typ = maps_data[group][1][var_nice_name]
     var_nice_name = _compatible_str(var_nice_name)
 
     p = _styled_map_figure()

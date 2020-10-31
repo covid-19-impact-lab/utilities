@@ -23,7 +23,7 @@ def assemble_dashboard_components(
     group_to_plot_type,
     background_variables,
     plot_data,
-    map_data,
+    maps_data,
     menu_labels,
     language,
 ):
@@ -40,7 +40,7 @@ def assemble_dashboard_components(
     intro_page = create_intro_page(**intro_page_data, language=language)
 
     map_page = create_maps(
-        map_data=map_data,
+        maps_data=maps_data,
         menu_labels=menu_labels,
         variable_mappings=general_variable_mappings,
     )

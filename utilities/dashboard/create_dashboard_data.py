@@ -1,6 +1,6 @@
 from utilities.dashboard.components.debugging import no_plot
 from utilities.dashboard.components.intro_page.create_data import create_intro_page_data
-from utilities.dashboard.components.maps.mapplot import prepare_map_data
+from utilities.dashboard.components.maps.mapplot import prepare_maps_data
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
@@ -40,7 +40,7 @@ def create_dashboard_data(
             - "variable_to_label": Dictionary
             - "plot_data": A dict with data for the plots
             - "variable_to_nice_name": Dictionary
-            - "map_data": A dict with geojson data sources for each group
+            - "maps_data": A dict with geojson data sources for each group
 
     """
 
@@ -93,7 +93,7 @@ def create_dashboard_data(
             "Mean": "Mittelwert",
             "Most Common": "Häufigste Antwort",
         }
-    map_data = {"tooltips": translations}
+    maps_data = {"tooltips": translations}
 
     plot_data = {}
     for g in groups:
@@ -111,7 +111,7 @@ def create_dashboard_data(
             nothing_string=menu_labels["nothing_category"],
         )
 
-        map_data[g] = prepare_map_data(
+        maps_data[g] = prepare_maps_data(
             data=data,
             variables=variables,
             nice_names=nice_names,
@@ -126,7 +126,7 @@ def create_dashboard_data(
     )
 
     res["plot_data"] = plot_data
-    res["map_data"] = map_data
+    res["maps_data"] = maps_data
     return res
 
 

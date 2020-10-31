@@ -9,28 +9,11 @@ from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_high
 from utilities.dashboard.shared import create_caption_for_variable_group
 
 
-def create_maps(map_data, variable_mappings, menu_labels):
+def create_maps(maps_data, variable_mappings, menu_labels):
     """Create the overview tab showing the distribution of any group of variables.
 
     Args:
-        groups (list)
-        topics (list)
-        topic_to_groups (dict)
-        group_to_header (dict)
-        group_to_plot_type (dict)
-        background_variables (list)
-        plot_data (dict)
-        group_to_variables (dict)
-        variable_to_label (dict)
-        variable_to_nice_name (dict)
-        nice_name_to_variable (dict)
-        group_to_caption (dict)
-        title (str)
-        groupby_title (str)
-        top_text (str)
-        plot_intro (str)
-        menu_titles (tuple)
-        nothing_string (str): name of the "Nothing" category in English
+
 
     Returns:
         page (bokeh Column)
@@ -76,7 +59,7 @@ def create_maps(map_data, variable_mappings, menu_labels):
             width=160,
         ),
     ]
-    map_func = partial(setup_map, map_data=map_data)
+    map_func = partial(setup_map, maps_data=maps_data)
     country_map = map_func(group=group, var_nice_name=var_nice_name)
 
     create_caption = partial(

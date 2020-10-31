@@ -26,23 +26,6 @@ def create_univariate_distributions(
     """Create the overview tab showing the distribution of any group of variables.
 
     Args:
-        groups (list)
-        topics (list)
-        topic_to_groups (dict)
-        group_to_header (dict)
-        group_to_plot_type (dict)
-        background_variables (list)
-        plot_data (dict)
-        group_to_variables (dict)
-        variable_to_label (dict)
-        variable_to_nice_name (dict)
-        nice_name_to_variable (dict)
-        group_to_caption (dict)
-        title (str)
-        groupby_title (str)
-        top_text (str)
-        plot_intro (str)
-        menu_labels (tuple)
 
     Returns:
         page (bokeh Column)
