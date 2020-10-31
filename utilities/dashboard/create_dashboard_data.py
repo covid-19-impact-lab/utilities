@@ -95,28 +95,26 @@ def create_dashboard_data(
         }
     maps_data = {"tooltips": translations}
 
+    for g in groups:
+        maps_data[g] = prepare_maps_data(
+            data=data,
+            variables=vm["group_to_variables"][g],
+            nice_names=nice_names,
+            labels=vm["variable_to_label"],
+            data_name=data_name,
+        )
+
     univariate_distributions_data = {}
     for g in groups:
         plot_type = res["group_to_plot_type"][g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
-        variables = vm["group_to_variables"][g]
-        nice_names = nice_names
-        labels = vm["variable_to_label"]
         univariate_distributions_data[g] = prepare_data(
             data=data,
-            variables=variables,
+            variables=vm["group_to_variables"][g],
             bg_vars=[x for x in internal_bg_vars if x != "prov"],
             nice_names=nice_names,
-            labels=labels,
+            labels=vm["variable_to_label"],
             nothing_string=menu_labels["nothing_category"],
-        )
-
-        maps_data[g] = prepare_maps_data(
-            data=data,
-            variables=variables,
-            nice_names=nice_names,
-            labels=labels,
-            data_name=data_name,
         )
 
     res["intro_page_data"] = create_intro_page_data(language, data_name)
