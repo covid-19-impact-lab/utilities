@@ -1,17 +1,23 @@
 import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from bokeh.models import GeoJSONDataSource
-from utilities.colors import get_colors
-from bokeh.plotting import figure
-from bokeh.models import HoverTool, Div
-from pandas.api.types import is_categorical_dtype, is_bool_dtype, is_numeric_dtype
-from pathlib import Path
 from bokeh.layouts import Column
 from bokeh.layouts import Row
+from bokeh.models import Div
+from bokeh.models import GeoJSONDataSource
+from bokeh.models import HoverTool
+from bokeh.plotting import figure
+from pandas.api.types import is_bool_dtype
+from pandas.api.types import is_categorical_dtype
+from pandas.api.types import is_numeric_dtype
+
+from utilities.colors import get_colors
+from utilities.dashboard.config import MAPS_DIR
 
 
-def prepare_map_data(data, variables, nice_names, labels, data_name):
+def prepare_maps_data(data, variables, nice_names, labels, data_name):
     """Prepare the map data for one group.
 
     Args:
@@ -124,11 +130,12 @@ def _get_color_dict(sr, full_data):
                 mid_int = int(bin_.mid)
                 new_cat = full_data.cat.categories[mid_int]
                 if new_cat != old_cat:
-                    legend_colors.append((str(new_cat.replace('- ', '')), color))
+                    legend_colors.append((str(new_cat.replace("- ", "")), color))
                     old_cat = new_cat
         else:
             legend_colors = [
-                (f"{bin_.mid:.2f}", bin_to_color[bin_]) for bin_ in bin_cats]
+                (f"{bin_.mid:.2f}", bin_to_color[bin_]) for bin_ in bin_cats
+            ]
     else:
         raise AssertionError(f"{sr.name} is neihter categorical nor numeric")
     return color_dict, legend_colors
@@ -143,8 +150,7 @@ def _load_map_coordinates(data_name):
     source for Germany:
     https://public.opendatasoft.com/explore/dataset/landkreise-in-germany/export/
     """
-    dashboard_path = Path(__file__).resolve().parent.parent
-    with open(dashboard_path / data_name / "provinces.geojson", "r") as f:
+    with open(MAPS_DIR / f"{data_name}_provinces.geojson", "r") as f:
         provinces = json.load(f)
 
     if data_name == "liss":
@@ -158,10 +164,10 @@ def _load_map_coordinates(data_name):
     return provinces
 
 
-def setup_map(map_data, group, var_nice_name):
-    translations = map_data["tooltips"]
-    geo_source = map_data[group][0]
-    typ = map_data[group][1][var_nice_name]
+def setup_map(maps_data, group, var_nice_name):
+    translations = maps_data["tooltips"]
+    geo_source = maps_data[group][0]
+    typ = maps_data[group][1][var_nice_name]
     var_nice_name = _compatible_str(var_nice_name)
 
     p = _styled_map_figure()

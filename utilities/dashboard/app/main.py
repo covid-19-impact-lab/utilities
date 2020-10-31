@@ -2,25 +2,81 @@
 usage: bokeh serve run_dashboard.py --show --args path/to/overview_tab_data_dict.pickle
 
 """
-import pickle
 import sys
 from pathlib import Path
+
+import pandas as pd
+from bokeh.models import Panel
+from bokeh.models import Tabs
 from bokeh.plotting import curdoc
-from utilities.dashboard.app.create_overview_tab import create_overview_tab
 
-template_dir = Path(__file__).resolve().parent
+from utilities.dashboard.components.intro_page.create_component import create_intro_page
+from utilities.dashboard.components.maps.create_component import create_maps
+from utilities.dashboard.components.univariate_distributions.create_component import (
+    create_univariate_distributions,
+)
 
-dashboard_data_path = sys.argv[1]
-with open(dashboard_data_path, "rb") as f:
-    dashboard_data = pickle.load(f)
+
+def assemble_dashboard_components(
+    intro_page_data, univariate_distributions_data, maps_data, shared_data,
+):
+    """Create the overview tab showing the distribution of any group of variables.
+
+    Args:
+
+
+    Returns:
+        page (bokeh Column)
+
+    """
+
+    intro_page = create_intro_page(**intro_page_data, language=shared_data["language"])
+
+    map_page = create_maps(
+        maps_data=maps_data,
+        menu_labels=shared_data["menu_labels"],
+        variable_mappings=shared_data["variable_mappings"],
+    )
+
+    univariate_distributions_page = create_univariate_distributions(
+        **univariate_distributions_data,
+        menu_labels=shared_data["menu_labels"],
+        variable_mappings=shared_data["variable_mappings"],
+    )
+
+    if language == "german":
+        tab_names = ["Einleitung", "Karten", "Unterschiede zw. Gruppen"]
+    elif language == "english":
+        tab_names = ["Introduction", "Maps", "Group Differences"]
+
+    page = Tabs(
+        tabs=[
+            Panel(child=intro_page, title=tab_names[0]),
+            Panel(child=map_page, title=tab_names[1]),
+            Panel(child=univariate_distributions_page, title=tab_names[2]),
+        ]
+    )
+    return page
+
+
+# ======================================================================================
+# The actual app
+# ======================================================================================
+
+
+data_dir = Path(sys.argv[1]).resolve()
+dashboard_data = pd.read_pickle(data_dir / "dashboard_data.pickle")
+
+language = dashboard_data["shared_data"]["language"]
 
 doc = curdoc()
-if dashboard_data["overview"]["nth_str"] == "Nothing":
+if language == "english":
     doc.title = "Explore What People Believe and Do in Response to CoViD-19"
-elif dashboard_data["overview"]["nth_str"] == "Nichts":
+elif language == "german":
     doc.title = "Was Menschen zur Corona-Epidemie wissen, erwarten und tun"
 
-overview_tab = create_overview_tab(**dashboard_data["overview"])
+
+overview_tab = assemble_dashboard_components(**dashboard_data)
 # corr_tab = create_corr_tab(dashboard_data["correlation"])
 # timeline_tab = create_timeline_tab(dashboard_data["timeline"])
 # tabs = Tabs(tabs=[overview_tab, corr_tab], name="tabs")
