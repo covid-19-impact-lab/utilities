@@ -30,7 +30,7 @@ def create_maps(map_data, variable_mappings, menu_labels):
         top_text (str)
         plot_intro (str)
         menu_titles (tuple)
-        nth_str (str): name of the "Nothing" category in English
+        nothing_string (str): name of the "Nothing" category in English
 
     Returns:
         page (bokeh Column)

@@ -43,6 +43,12 @@ def create_dashboard_data(
             - "map_data": A dict with geojson data sources for each group
 
     """
+
+    # ==================================================================================
+    # Create intermediate variables that won't be part of the dashboard data dictionary
+    # ==================================================================================
+    groups = _get_groups(group_info, language)
+
     vm = create_general_variable_mappings(
         data=data,
         data_desc=data_desc,
@@ -50,13 +56,14 @@ def create_dashboard_data(
         language=language,
         data_name=data_name,
     )
-
-    res = {"language": language}
-    raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
-    bg_var_groups = ["Background Overview", "Background Correlation"]
-    groups = [group for group in raw_groups if group not in bg_var_groups]
-
     internal_bg_vars = vm["group_to_variables"]["Background Overview"]
+    # ==================================================================================
+    # Create the dashboard data dictionary
+    # ==================================================================================
+    res = {"language": language}
+    menu_labels = get_menu_labels(language)
+    res["menu_labels"] = menu_labels
+
     nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
     res["background_variables"] = [
         nice_names[var] for var in internal_bg_vars if var != "prov"
@@ -66,7 +73,6 @@ def create_dashboard_data(
         "plot_type"
     ].to_dict()
 
-    plot_data = {}
     if language == "english":
         translations = {
             "Province": "Province",
@@ -88,7 +94,8 @@ def create_dashboard_data(
             "Most Common": "Häufigste Antwort",
         }
     map_data = {"tooltips": translations}
-    menu_labels = get_menu_labels(language)
+
+    plot_data = {}
     for g in groups:
         plot_type = res["group_to_plot_type"][g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
@@ -101,7 +108,7 @@ def create_dashboard_data(
             bg_vars=[x for x in internal_bg_vars if x != "prov"],
             nice_names=nice_names,
             labels=labels,
-            nth_str=menu_labels["nothing_category"],
+            nothing_string=menu_labels["nothing_category"],
         )
 
         map_data[g] = prepare_map_data(
@@ -118,8 +125,13 @@ def create_dashboard_data(
         data, data_desc, group_info, language, data_name
     )
 
-    res["menu_labels"] = menu_labels
-
     res["plot_data"] = plot_data
     res["map_data"] = map_data
     return res
+
+
+def _get_groups(group_info, language):
+    raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
+    bg_var_groups = ["Background Overview", "Background Correlation"]
+    groups = [group for group in raw_groups if group not in bg_var_groups]
+    return groups
