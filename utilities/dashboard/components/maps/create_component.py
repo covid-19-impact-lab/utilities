@@ -9,9 +9,7 @@ from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_high
 from utilities.dashboard.shared import create_caption_for_variable_group
 
 
-def create_maps(
-    map_data, variable_mappings, menu_titles,
-):
+def create_maps(map_data, variable_mappings, menu_labels):
     """Create the overview tab showing the distribution of any group of variables.
 
     Args:
@@ -57,23 +55,24 @@ def create_maps(
 
     selection_menus = [
         Select(
-            title=menu_titles[0],
+            title=menu_labels["topic"],
             options=topics,
             value=topic,
             name="topic_selector",
             width=220,
         ),
         Select(
-            title=menu_titles[1],
+            title=menu_labels["subtopic"],
             options=subtopics,
             value=group,
             name="subtopic_selector",
             width=220,
         ),
         Select(
-            title=menu_titles[3],
+            title=menu_labels["question"],
             options=group_to_nicenames[group],
             value=group_to_nicenames[group][0],
+            name="question_selector",
             width=160,
         ),
     ]

@@ -5,6 +5,7 @@ from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
 from utilities.dashboard.shared import create_general_variable_mappings
+from utilities.dashboard.shared import get_menu_labels
 
 plot_modules = {
     "stacked_barplot": stacked_barplot,
@@ -49,12 +50,8 @@ def create_dashboard_data(
         language=language,
         data_name=data_name,
     )
-    res = _get_language_specific_text_snippets(
-        language=language, dataset_name=data_name
-    )
 
-    res["language"] = language
-
+    res = {"language": language}
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     groups = [group for group in raw_groups if group not in bg_var_groups]
@@ -91,6 +88,7 @@ def create_dashboard_data(
             "Most Common": "Häufigste Antwort",
         }
     map_data = {"tooltips": translations}
+    menu_labels = get_menu_labels(language)
     for g in groups:
         plot_type = res["group_to_plot_type"][g]
         prepare_data = getattr(plot_modules[plot_type], "prepare_data")
@@ -103,7 +101,7 @@ def create_dashboard_data(
             bg_vars=[x for x in internal_bg_vars if x != "prov"],
             nice_names=nice_names,
             labels=labels,
-            nth_str=res["nth_str"],
+            nth_str=menu_labels["nothing_category"],
         )
 
         map_data[g] = prepare_map_data(
@@ -120,23 +118,8 @@ def create_dashboard_data(
         data, data_desc, group_info, language, data_name
     )
 
+    res["menu_labels"] = menu_labels
+
     res["plot_data"] = plot_data
     res["map_data"] = map_data
-    return res
-
-
-def _get_language_specific_text_snippets(language, dataset_name):
-    """Create a dictionary with several dataset and language specific text snippets and headers."""
-    if language == "english":
-        res = {
-            "menu_titles": ("Topic", "Subtopic", "Split By", "Question"),
-            "nth_str": "Nothing",
-        }
-    elif language == "german":
-        res = {
-            "menu_titles": ("Bereich", "Thema", "Gruppieren nach", "Frage"),
-            "nth_str": "Nichts",
-        }
-    else:
-        raise NotImplementedError("The language you supplied is not supported yet.")
     return res

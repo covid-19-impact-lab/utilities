@@ -24,8 +24,7 @@ def assemble_dashboard_components(
     background_variables,
     plot_data,
     map_data,
-    menu_titles,
-    nth_str,
+    menu_labels,
     language,
 ):
     """Create the overview tab showing the distribution of any group of variables.
@@ -42,7 +41,7 @@ def assemble_dashboard_components(
 
     map_page = create_maps(
         map_data=map_data,
-        menu_titles=menu_titles,
+        menu_labels=menu_labels,
         variable_mappings=general_variable_mappings,
     )
 
@@ -51,8 +50,7 @@ def assemble_dashboard_components(
         background_variables=background_variables,
         variable_mappings=general_variable_mappings,
         plot_data=plot_data,
-        menu_titles=menu_titles,
-        nth_str=nth_str,
+        menu_labels=menu_labels,
     )
 
     if language == "german":

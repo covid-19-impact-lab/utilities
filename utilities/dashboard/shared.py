@@ -107,3 +107,25 @@ def create_general_variable_mappings(
 def _dict_of_uniques_from_df(df, key_col, val_col):
     raw = df.groupby(key_col)[val_col].unique().to_dict()
     return {k: val.tolist() for k, val in raw.items()}
+
+
+def get_menu_labels(language):
+    """Create a dict that maps internal menu labels to nice names in language."""
+    if language == "english":
+        res = {
+            "topic": "Topic",
+            "subtopic": "Subtopic",
+            "split_by": "Split By",
+            "nothing_category": "Nothing",
+            "question": "Question",
+        }
+    elif language == "german":
+        res = {
+            "topic": "Bereich",
+            "subtopic": "Thema",
+            "split_by": "Gruppieren nach",
+            "nothing_category": "Nichts",
+            "question": "Frage",
+        }
+
+    return res

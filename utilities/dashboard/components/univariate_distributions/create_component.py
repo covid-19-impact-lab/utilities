@@ -21,12 +21,7 @@ plot_modules = {
 
 
 def create_univariate_distributions(
-    group_to_plot_type,
-    background_variables,
-    variable_mappings,
-    plot_data,
-    menu_titles,
-    nth_str,
+    group_to_plot_type, background_variables, variable_mappings, plot_data, menu_labels,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -47,8 +42,7 @@ def create_univariate_distributions(
         groupby_title (str)
         top_text (str)
         plot_intro (str)
-        menu_titles (tuple)
-        nth_str (str): name of the "Nothing" category in English
+        menu_labels (tuple)
 
     Returns:
         page (bokeh Column)
@@ -84,28 +78,32 @@ def create_univariate_distributions(
 
     plot_selectors = [
         Select(
-            title=menu_titles[0],
+            title=menu_labels["topic"],
             options=topics,
             value=topic,
             name="topic_selector",
             width=200,
         ),
         Select(
-            title=menu_titles[1],
+            title=menu_labels["subtopic"],
             options=subtopics,
             value=group,
             name="subtopic_selector",
             width=250,
         ),
         Select(
-            title=menu_titles[2],
-            options=[nth_str] + background_variables,
-            value=nth_str,
+            title=menu_labels["split_by"],
+            options=[menu_labels["nothing_category"]] + background_variables,
+            value=menu_labels["nothing_category"],
             width=100,
         ),
     ]
 
-    plot = setup_plot(**plot_data[group], bg_var=nth_str, nth_str=nth_str)  # noqa
+    plot = setup_plot(
+        **plot_data[group],
+        bg_var=menu_labels["nothing_category"],
+        nth_str=menu_labels["nothing_category"],
+    )  # noqa
     plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=HEADER_STYLE)
 
@@ -132,7 +130,7 @@ def create_univariate_distributions(
         background_selector=plot_selectors[2],
         group_to_plot_type=group_to_plot_type,
         caption_callback=create_caption,
-        nth_str=nth_str,
+        nth_str=menu_labels["nothing_category"],
     )
     plot_selectors[1].on_change("value", subtopic_callback)
 
@@ -145,7 +143,7 @@ def create_univariate_distributions(
         variable_to_label=variable_to_label,
         group_to_variables=group_to_variables,
         nice_name_to_variable=nice_name_to_variable,
-        nth_str=nth_str,
+        nth_str=menu_labels["nothing_category"],
     )
     plot_selectors[2].on_change("value", background_var_callback)
 
