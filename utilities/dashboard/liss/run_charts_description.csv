@@ -1,0 +1,31 @@
+new_name;type;nice_name_english;nice_name_german
+gender;Background Variable;Gender;-
+gender_Female;Category;Female;-
+gender_Male;Category;Male;-
+edu;Background Variable;Education;-
+edu_lower_secondary_and_lower;Category;Lower secondary and lower;-
+edu_upper_secondary;Category;Upper secondary;-
+edu_tertiary;Category;Tertiary;-
+work_perc_home_cat;Background Variable;Degree of telecommutability;-
+work_perc_home_cat_up to 10%;Category;Up to 10%;-
+work_perc_home_cat_10-90%;Category;Between 10% and 90%;-
+work_perc_home_cat_more than 90%;Category;More than 90%;-
+gross_income_groups;Background Variable;Gross Income;-
+gross_income_groups_above 3500;Category;Above €3500;-
+gross_income_groups_bet. 2500 and 3500;Category;Between €2500 and €3500;-
+gross_income_groups_below 2500;Category;Below €2500;-
+essential_worker_w2;Background Variable;Working status;-
+essential_worker_w2_essential_worker;Category;Essential worker;-
+essential_worker_w2_not_essential_worker;Category;Not an essential worker:-
+parttime_covid;Background Variable;Working time;-
+parttime_covid_parttime;Category;Working part-time;-
+parttime_covid_not_parttime;Category;Not working part-time;-
+hours_total_uncond;Outcome Variable;Working hours;-
+hours_home_uncond;Outcome Variable;Hours worked from home;-
+abs_change_hours_home_uncond;Outcome Variable;Change in hours worked from home;-
+abs_change_hours_uncond;Outcome Variable;Change in working hours;-
+
+
+
+
+
