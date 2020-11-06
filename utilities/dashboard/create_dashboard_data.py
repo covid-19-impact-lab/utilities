@@ -85,6 +85,7 @@ def create_dashboard_data(
             nice_names=variable_mappings["nice_names_run_charts"],
         )
         res = {}
+        res["mapping"] = shared_data
         res["run_charts_data"] = run_charts_data
 
     return res

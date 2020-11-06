@@ -126,6 +126,17 @@ def create_general_variable_mappings(
         ].to_dict()
         res["nice_names_run_charts"] = nice_names
 
+        res["outcome_variable_to_nice_name"] = (
+            run_charts_desc.set_index("new_name")
+            .query("type == 'Outcome Variable'")[f"nice_name_{language}"]
+            .to_dict()
+        )
+        res["background_variable_to_nice_name"] = (
+            run_charts_desc.set_index("new_name")
+            .query("type == 'Background Variable'")[f"nice_name_{language}"]
+            .to_dict()
+        )
+
     return res
 
 

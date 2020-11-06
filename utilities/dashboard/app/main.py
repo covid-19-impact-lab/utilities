@@ -15,10 +15,16 @@ from utilities.dashboard.components.maps.create_component import create_maps
 from utilities.dashboard.components.univariate_distributions.create_component import (
     create_univariate_distributions,
 )
+from utilities.dashboard.components.run_charts.create_component import create_run_charts
 
 
 def assemble_dashboard_components(
-    intro_page_data, univariate_distributions_data, maps_data, shared_data,
+    intro_page_data,
+    univariate_distributions_data,
+    maps_data,
+    shared_data,
+    run_charts_data,
+    run_charts_mapping,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
@@ -44,16 +50,22 @@ def assemble_dashboard_components(
         variable_mappings=shared_data["variable_mappings"],
     )
 
+    run_charts_page = create_run_charts(
+        data=run_charts_data,
+        variable_mappings=run_charts_mapping["variable_mappings"],
+    )
+
     if language == "german":
-        tab_names = ["Einleitung", "Karten", "Unterschiede zw. Gruppen"]
+        tab_names = ["Einleitung", "Karten", "Unterschiede zw. Gruppen", "Run charts"]
     elif language == "english":
-        tab_names = ["Introduction", "Maps", "Group Differences"]
+        tab_names = ["Introduction", "Maps", "Group Differences", "Run Charts"]
 
     page = Tabs(
         tabs=[
             Panel(child=intro_page, title=tab_names[0]),
             Panel(child=map_page, title=tab_names[1]),
             Panel(child=univariate_distributions_page, title=tab_names[2]),
+            Panel(child=run_charts_page, title=tab_names[3]),
         ]
     )
     return page
@@ -63,11 +75,23 @@ def assemble_dashboard_components(
 # The actual app
 # ======================================================================================
 
-
 data_dir = Path(sys.argv[1]).resolve()
-dashboard_data = pd.read_pickle(data_dir / "dashboard_data_single.pickle")
+dashboard_data_shared = pd.read_pickle(data_dir / "dashboard_data_single.pickle")
+dashboard_data_waves = pd.read_pickle(data_dir / "dashboard_data_waves.pickle")
 
-language = dashboard_data["shared_data"]["language"]
+kwargs = {
+    "intro_page_data": dashboard_data_shared["intro_page_data"],
+    "univariate_distributions_data": dashboard_data_shared[
+        "univariate_distributions_data"
+    ],
+    "maps_data": dashboard_data_shared["maps_data"],
+    "shared_data": dashboard_data_shared["shared_data"],
+    "run_charts_data": dashboard_data_waves["run_charts_data"],
+    "run_charts_mapping": dashboard_data_waves["mapping"],
+}
+
+
+language = dashboard_data_shared["shared_data"]["language"]
 
 doc = curdoc()
 if language == "english":
@@ -76,7 +100,7 @@ elif language == "german":
     doc.title = "Was Menschen zur Corona-Epidemie wissen, erwarten und tun"
 
 
-overview_tab = assemble_dashboard_components(**dashboard_data)
+overview_tab = assemble_dashboard_components(**kwargs)
 # corr_tab = create_corr_tab(dashboard_data["correlation"])
 # timeline_tab = create_timeline_tab(dashboard_data["timeline"])
 # tabs = Tabs(tabs=[overview_tab, corr_tab], name="tabs")
