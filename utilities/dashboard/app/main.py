@@ -65,7 +65,7 @@ def assemble_dashboard_components(
 
 
 data_dir = Path(sys.argv[1]).resolve()
-dashboard_data = pd.read_pickle(data_dir / "dashboard_data.pickle")
+dashboard_data = pd.read_pickle(data_dir / "dashboard_data_single.pickle")
 
 language = dashboard_data["shared_data"]["language"]
 
