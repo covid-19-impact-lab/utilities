@@ -20,41 +20,65 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError(f"Only LISS supported so far.")
 
+    # load data
     if data_name == "liss":
         raw_data = pd.read_pickle(data_path)
-        data = prepare_liss_data(raw_data, lang, path_to_regions)
 
     dashboard_path = Path(__file__).resolve().parent
-    raw_group_info = pd.read_csv(
-        dashboard_path / data_name / "group_info.csv", sep=";", encoding="latin3"
-    )
-    group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
 
-    raw_desc = pd.read_csv(
-        dashboard_path / data_name / "data_description.csv", sep=";", encoding="latin3"
-    )
-    bg_desc = pd.read_csv(
-        dashboard_path / data_name / "background_variables.csv",
-        sep=";",
-        encoding="latin3",
-    )
-    desc = create_description_table(
-        raw_desc=raw_desc,
-        background_table=bg_desc,
-        group_info=group_info,
-        data=data,
-        language=lang,
-    )
+    if "waves" in data_path:
+        suffix = "waves"
+        run_charts_desc = pd.read_csv(
+            dashboard_path / data_name / "run_charts_description.csv",
+            sep=";",
+            encoding="latin3",
+        )
+        kwargs = {
+            "data": raw_data,
+            "run_charts_desc": run_charts_desc,
+            "language": lang,
+            "data_name": "liss",
+        }
 
-    dashboard_data = create_dashboard_data(
-        data=data,
-        data_desc=desc,
-        group_info=group_info,
-        language=lang,
-        data_name="liss",
-    )
+    else:
+        suffix = "single"
+        data = prepare_liss_data(raw_data, lang, path_to_regions)
+
+        raw_group_info = pd.read_csv(
+            dashboard_path / data_name / "group_info.csv", sep=";", encoding="latin3"
+        )
+        group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
+
+        raw_desc = pd.read_csv(
+            dashboard_path / data_name / "data_description.csv",
+            sep=";",
+            encoding="latin3",
+        )
+        bg_desc = pd.read_csv(
+            dashboard_path / data_name / "background_variables.csv",
+            sep=";",
+            encoding="latin3",
+        )
+
+        desc = create_description_table(
+            raw_desc=raw_desc,
+            background_table=bg_desc,
+            group_info=group_info,
+            data=data,
+            language=lang,
+        )
+
+        kwargs = {
+            "data": data,
+            "data_desc": desc,
+            "group_info": group_info,
+            "language": lang,
+            "data_name": "liss",
+        }
+
+    dashboard_data = create_dashboard_data(**kwargs)
 
     out_subdir = Path(out_dir).resolve() / data_name / lang
     out_subdir.mkdir(parents=True, exist_ok=True)
 
-    pd.to_pickle(dashboard_data, out_subdir / "dashboard_data.pickle")
+    pd.to_pickle(dashboard_data, out_subdir / f"dashboard_data_{suffix}.pickle")

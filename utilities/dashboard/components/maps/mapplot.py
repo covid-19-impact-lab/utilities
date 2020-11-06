@@ -23,9 +23,9 @@ def prepare_maps_data(data, variables, nice_names, labels, data_name):
     Args:
         data (pd.DataFrame): The dataset that contains variable and background_variables.
         variables (list): Names of apd.Categorical variables of which the shares are calculated.
-        bg_vars (list): pd.Categorical variables with background characteristics.
         nice_names (dict): Maps variables to nice names
         labels (dict): Maps variables to labels
+        data_name (string): Name of data set (i.e. LISS, GESIS).
 
     """
     provinces = _load_map_coordinates(data_name=data_name)
@@ -150,7 +150,7 @@ def _load_map_coordinates(data_name):
     source for Germany:
     https://public.opendatasoft.com/explore/dataset/landkreise-in-germany/export/
     """
-    with open(MAPS_DIR / f"{data_name}_provinces.geojson", "r") as f:
+    with open(MAPS_DIR / f"{data_name}_provinces.geojson", "r", encoding="utf-8") as f:
         provinces = json.load(f)
 
     if data_name == "liss":
