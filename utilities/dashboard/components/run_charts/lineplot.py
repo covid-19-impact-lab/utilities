@@ -36,13 +36,11 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
     """
     data = _preprocess_data(data, variables, bg_vars, period=[period])
 
-    bg_vars = [None] + bg_vars
-
     res = {"data": {}, "selectors": {}, "bounds": {}}
 
     for var, bg_var in itertools.product(variables, bg_vars):
         # add data to the result dictionary
-        if bg_var is not None:
+        if bg_var != "None":
             new = data.groupby([period, bg_var])[var].mean().unstack()
             new = {(var, col, bg_var): new[col].tolist() for col in new.columns}
 
@@ -53,7 +51,7 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
         res["data"]["period"] = sorted(data[period].unique())
 
         # add selectors to the result dictionary
-        if bg_var is not None:
+        if bg_var != "None":
             bg_vals = data[bg_var].dropna().unique().tolist()
             selectors = [(var, val) for val in bg_vals]
         else:
@@ -100,7 +98,9 @@ def _preprocess_data(df, outcome_vars, bg_vars, period):
     """
     df.reset_index(level="month", inplace=True)
     df = df[(df.age <= 66) & (df.age >= 18) & (df.max_hours_total >= 10)]
-    df = df[outcome_vars + bg_vars + period]
+    _bg_vars = bg_vars.copy()
+    _bg_vars.remove("None")
+    df = df[outcome_vars + _bg_vars + period]
 
     # rename problematic categories
     df["parttime_covid"] = np.select(
@@ -268,7 +268,7 @@ def update_plot(plot, selectors, bounds, variable, bg_var, nice_names_dict):
         lines.visible = True
 
         # store legend items
-        if bg_var is not None:
+        if bg_var != "None":
             cat = nice_names_dict.get(f"{bg_var}_{sel[1]}")
             item = (cat, lines)
             legend_items.append(item)
@@ -298,12 +298,12 @@ def _add_legend(p, legend_items):
 
     legend = Legend(
         items=legend_items,
-        location="center",
+        location="top_right",
         border_line_color=None,
         label_text_font_size="12pt",
     )
 
-    p.add_layout(legend, "right")
+    p.add_layout(legend)
     p.legend.click_policy = "hide"
 
     return p

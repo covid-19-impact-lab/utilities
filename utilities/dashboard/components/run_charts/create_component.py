@@ -3,6 +3,7 @@ from functools import partial
 from bokeh.layouts import Column
 from bokeh.layouts import Row
 from bokeh.models import Select
+from bokeh.models.ranges import Range1d, DataRange1d
 
 from utilities.dashboard.components.run_charts.lineplot import setup_plot
 from utilities.dashboard.components.run_charts.lineplot import update_plot
@@ -37,22 +38,17 @@ def create_run_charts(data, variable_mappings):
             width=220,
         ),
     ]
-    run_charts_func = partial(
-        setup_plot,
+
+    run_chart = setup_plot(
         data_dict=data["data"],
         selectors=data["selectors"],
         bounds=data["bounds"],
         nice_names_dict=data["nice_names"],
-    )
-    run_chart = run_charts_func(variable=outcome_variable, bg_var=background_variable)
-
-    update_out_var_func = partial(
-        update_plot,
+        variable=outcome_variable,
         bg_var=background_variable,
-        selectors=data["selectors"],
-        bounds=data["bounds"],
-        nice_names_dict=data["nice_names"],
     )
+
+    run_charts_page = Column(Row(*selection_menus), run_chart)
 
     update_bg_var_func = partial(
         update_plot,
@@ -62,13 +58,19 @@ def create_run_charts(data, variable_mappings):
         nice_names_dict=data["nice_names"],
     )
 
-    run_charts_page = Column(Row(*selection_menus), run_chart)
+    update_outcome_func = partial(
+        update_plot,
+        bg_var=background_variable,
+        selectors=data["selectors"],
+        bounds=data["bounds"],
+        nice_names_dict=data["nice_names"],
+    )
 
     _add_run_charts_callbacks(
         run_chart,
         run_charts_page,
         update_bg_var_func,
-        update_out_var_func,
+        update_outcome_func,
         nice_name_to_background,
         nice_name_to_outcome,
     )
@@ -80,19 +82,19 @@ def _add_run_charts_callbacks(
     run_chart,
     run_charts_page,
     update_bg_var_func,
-    update_out_var_func,
+    update_outcome_func,
     nice_name_to_background,
     nice_name_to_outcome,
 ):
+    # get selectors (0: Outcome variables, 1: Background variables)
     run_charts_selectors = run_charts_page.children[0].children
 
     outcome_variable_callback = partial(
         update_outcome_variable,
         run_chart=run_chart,
-        nice_name_to_outcome=nice_name_to_outcome,
-        nice_name_to_background=nice_name_to_background,
         run_charts_page=run_charts_page,
-        update_func=update_out_var_func,
+        nice_name_to_outcome=nice_name_to_outcome,
+        update_func=update_outcome_func,
     )
 
     run_charts_selectors[0].on_change("value", outcome_variable_callback)
@@ -100,9 +102,8 @@ def _add_run_charts_callbacks(
     background_variable_callback = partial(
         update_background_variable,
         run_chart=run_chart,
-        nice_name_to_outcome=nice_name_to_outcome,
-        nice_name_to_background=nice_name_to_background,
         run_charts_page=run_charts_page,
+        nice_name_to_background=nice_name_to_background,
         update_func=update_bg_var_func,
     )
 
@@ -113,25 +114,17 @@ def update_outcome_variable(
     attr,
     old,
     new,
-    nice_name_to_outcome,
-    nice_name_to_background,
-    update_func,
     run_chart,
     run_charts_page,
+    nice_name_to_outcome,
+    update_func,
 ):
     new_run_chart = update_func(plot=run_chart, variable=nice_name_to_outcome[new])
     run_charts_page.children[1] = new_run_chart
 
 
 def update_background_variable(
-    attr,
-    old,
-    new,
-    nice_name_to_background,
-    nice_name_to_outcome,
-    update_func,
-    run_chart,
-    run_charts_page,
+    attr, old, new, run_chart, run_charts_page, nice_name_to_background, update_func
 ):
     new_run_chart = update_func(plot=run_chart, bg_var=nice_name_to_background[new])
     run_charts_page.children[1] = new_run_chart

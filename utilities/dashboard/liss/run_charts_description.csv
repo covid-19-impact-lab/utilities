@@ -1,4 +1,5 @@
 new_name;type;nice_name_english;nice_name_german
+None;Background Variable;Nothing;-
 gender;Background Variable;Gender;-
 gender_Female;Category;Female;-
 gender_Male;Category;Male;-
