@@ -50,17 +50,8 @@ def create_run_charts(data, variable_mappings):
 
     run_charts_page = Column(Row(*selection_menus), run_chart)
 
-    update_bg_var_func = partial(
+    update_func = partial(
         update_plot,
-        variable=outcome_variable,
-        selectors=data["selectors"],
-        bounds=data["bounds"],
-        nice_names_dict=data["nice_names"],
-    )
-
-    update_outcome_func = partial(
-        update_plot,
-        bg_var=background_variable,
         selectors=data["selectors"],
         bounds=data["bounds"],
         nice_names_dict=data["nice_names"],
@@ -69,10 +60,10 @@ def create_run_charts(data, variable_mappings):
     _add_run_charts_callbacks(
         run_chart,
         run_charts_page,
-        update_bg_var_func,
-        update_outcome_func,
+        update_func,
         nice_name_to_background,
         nice_name_to_outcome,
+        selection_menus,
     )
 
     return run_charts_page
@@ -81,10 +72,10 @@ def create_run_charts(data, variable_mappings):
 def _add_run_charts_callbacks(
     run_chart,
     run_charts_page,
-    update_bg_var_func,
-    update_outcome_func,
+    update_func,
     nice_name_to_background,
     nice_name_to_outcome,
+    selection_menus,
 ):
     # get selectors (0: Outcome variables, 1: Background variables)
     run_charts_selectors = run_charts_page.children[0].children
@@ -93,8 +84,10 @@ def _add_run_charts_callbacks(
         update_outcome_variable,
         run_chart=run_chart,
         run_charts_page=run_charts_page,
+        nice_name_to_background=nice_name_to_background,
         nice_name_to_outcome=nice_name_to_outcome,
-        update_func=update_outcome_func,
+        selection_menus=selection_menus,
+        update_func=update_func,
     )
 
     run_charts_selectors[0].on_change("value", outcome_variable_callback)
@@ -104,7 +97,9 @@ def _add_run_charts_callbacks(
         run_chart=run_chart,
         run_charts_page=run_charts_page,
         nice_name_to_background=nice_name_to_background,
-        update_func=update_bg_var_func,
+        nice_name_to_outcome=nice_name_to_outcome,
+        selection_menus=selection_menus,
+        update_func=update_func,
     )
 
     run_charts_selectors[1].on_change("value", background_variable_callback)
@@ -116,15 +111,34 @@ def update_outcome_variable(
     new,
     run_chart,
     run_charts_page,
+    nice_name_to_background,
     nice_name_to_outcome,
+    selection_menus,
     update_func,
 ):
-    new_run_chart = update_func(plot=run_chart, variable=nice_name_to_outcome[new])
+    # background_variable = run_charts_page.children[0].children[1].value
+    new_run_chart = update_func(
+        plot=run_chart,
+        bg_var=nice_name_to_background[selection_menus[1].value],
+        variable=nice_name_to_outcome[new],
+    )
     run_charts_page.children[1] = new_run_chart
 
 
 def update_background_variable(
-    attr, old, new, run_chart, run_charts_page, nice_name_to_background, update_func
+    attr,
+    old,
+    new,
+    run_chart,
+    run_charts_page,
+    nice_name_to_background,
+    nice_name_to_outcome,
+    selection_menus,
+    update_func,
 ):
-    new_run_chart = update_func(plot=run_chart, bg_var=nice_name_to_background[new])
+    new_run_chart = update_func(
+        plot=run_chart,
+        variable=nice_name_to_outcome[selection_menus[0].value],
+        bg_var=nice_name_to_background[new],
+    )
     run_charts_page.children[1] = new_run_chart
