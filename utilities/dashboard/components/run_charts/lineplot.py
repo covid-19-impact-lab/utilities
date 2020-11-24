@@ -9,7 +9,6 @@ import itertools
 from utilities.colors import get_colors, plot_colors
 from bokeh.models import Legend, LegendItem
 from bokeh.models import DatetimeTickFormatter
-from bokeh.models.ranges import Range1d, DataRange1d
 from bokeh.models import ColumnDataSource, HoverTool, GlyphRenderer, Line
 
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
@@ -124,7 +123,12 @@ def _preprocess_data(df, outcome_vars, bg_vars, period):
 
 
 def setup_plot(
-    data_dict, selectors, bounds, variable, bg_var, nice_names_dict,
+    data_dict,
+    selectors,
+    bounds,
+    variable,
+    bg_var,
+    nice_names_dict,
 ):
     """Create the basic plot.
 
@@ -143,7 +147,11 @@ def setup_plot(
         bokeh.figure: Basic plot.
 
     """
-    fig = figure(frame_width=650, frame_height=450, x_axis_type="datetime",)
+    fig = figure(
+        frame_width=650,
+        frame_height=450,
+        x_axis_type="datetime",
+    )
     fig.toolbar_location = None
 
     for col in data_dict:
@@ -194,7 +202,11 @@ def _add_HoverTool(p, renderers, col, nice_names_dict):
     kwargs = {"tooltips": TOOLTIPS[:-1]} if col[1] is None else {"tooltips": TOOLTIPS}
 
     p.add_tools(
-        HoverTool(renderers=[renderers], **kwargs, formatters={"@x": "datetime"},)
+        HoverTool(
+            renderers=[renderers],
+            **kwargs,
+            formatters={"@x": "datetime"},
+        )
     )
 
     return p
@@ -316,6 +328,7 @@ def _update_yaxis(p, bounds, variable, nice_names_dict):
     ymin = bounds[(variable, "min_outcome")]
     ymax = bounds[(variable, "max_outcome")]
 
-    p.y_range = DataRange1d(start=ymin, end=ymax)
+    p.y_range.start = ymin
+    p.y_range.end = ymax
 
     return p

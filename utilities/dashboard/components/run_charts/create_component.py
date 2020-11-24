@@ -3,7 +3,6 @@ from functools import partial
 from bokeh.layouts import Column
 from bokeh.layouts import Row
 from bokeh.models import Select
-from bokeh.models.ranges import Range1d, DataRange1d
 
 from utilities.dashboard.components.run_charts.lineplot import setup_plot
 from utilities.dashboard.components.run_charts.lineplot import update_plot
@@ -64,6 +63,7 @@ def create_run_charts(data, variable_mappings):
         nice_name_to_background,
         nice_name_to_outcome,
         selection_menus,
+        data["bounds"],
     )
 
     return run_charts_page
@@ -76,6 +76,7 @@ def _add_run_charts_callbacks(
     nice_name_to_background,
     nice_name_to_outcome,
     selection_menus,
+    bounds,
 ):
     # get selectors (0: Outcome variables, 1: Background variables)
     run_charts_selectors = run_charts_page.children[0].children
@@ -88,6 +89,7 @@ def _add_run_charts_callbacks(
         nice_name_to_outcome=nice_name_to_outcome,
         selection_menus=selection_menus,
         update_func=update_func,
+        bounds=bounds,
     )
 
     run_charts_selectors[0].on_change("value", outcome_variable_callback)
@@ -115,6 +117,7 @@ def update_outcome_variable(
     nice_name_to_outcome,
     selection_menus,
     update_func,
+    bounds,
 ):
     # background_variable = run_charts_page.children[0].children[1].value
     new_run_chart = update_func(
