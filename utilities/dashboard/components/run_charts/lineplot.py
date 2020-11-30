@@ -47,7 +47,12 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
             new = {(var, None, None): data.groupby(period)[var].mean().tolist()}
 
         res["data"].update(new)
-        res["data"]["period"] = sorted(data[period].unique())
+
+        periods = sorted(data[period].unique())
+        periods = [pd.to_datetime(period) for period in periods]
+        periods = [period.strftime("%B %Y") for period in periods]
+        periods[0] = "Pre-CoVid 19"
+        res["data"]["period"] = periods
 
         # add selectors to the result dictionary
         if bg_var != "None":
@@ -96,14 +101,18 @@ def _preprocess_data(df, outcome_vars, bg_vars, period):
 
     """
     df.reset_index(level="month", inplace=True)
+    df = df[df["month"] != "2019-11-01"]
     df = df[(df.age <= 66) & (df.age >= 18) & (df.max_hours_total >= 10)]
     _bg_vars = bg_vars.copy()
     _bg_vars.remove("None")
     df = df[outcome_vars + _bg_vars + period]
 
     # rename problematic categories
-    df["parttime_covid"] = np.select(
-        condlist=[df["parttime_covid"] == 1.0, df["parttime_covid"] == 0.0],
+    df["parttime_baseline_covid"] = np.select(
+        condlist=[
+            df["parttime_baseline_covid"] == 1.0,
+            df["parttime_baseline_covid"] == 0.0,
+        ],
         choicelist=["parttime", "not_parttime"],
         default=np.nan,
     )
@@ -114,21 +123,26 @@ def _preprocess_data(df, outcome_vars, bg_vars, period):
         default=np.nan,
     )
 
+    df["self_employed_baseline"] = np.select(
+        condlist=[
+            df["self_employed_baseline"] == 1.0,
+            df["self_employed_baseline"] == 0.0,
+        ],
+        choicelist=["self_employed", "employee"],
+        default=np.nan,
+    )
+
     # Need to do this because of a bug, otherwise nans will be casted as strings:
     # https://github.com/pandas-dev/pandas/issues/25353
-    df["parttime_covid"] = df["parttime_covid"].replace("nan", np.nan)
+    df["parttime_baseline_covid"] = df["parttime_baseline_covid"].replace("nan", np.nan)
+    df["self_employed_baseline"] = df["self_employed_baseline"].replace("nan", np.nan)
     df["essential_worker_w2"] = df["essential_worker_w2"].replace("nan", np.nan)
 
     return df
 
 
 def setup_plot(
-    data_dict,
-    selectors,
-    bounds,
-    variable,
-    bg_var,
-    nice_names_dict,
+    data_dict, selectors, bounds, variable, bg_var, nice_names_dict,
 ):
     """Create the basic plot.
 
@@ -147,11 +161,7 @@ def setup_plot(
         bokeh.figure: Basic plot.
 
     """
-    fig = figure(
-        frame_width=650,
-        frame_height=450,
-        x_axis_type="datetime",
-    )
+    fig = figure(frame_width=650, frame_height=450, x_range=data_dict["period"],)
     fig.toolbar_location = None
 
     for col in data_dict:
@@ -195,19 +205,13 @@ def _add_HoverTool(p, renderers, col, nice_names_dict):
 
     TOOLTIPS = [
         (nice_names_dict.get(var_name), "@y"),
-        ("Date of survey", "@x{%d-%m-%Y}"),
+        ("Date of survey", "@x"),
         (nice_names_dict.get(bg_var_name), "@cat"),
     ]
 
     kwargs = {"tooltips": TOOLTIPS[:-1]} if col[1] is None else {"tooltips": TOOLTIPS}
 
-    p.add_tools(
-        HoverTool(
-            renderers=[renderers],
-            **kwargs,
-            formatters={"@x": "datetime"},
-        )
-    )
+    p.add_tools(HoverTool(renderers=[renderers], **kwargs,))
 
     return p
 
@@ -220,7 +224,7 @@ def _apply_styling(p):
     p.outline_line_color = None
 
     # axis styling
-    p.xaxis.formatter = DatetimeTickFormatter(months=["%B %Y"])
+    # p.xaxis.formatter = DatetimeTickFormatter(months=["%B %Y"])
 
     p.yaxis.axis_line_color = None
     p.yaxis.axis_label_text_font_style = "normal"
