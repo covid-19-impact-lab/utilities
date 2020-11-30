@@ -1,8 +1,8 @@
 new_name;type;nice_name_english;nice_name_german
 None;Background Variable;Nothing;-
 gender;Background Variable;Gender;-
-gender_Female;Category;Female;-
-gender_Male;Category;Male;-
+gender_female;Category;Female;-
+gender_male;Category;Male;-
 edu;Background Variable;Education;-
 edu_lower_secondary_and_lower;Category;Lower secondary and lower;-
 edu_upper_secondary;Category;Upper secondary;-

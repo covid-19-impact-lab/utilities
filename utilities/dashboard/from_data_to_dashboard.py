@@ -22,63 +22,67 @@ if __name__ == "__main__":
 
     # load data
     if data_name == "liss":
-        raw_data = pd.read_pickle(data_path)
+        raw_data_single = pd.read_pickle(f"{data_path}/liss_single_wave_data.pickle")
+        raw_data_waves = pd.read_pickle(f"{data_path}/liss_all_waves_data.pickle")
 
     dashboard_path = Path(__file__).resolve().parent
 
-    if "waves" in data_path:
-        suffix = "waves"
-        run_charts_desc = pd.read_csv(
-            dashboard_path / data_name / "run_charts_description.csv",
-            sep=";",
-            encoding="latin3",
-        )
-        kwargs = {
-            "data": raw_data,
-            "run_charts_desc": run_charts_desc,
-            "language": lang,
-            "data_name": "liss",
-        }
+    dataDict = {"single": raw_data_single, "waves": raw_data_waves}
 
-    else:
-        suffix = "single"
-        data = prepare_liss_data(raw_data, lang, path_to_regions)
+    for suffix, raw_data in dataDict.items():
+        if suffix == "waves":
+            run_charts_desc = pd.read_csv(
+                dashboard_path / data_name / "run_charts_description.csv",
+                sep=";",
+                encoding="latin3",
+            )
+            kwargs = {
+                "data": raw_data,
+                "run_charts_desc": run_charts_desc,
+                "language": lang,
+                "data_name": "liss",
+            }
 
-        raw_group_info = pd.read_csv(
-            dashboard_path / data_name / "group_info.csv", sep=";", encoding="latin3"
-        )
-        group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
+        elif suffix == "single":
+            data = prepare_liss_data(raw_data, lang, path_to_regions)
 
-        raw_desc = pd.read_csv(
-            dashboard_path / data_name / "data_description.csv",
-            sep=";",
-            encoding="latin3",
-        )
-        bg_desc = pd.read_csv(
-            dashboard_path / data_name / "background_variables.csv",
-            sep=";",
-            encoding="latin3",
-        )
+            raw_group_info = pd.read_csv(
+                dashboard_path / data_name / "group_info.csv",
+                sep=";",
+                encoding="latin3",
+            )
+            group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
 
-        desc = create_description_table(
-            raw_desc=raw_desc,
-            background_table=bg_desc,
-            group_info=group_info,
-            data=data,
-            language=lang,
-        )
+            raw_desc = pd.read_csv(
+                dashboard_path / data_name / "data_description.csv",
+                sep=";",
+                encoding="latin3",
+            )
+            bg_desc = pd.read_csv(
+                dashboard_path / data_name / "background_variables.csv",
+                sep=";",
+                encoding="latin3",
+            )
 
-        kwargs = {
-            "data": data,
-            "data_desc": desc,
-            "group_info": group_info,
-            "language": lang,
-            "data_name": "liss",
-        }
+            desc = create_description_table(
+                raw_desc=raw_desc,
+                background_table=bg_desc,
+                group_info=group_info,
+                data=data,
+                language=lang,
+            )
 
-    dashboard_data = create_dashboard_data(**kwargs)
+            kwargs = {
+                "data": data,
+                "data_desc": desc,
+                "group_info": group_info,
+                "language": lang,
+                "data_name": "liss",
+            }
 
-    out_subdir = Path(out_dir).resolve() / data_name / lang
-    out_subdir.mkdir(parents=True, exist_ok=True)
+        dashboard_data = create_dashboard_data(**kwargs)
 
-    pd.to_pickle(dashboard_data, out_subdir / f"dashboard_data_{suffix}.pickle")
+        out_subdir = Path(out_dir).resolve() / data_name / lang
+        out_subdir.mkdir(parents=True, exist_ok=True)
+
+        pd.to_pickle(dashboard_data, out_subdir / f"dashboard_data_{suffix}.pickle")

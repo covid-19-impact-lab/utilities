@@ -102,6 +102,7 @@ def _add_run_charts_callbacks(
         nice_name_to_outcome=nice_name_to_outcome,
         selection_menus=selection_menus,
         update_func=update_func,
+        bounds=bounds,
     )
 
     run_charts_selectors[1].on_change("value", background_variable_callback)
@@ -119,12 +120,15 @@ def update_outcome_variable(
     update_func,
     bounds,
 ):
-    # background_variable = run_charts_page.children[0].children[1].value
+    bg_var = nice_name_to_background[selection_menus[1].value]
+    variable = nice_name_to_outcome[new]
     new_run_chart = update_func(
         plot=run_chart,
-        bg_var=nice_name_to_background[selection_menus[1].value],
-        variable=nice_name_to_outcome[new],
+        bg_var=bg_var,
+        variable=variable,
     )
+    new_run_chart.y_range.start = bounds[(variable, "min_outcome")]
+    new_run_chart.y_range.end = bounds[(variable, "max_outcome")]
     run_charts_page.children[1] = new_run_chart
 
 
@@ -138,10 +142,15 @@ def update_background_variable(
     nice_name_to_outcome,
     selection_menus,
     update_func,
+    bounds,
 ):
+    bg_var = nice_name_to_background[new]
+    variable = nice_name_to_outcome[selection_menus[0].value]
     new_run_chart = update_func(
         plot=run_chart,
-        variable=nice_name_to_outcome[selection_menus[0].value],
-        bg_var=nice_name_to_background[new],
+        variable=variable,
+        bg_var=bg_var,
     )
+    new_run_chart.y_range.start = bounds[(variable, "min_outcome")]
+    new_run_chart.y_range.end = bounds[(variable, "max_outcome")]
     run_charts_page.children[1] = new_run_chart

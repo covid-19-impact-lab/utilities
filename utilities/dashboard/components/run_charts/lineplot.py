@@ -142,7 +142,12 @@ def _preprocess_data(df, outcome_vars, bg_vars, period):
 
 
 def setup_plot(
-    data_dict, selectors, bounds, variable, bg_var, nice_names_dict,
+    data_dict,
+    selectors,
+    bounds,
+    variable,
+    bg_var,
+    nice_names_dict,
 ):
     """Create the basic plot.
 
@@ -161,7 +166,11 @@ def setup_plot(
         bokeh.figure: Basic plot.
 
     """
-    fig = figure(frame_width=650, frame_height=450, x_range=data_dict["period"],)
+    fig = figure(
+        frame_width=650,
+        frame_height=450,
+        x_range=data_dict["period"],
+    )
     fig.toolbar_location = None
 
     for col in data_dict:
@@ -211,7 +220,12 @@ def _add_HoverTool(p, renderers, col, nice_names_dict):
 
     kwargs = {"tooltips": TOOLTIPS[:-1]} if col[1] is None else {"tooltips": TOOLTIPS}
 
-    p.add_tools(HoverTool(renderers=[renderers], **kwargs,))
+    p.add_tools(
+        HoverTool(
+            renderers=[renderers],
+            **kwargs,
+        )
+    )
 
     return p
 
