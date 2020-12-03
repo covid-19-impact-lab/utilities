@@ -17,7 +17,7 @@ gross_income_groups_bet. 2500 and 3500;Category;Between EUR 2500 and EUR 3500;-
 gross_income_groups_below 2500;Category;Below EUR 2500;-
 essential_worker_w2;Background Variable;Working status;-
 essential_worker_w2_essential_worker;Category;Essential worker;-
-essential_worker_w2_not_essential_worker;Category;Not an essential worker:-
+essential_worker_w2_not_essential_worker;Category;Not an essential worker;-
 parttime_baseline_covid;Background Variable;Working time;-
 parttime_baseline_covid_parttime;Category;Working part-time;-
 parttime_baseline_covid_not_parttime;Category;Not working part-time;-

@@ -51,14 +51,18 @@ def assemble_dashboard_components(
     )
 
     run_charts_page = create_run_charts(
-        data=run_charts_data,
-        variable_mappings=run_charts_mapping["variable_mappings"],
+        data=run_charts_data, variable_mappings=run_charts_mapping["variable_mappings"],
     )
 
     if language == "german":
-        tab_names = ["Einleitung", "Karten", "Unterschiede zw. Gruppen", "Run charts"]
+        tab_names = [
+            "Einleitung",
+            "Karten",
+            "Unterschiede zw. Gruppen",
+            "Arbeitskräfteangebot",
+        ]
     elif language == "english":
-        tab_names = ["Introduction", "Maps", "Group Differences", "Run Charts"]
+        tab_names = ["Introduction", "Maps", "Group Differences", "Labor Supply"]
 
     page = Tabs(
         tabs=[

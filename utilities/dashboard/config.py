@@ -11,6 +11,8 @@ UNIVARIATE_DISTRIBUTIONS_DIR = (
     DASHBOARD_ROOT / "components" / "univariate_distributions"
 )
 
+RUN_CHARTS_DIR = DASHBOARD_ROOT / "components" / "run_charts"
+
 APP_DIR = DASHBOARD_ROOT / "app"
 
 

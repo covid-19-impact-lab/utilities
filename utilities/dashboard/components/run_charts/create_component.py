@@ -3,10 +3,14 @@ from functools import partial
 from bokeh.layouts import Column
 from bokeh.layouts import Row
 from bokeh.models import Select
+from bokeh.models.widgets import Div
 
 from utilities.dashboard.components.run_charts.lineplot import setup_plot
 from utilities.dashboard.components.run_charts.lineplot import update_plot
 from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_higher_level
+
+from utilities.dashboard.config import PLOT_WIDTH
+from utilities.dashboard.config import TITLE_STYLE
 
 
 def create_run_charts(data, variable_mappings):
@@ -47,7 +51,19 @@ def create_run_charts(data, variable_mappings):
         bg_var=background_variable,
     )
 
-    run_charts_page = Column(Row(*selection_menus), run_chart)
+    title = Div(
+        text=data["title"], style=TITLE_STYLE, margin=(10, 0, 10, 0), width=PLOT_WIDTH
+    )
+    top_text = Div(
+        text=data["top_text"], margin=(10, 0, 10, 0), style={"text-align": "justify"}
+    )
+    bottom_text = Div(
+        text=data["bottom_text"], margin=(10, 0, 10, 0), style={"text-align": "justify"}
+    )
+
+    run_charts_page = Column(
+        title, top_text, Row(*selection_menus), run_chart, bottom_text
+    )
 
     update_func = partial(
         update_plot,
@@ -79,7 +95,7 @@ def _add_run_charts_callbacks(
     bounds,
 ):
     # get selectors (0: Outcome variables, 1: Background variables)
-    run_charts_selectors = run_charts_page.children[0].children
+    run_charts_selectors = run_charts_page.children[2].children
 
     outcome_variable_callback = partial(
         update_outcome_variable,
@@ -129,7 +145,8 @@ def update_outcome_variable(
     )
     new_run_chart.y_range.start = bounds[(variable, "min_outcome")]
     new_run_chart.y_range.end = bounds[(variable, "max_outcome")]
-    run_charts_page.children[1] = new_run_chart
+    run_charts_page.children[3] = new_run_chart
+    selection_menus[0].value = new
 
 
 def update_background_variable(
@@ -153,4 +170,7 @@ def update_background_variable(
     )
     new_run_chart.y_range.start = bounds[(variable, "min_outcome")]
     new_run_chart.y_range.end = bounds[(variable, "max_outcome")]
-    run_charts_page.children[1] = new_run_chart
+    ymin = bounds[(variable, "min_outcome")]
+    ymax = bounds[(variable, "max_outcome")]
+    run_charts_page.children[3] = new_run_chart
+    selection_menus[1].value = new
