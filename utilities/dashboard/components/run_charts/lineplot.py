@@ -8,6 +8,7 @@ import itertools
 
 from utilities.colors import get_colors, plot_colors
 from bokeh.models import Legend, LegendItem
+from bokeh.models import Range1d
 from bokeh.models import DatetimeTickFormatter
 from bokeh.models import ColumnDataSource, HoverTool, GlyphRenderer, Line
 
@@ -305,9 +306,8 @@ def update_plot(plot, selectors, bounds, variable, bg_var, nice_names_dict):
 
     _add_legend(plot, legend_items)
 
-    # when necessary, update y-axis label and y-axis range
+    # update y-axis label and y-axis range
     if plot.yaxis.axis_label != nice_names_dict[variable]:
-
         _update_yaxis(plot, bounds, variable, nice_names_dict)
 
     return plot
@@ -343,10 +343,7 @@ def _update_yaxis(p, bounds, variable, nice_names_dict):
     """Update lineplot y-axis according to the outcome variables selected."""
     p.yaxis.axis_label = nice_names_dict[variable]
 
-    ymin = bounds[(variable, "min_outcome")]
-    ymax = bounds[(variable, "max_outcome")]
-
-    p.y_range.start = ymin
-    p.y_range.end = ymax
+    p.y_range.start = bounds[(variable, "min_outcome")]
+    p.y_range.end = bounds[(variable, "max_outcome")]
 
     return p
