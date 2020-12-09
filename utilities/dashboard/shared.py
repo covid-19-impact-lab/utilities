@@ -57,11 +57,14 @@ def create_general_variable_mappings(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of the dataset.
-        group_info (pd.DataFrame): Description of groups.
-        run_charts_desc (pd.DataFrame): Description of run charts variables.
         language (str): One of ["english", "german", "dutch"]
         data_name (str): "liss" or "gesis"
+        data_desc (pd.DataFrame): Description of variables displayed in the maps
+            and univariate distributions dashboard tabs. Default is None.
+        group_info (pd.DataFrame): Description of groups, as defined for
+            maps and univariate distributions dashboard tabs. Default is None.
+        run_charts_desc (pd.DataFrame): Description of variables displayed in
+            the run charts dashboard tab. Default is None.
 
     Returns:
         dict: Dictionary wich may contain the following entries:

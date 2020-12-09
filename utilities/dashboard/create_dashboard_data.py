@@ -1,11 +1,9 @@
 from utilities.dashboard.components.intro_page.create_data import create_intro_page_data
 from utilities.dashboard.components.maps.create_data import create_maps_data
+from utilities.dashboard.components.run_charts.create_data import create_run_charts_data
 from utilities.dashboard.components.univariate_distributions.create_data import (
     create_univariate_distributions_data,
 )
-from utilities.dashboard.components.run_charts.create_data import create_run_charts_data
-
-
 from utilities.dashboard.shared import create_general_variable_mappings
 from utilities.dashboard.shared import get_menu_labels
 
@@ -19,23 +17,21 @@ def create_dashboard_data(
     run_charts_desc=None,
     kde_cutoff=7,
 ):
-    """Create a dict with all data needed in the dashboard.
+    """Create a dict with all data needed to generate a dashboard component.
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of the dataset.
-        run_charts_desc (pd.DataFrame): Description of run charts variables.
-        group_info (pd.DataFrame): Description of groups.
+        data_desc (pd.DataFrame): Description of variables displayed in the maps
+            and univariate distributions dashboard tabs. Default is None.
+        run_charts_desc (pd.DataFrame): Description of variables displayed in
+            the run charts dashboard tab. Default is None.
+        group_info (pd.DataFrame): Description of groups, as defined for
+            maps and univariate distributions dashboard tabs. Default is None.
         data_name (str): "liss" or "gesis".
         language (str): One of ["english", "german", "dutch"].
 
     Returns:
-        dict: Dictionary with the following entries:
-            "shared_data": dict
-            "intro_page_data": dict
-
-        Plus one dict containign the data of each additional dashboard component
-            (e.g. "maps_data", "run_charts_data"...).
+        dict: Dictionary whose entries depend on the pd.DataFrame(s) passed.
 
     """
     shared_data = _create_shared_dashboad_data(
@@ -92,7 +88,17 @@ def create_dashboard_data(
 
 
 def _get_groups(group_info, language):
-    """Get variables' group from `group_info`, given language."""
+    """Get variables' group from `group_info`, given language.
+
+    Args:
+        group_info (pd.DataFrame): Description of groups, as defined for
+            maps and univariate distributions dashboard tabs. Default is None.
+        language (str): One of ["english", "german", "dutch"].
+
+     Returns:
+        list: List of groups.
+
+    """
     raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
     bg_var_groups = ["Background Overview", "Background Correlation"]
     groups = [group for group in raw_groups if group not in bg_var_groups]
@@ -106,9 +112,12 @@ def _create_shared_dashboad_data(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of the dataset.
-        group_info (pd.DataFrame): Description of groups.
-        run_charts_desc (pd.DataFrame): Description of run charts variables.
+        data_desc (pd.DataFrame): Description of variables displayed in the maps
+            and univariate distributions dashboard tabs. Default is None.
+        run_charts_desc (pd.DataFrame): Description of variables displayed in
+            the run charts dashboard tab. Default is None.
+        group_info (pd.DataFrame): Description of groups, as defined for
+            maps and univariate distributions dashboard tabs. Default is None.
         language (str): One of ["english", "german", "dutch"].
         data_name (str): "liss" or "gesis".
 

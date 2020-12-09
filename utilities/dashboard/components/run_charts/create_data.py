@@ -1,9 +1,19 @@
-from utilities.dashboard.config import RUN_CHARTS_DIR
 from utilities.dashboard.components.run_charts.lineplot import prepare_data
+from utilities.dashboard.config import RUN_CHARTS_DIR
 
 
 def create_run_charts_data(data, variable_mappings, nice_names):
+    """Create data needed to generate run charts tab.
 
+    Args:
+        data (pd.DataFrame): Raw dataframe to process.
+        variable_mappings (dict): Dictionary of run charts metadata.
+        nice_names (dict): Dictionary mapping variables' names to nice names.
+
+    Returns:
+        dict: Dictionary containing all data needed to generate the run charts.
+
+    """
     variables = variable_mappings["outcome_variables"]
     bg_vars = variable_mappings["background_variables"]
 
@@ -25,6 +35,6 @@ def create_run_charts_data(data, variable_mappings, nice_names):
 
     run_charts_data[
         "title"
-    ] = "How does the CoVid-19 pandemic affect labor market outcomes?"
+    ] = "How Does the CoVid-19 Pandemic Affect Labor Market Outcomes?"
 
     return run_charts_data

@@ -1,19 +1,25 @@
-from bokeh.io import output_notebook
-from bokeh.plotting import figure, show
+import io
+import itertools
+import textwrap
+
 import numpy as np
 import pandas as pd
-import io
-import textwrap
-import itertools
-
-from utilities.colors import get_colors, plot_colors
-from bokeh.models import Legend, LegendItem
-from bokeh.models import Range1d
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource
 from bokeh.models import DatetimeTickFormatter
-from bokeh.models import ColumnDataSource, HoverTool, GlyphRenderer, Line
-
+from bokeh.models import GlyphRenderer
+from bokeh.models import HoverTool
+from bokeh.models import Legend
+from bokeh.models import LegendItem
+from bokeh.models import Line
+from bokeh.models import Range1d
+from bokeh.plotting import figure
+from bokeh.plotting import show
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from pandas.core.common import flatten
+
+from utilities.colors import get_colors
+from utilities.colors import plot_colors
 
 
 def prepare_data(data, period, variables, bg_vars, nice_names):
@@ -21,17 +27,16 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
 
     Args:
         data (pandas.DataFrame): A (relatively) raw dataset on which
-            you calculate points that will form the line plot.
+            the points that will form the line plot will be computed.
         period (string): Name of time period column. The time period
             column needs to be in datetime format.
         variables (list): List of outcome variables.
-        bg_vars (list): List of background variables by which we want to
-            split the sample.
+        bg_vars (list): List of background variables by which the sample can be
+            splitted.
         nice_names (dict): Dictionary mapping variables to nice names.
 
     Returns:
-        dict: A dictionary that contains all the points for lineplots
-            that you potentially need.
+        dict: A dictionary that contains all the possible lineplot points.
 
     """
     data = _preprocess_data(data, variables, bg_vars, period=[period])
@@ -51,7 +56,7 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
 
         periods = sorted(data[period].unique())
         periods = [pd.to_datetime(period) for period in periods]
-        periods = [period.strftime("%B %Y") for period in periods]
+        periods = [period.strftime("%b %Y") for period in periods]
         periods[0] = "Pre-CoVid 19"
         res["data"]["period"] = periods
 
@@ -98,7 +103,7 @@ def _preprocess_data(df, outcome_vars, bg_vars, period):
         period (list): List containing name of time period column.
 
     Returns
-        df: Formatted dataset.
+        pd.DataFrame: Formatted dataset.
 
     """
     df.reset_index(level="month", inplace=True)
@@ -167,11 +172,7 @@ def setup_plot(
         bokeh.figure: Basic plot.
 
     """
-    fig = figure(
-        frame_width=650,
-        frame_height=450,
-        x_range=data_dict["period"],
-    )
+    fig = figure(x_range=data_dict["period"], frame_width=535, frame_height=300)
     fig.toolbar_location = None
 
     for col in data_dict:
@@ -243,7 +244,7 @@ def _apply_styling(p):
 
     p.yaxis.axis_line_color = None
     p.yaxis.axis_label_text_font_style = "normal"
-    p.yaxis.axis_label_standoff = 30
+    p.yaxis.axis_label_standoff = 20
 
     p.axis.major_tick_line_color = None
     p.axis.minor_tick_line_color = None
@@ -254,8 +255,8 @@ def _apply_styling(p):
     p.xaxis.axis_label_text_font_size = "12pt"
     p.yaxis.axis_label_text_font_size = "12pt"
 
-    p.xaxis.major_label_text_font_size = "11pt"
-    p.yaxis.major_label_text_font_size = "11pt"
+    p.xaxis.major_label_text_font_size = "9pt"
+    p.yaxis.major_label_text_font_size = "9pt"
 
     # borders
     p.min_border_left = 50
@@ -267,7 +268,7 @@ def _apply_styling(p):
 
 
 def update_plot(plot, selectors, bounds, variable, bg_var, nice_names_dict):
-    """Activate and de-activate the lines according to variable and bg_var
+    """Activate and de-activate the lines according to variable and bg_var.
 
     Args:
         plot (bokeh.figure): The plot that will be updated.

@@ -10,10 +10,12 @@ from utilities.dashboard.shared import create_caption_for_variable_group
 
 
 def create_maps(maps_data, variable_mappings, menu_labels):
-    """Create the overview tab showing the distribution of any group of variables.
+    """Create the maps tab showing the distribution of any group of variables.
 
     Args:
-
+        maps_data (dict): Dictionary of maps data.
+        variable_mappings (dict): Dictionary of maps metadata.
+        menu_labels (dict): Dictionary of menu labels.
 
     Returns:
         page (bokeh Column)

@@ -7,13 +7,23 @@ from bokeh.models.widgets import Div
 
 from utilities.dashboard.components.run_charts.lineplot import setup_plot
 from utilities.dashboard.components.run_charts.lineplot import update_plot
-from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_higher_level
-
 from utilities.dashboard.config import PLOT_WIDTH
 from utilities.dashboard.config import TITLE_STYLE
+from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_higher_level
 
 
 def create_run_charts(data, variable_mappings):
+    """Create the labor supply tab, showing run charts for selected outcome and
+    background variables..
+
+    Args:
+        data (dict): Dictionary of run charts data.
+        variable_mappings (dict): Dictionary of maps metadata.
+
+    Returns:
+        bokeh Column
+
+    """
     outcome_variables = variable_mappings["outcome_variables"]
     background_variables = variable_mappings["background_variables"]
     nice_name_to_outcome = variable_mappings["nice_name_to_outcome"]
@@ -55,10 +65,16 @@ def create_run_charts(data, variable_mappings):
         text=data["title"], style=TITLE_STYLE, margin=(10, 0, 10, 0), width=PLOT_WIDTH
     )
     top_text = Div(
-        text=data["top_text"], margin=(10, 0, 10, 0), style={"text-align": "justify"}
+        text=data["top_text"],
+        margin=(10, 0, 10, 0),
+        style={"text-align": "justify"},
+        width=PLOT_WIDTH,
     )
     bottom_text = Div(
-        text=data["bottom_text"], margin=(10, 0, 10, 0), style={"text-align": "justify"}
+        text=data["bottom_text"],
+        margin=(10, 0, 10, 0),
+        style={"text-align": "justify"},
+        width=PLOT_WIDTH,
     )
 
     run_charts_page = Column(

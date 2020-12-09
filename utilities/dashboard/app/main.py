@@ -12,10 +12,10 @@ from bokeh.plotting import curdoc
 
 from utilities.dashboard.components.intro_page.create_component import create_intro_page
 from utilities.dashboard.components.maps.create_component import create_maps
+from utilities.dashboard.components.run_charts.create_component import create_run_charts
 from utilities.dashboard.components.univariate_distributions.create_component import (
     create_univariate_distributions,
 )
-from utilities.dashboard.components.run_charts.create_component import create_run_charts
 
 
 def assemble_dashboard_components(
@@ -26,13 +26,19 @@ def assemble_dashboard_components(
     run_charts_data,
     run_charts_mapping,
 ):
-    """Create the overview tab showing the distribution of any group of variables.
+    """Create the dashboard tabs.
 
     Args:
-
+        intro_page_data (dict): Data to generate Introduction tab.
+        univariate_distributions_data (dict): Data to generate Group Differences
+            tab.
+        maps_data (dict): Data to generate Maps tab.
+        shared_data (dict): Metadata shared between Maps and Group Differences tab.
+        run_charts_data (dict): Data for Labor Supply tab.
+        run_charts_mapping (dict): Metadata for Labor Supply tab.
 
     Returns:
-        page (bokeh Column)
+        bokeh Column
 
     """
 
@@ -51,7 +57,8 @@ def assemble_dashboard_components(
     )
 
     run_charts_page = create_run_charts(
-        data=run_charts_data, variable_mappings=run_charts_mapping["variable_mappings"],
+        data=run_charts_data,
+        variable_mappings=run_charts_mapping["variable_mappings"],
     )
 
     if language == "german":
