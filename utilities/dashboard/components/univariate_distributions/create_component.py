@@ -21,14 +21,24 @@ plot_modules = {
 
 
 def create_univariate_distributions(
-    group_to_plot_type, background_variables, variable_mappings, plot_data, menu_labels,
+    group_to_plot_type,
+    background_variables,
+    variable_mappings,
+    plot_data,
+    menu_labels,
 ):
     """Create the overview tab showing the distribution of any group of variables.
 
     Args:
+        group_to_plot_type (dict): Dictionary mapping group to type of plot
+            associated with it (stacked barplot, barplot, or distplot).
+        background_variables (list): List of background variables.
+        variable_mappings (dict): Dictionary of metadata.
+        plot_data (dict): Dictionary of shares and selectors.
+        menu_labels (dict): Dictionary of menu labels.
 
     Returns:
-        page (bokeh Column)
+        bokeh Column
 
     """
     topics = variable_mappings["topics"]
@@ -173,6 +183,10 @@ def condition_on_background_var(
     nice_name_to_variable,
     nothing_string,
 ):
+    """Adjust the plot and information on background variable according to the
+    selected subtopic.
+
+    """
     plot, caption, bg_info = page.children[-3:]
     page.children = page.children[:-3]
     group = subtopic_selector.value
@@ -180,7 +194,10 @@ def condition_on_background_var(
     condition_plot = getattr(plot_modules[plot_type], "condition_plot")
 
     condition_plot(
-        plot, **plot_data[group], bg_var=new, nothing_string=nothing_string,
+        plot,
+        **plot_data[group],
+        bg_var=new,
+        nothing_string=nothing_string,
     )
 
     if new == nothing_string:

@@ -38,7 +38,7 @@ def create_caption_for_variable_group(
 
 
 def create_general_variable_mappings(
-    data, data_desc, group_info, language, data_name,
+    data, language, data_name, data_desc=None, group_info=None, run_charts_desc=None
 ):
     """Create a dict of dicts that allows to look up metadata of variables.
 
@@ -51,19 +51,23 @@ def create_general_variable_mappings(
         and take the same values.
 
 
-    Note: This applies to the very first wave of the covid data and might not be
-    useful for components that make use of several waves.
+    Note: This applies to the very first wave of the covid data and it is not
+    useful for components that make use of several waves, such as the run charts.
 
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of the dataset.
-        group_info (pd.DataFrame): Description of groups.
         language (str): One of ["english", "german", "dutch"]
         data_name (str): "liss" or "gesis"
+        data_desc (pd.DataFrame): Description of variables displayed in the maps
+            and univariate distributions dashboard tabs. Default is None.
+        group_info (pd.DataFrame): Description of groups, as defined for
+            maps and univariate distributions dashboard tabs. Default is None.
+        run_charts_desc (pd.DataFrame): Description of variables displayed in
+            the run charts dashboard tab. Default is None.
 
     Returns:
-        dict: Dictionary with the following entries:
+        dict: Dictionary wich may contain the following entries:
             - "topics": List of strings
             - "topic_to_groups": dict
             - "group_to_header": dict
@@ -72,34 +76,78 @@ def create_general_variable_mappings(
             - "variable_to_label": dict
             - "variable_to_nice_name": dict
             - "nice_name_to_variable": dict
+            - "outcome_variables": list
+            - "background_variables": list
 
     """
     res = {}
-    raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
-    raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
-    res["topics"] = [topic for topic in raw_topics if topic != "Background Variables"]
 
-    res["topic_to_groups"] = _dict_of_uniques_from_df(
-        group_info, f"topic_{language}", f"group_{language}"
-    )
+    if group_info is not None:
+        # information on groups for maps and distribution plots
+        raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
+        raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
+        res["topics"] = [
+            topic for topic in raw_topics if topic != "Background Variables"
+        ]
 
-    res["group_to_header"] = group_info.set_index(f"group_{language}")[
-        f"header_{language}"
-    ].to_dict()
-    res["group_to_caption"] = group_info.set_index(f"group_{language}")[
-        f"caption_{language}"
-    ].to_dict()
-    res["group_to_variables"] = _dict_of_uniques_from_df(
-        data_desc, f"group_{language}", "new_name"
-    )
+        res["topic_to_groups"] = _dict_of_uniques_from_df(
+            group_info, f"topic_{language}", f"group_{language}"
+        )
 
-    nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
-    res["variable_to_nice_name"] = nice_names
-    res["variable_to_label"] = data_desc.set_index("new_name")[
-        f"label_{language}"
-    ].to_dict()
+        res["group_to_header"] = group_info.set_index(f"group_{language}")[
+            f"header_{language}"
+        ].to_dict()
+        res["group_to_caption"] = group_info.set_index(f"group_{language}")[
+            f"caption_{language}"
+        ].to_dict()
 
-    res["nice_name_to_variable"] = {v: k for k, v in nice_names.items()}
+    if data_desc is not None:
+        # description of data for maps and distribution plots
+        res["group_to_variables"] = _dict_of_uniques_from_df(
+            data_desc, f"group_{language}", "new_name"
+        )
+
+        nice_names = data_desc.set_index("new_name")[f"nice_name_{language}"].to_dict()
+        res["variable_to_nice_name"] = nice_names
+        res["variable_to_label"] = data_desc.set_index("new_name")[
+            f"label_{language}"
+        ].to_dict()
+
+        res["nice_name_to_variable"] = {v: k for k, v in nice_names.items()}
+
+    if run_charts_desc is not None:
+        # description of data for run charts
+        res["outcome_variables"] = run_charts_desc.query("type == 'Outcome Variable'")[
+            "new_name"
+        ].values.tolist()
+        res["background_variables"] = run_charts_desc.query(
+            "type == 'Background Variable'"
+        )["new_name"].values.tolist()
+
+        nice_names = run_charts_desc.set_index("new_name")[
+            f"nice_name_{language}"
+        ].to_dict()
+        res["nice_names_run_charts"] = nice_names
+
+        outcome_variable_to_nice_name = (
+            run_charts_desc.set_index("new_name")
+            .query("type == 'Outcome Variable'")[f"nice_name_{language}"]
+            .to_dict()
+        )
+        res["outcome_variable_to_nice_name"] = outcome_variable_to_nice_name
+        res["nice_name_to_outcome"] = {
+            v: k for k, v in outcome_variable_to_nice_name.items()
+        }
+
+        background_variable_to_nice_name = (
+            run_charts_desc.set_index("new_name")
+            .query("type == 'Background Variable'")[f"nice_name_{language}"]
+            .to_dict()
+        )
+        res["background_variable_to_nice_name"] = background_variable_to_nice_name
+        res["nice_name_to_background"] = {
+            v: k for k, v in background_variable_to_nice_name.items()
+        }
 
     return res
 
