@@ -1,0 +1,28 @@
+name: covid-dashboard
+
+channels:
+  - conda-forge
+  - defaults
+  - opensourceeconomics
+
+dependencies:
+
+  - python=3.8.5
+  - pip
+  - anaconda-client
+  - click
+  - conda-build
+  - conda-verify
+  - bokeh>=2.2
+  - seaborn=0.11.0
+
+  - numpy=1.16
+  - pandas=1.1.3
+  - pytest
+  - tox-conda
+  - pip:
+    - black
+    - blackcellmagic
+    - bump2version
+    - pre-commit
+
