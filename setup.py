@@ -20,12 +20,13 @@ setup(
         "utilities": [
             "dashboard/app/static/*.*",
             "dashboard/app/templates/*.html",
-            "dashboard/liss/provinces.geojson",
+            "dashboard/components/maps/liss_provinces.geojson",
             "dashboard/gesis/provinces.geojson",
+            "dashboard/liss/provinces.geojson",
             "dashboard/*/*.txt",
             "dashboard/*/*.csv",
             "dashboard/*/*.yaml",
-            "dashboard/*/*.py",  ### WHY???
+            "dashboard/*/*.py",
         ],
     },
     include_package_data=True,
