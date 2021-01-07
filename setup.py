@@ -24,6 +24,7 @@ setup(
             "dashboard/gesis/provinces.geojson",
             "dashboard/liss/provinces.geojson",
             "dashboard/*/*.txt",
+            "dashboard/*/*/*.txt",
             "dashboard/*/*.csv",
             "dashboard/*/*.yaml",
             "dashboard/*/*.py",
