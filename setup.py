@@ -28,7 +28,7 @@ setup(
             "dashboard/*/*.yaml",
             "dashboard/*/*.py",
             "dashboard/components/intro_page/metadata/*/*.*",
-            "dashboard/components/run_charts/metadata/*/*.*",
+            "dashboard/components/run_charts/metadata/*.*",
         ],
     },
     include_package_data=True,
