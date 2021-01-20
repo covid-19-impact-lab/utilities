@@ -306,7 +306,7 @@ def condition_plot(
 ):
     p = plot
     p.y_range.factors = selectors[bg_var]
-    p.plot_height = _get_plot_height(selectors, bg_var)
+    p.plot_height = _get_plot_height(selectors, bg_var, nothing_string)
     if bg_var == nothing_string:
         p.yaxis.group_label_orientation = "horizontal"
         p.y_range.group_padding = 0.3
