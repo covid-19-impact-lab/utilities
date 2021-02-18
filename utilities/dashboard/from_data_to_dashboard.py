@@ -9,13 +9,6 @@ from utilities.dashboard.create_dashboard_data import create_dashboard_data
 from utilities.dashboard.create_description_table import create_description_table
 from utilities.dashboard.liss.data_functions import prepare_liss_data
 
-# if __name__ == "__main__":
-#     if len(sys.argv) == 4:
-#         lang, data_path, out_dir = sys.argv[1:]
-#         path_to_regions = None
-#     elif len(sys.argv) == 5:
-#         lang, data_path, out_dir, path_to_regions = sys.argv[1:]
-
 
 @click.command()
 @click.option(
@@ -54,8 +47,14 @@ def from_data_to_dashboard(lang, data_path, out_dir, path_to_regions):
 
     # load data
     if data_name == "liss":
-        raw_data_single = pd.read_pickle(f"{data_path}/liss_single_wave_data.pickle")
+        raw_data_single = pd.read_pickle(f"{data_path}/covid_data_2020_03.pickle")
         raw_data_waves = pd.read_pickle(f"{data_path}/liss_all_waves_data.pickle")
+        bg_data = pd.read_pickle(f"{data_path}/background_data_merged.pickle")
+
+        # merge data
+        raw_data_single["id"] = raw_data_single.index.get_level_values(0)
+        bg_data["id"] = bg_data.index
+        raw_data_single = raw_data_single.merge(bg_data, how="left", on="id")
 
     dashboard_path = Path(__file__).resolve().parent
 
