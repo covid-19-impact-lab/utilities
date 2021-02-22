@@ -1,16 +1,16 @@
-How to Update the Dashboard Data
+How to update the dashboard data
 ================================
 
 Maps & Group Differences
 ------------------------
 
-Currently, the Maps and Group Differences tabs rely on the same data source,
-therefore they will be updated together. To update these tabs you need to:
+Currently, the Maps and Group Differences Tabs rely on the same data source,
+therefore they will be updated together. To update these Tabs you need to:
 
 - Include the new variables/remove the old variables from `group_info.csv` and
   `data_description.csv` in `utilities/dashboard/liss`.
   The former file is the most important because it determines which variables
-  will be included in the tabs. The latter provides descriptions for the variables
+  will be included in the Tabs. The latter provides descriptions for the variables
   in the source data. Please adhere to the format of the existing files when
   adding new variables.
 - Update `data_functions.py`, again in `utilities/dashboard/liss`.
@@ -23,14 +23,14 @@ therefore they will be updated together. To update these tabs you need to:
 Labor Supply
 ------------
 
-The Labor Supply tab relies on an independent dataset. To update it you need to:
+The Labor Supply Tab relies on an independent dataset. To update it you need to:
 
 - Include the new variables/remove the old variables from
   `run_charts_description.csv`in `utilities/utilities/dashboard/liss`. Please
   stick to the current format.
 - Update the function `_preprocess_data` in
-  `utilities/dashboard/components/run_charts/lineplot.py`. This function prepare
+  `utilities/dashboard/components/run_charts/lineplot.py`. This function prepares
   the source data, mostly by implementing data restrictions (e.g. on age) and by
-  renaming the values that categorical variables can take if the original are
-  problematic.
+  renaming the values that categorical variables can take if the original names
+  are problematic.
 - Update `from_data_to_dashboard` in `utilities/dashboard`, as above.
