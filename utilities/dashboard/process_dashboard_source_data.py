@@ -33,7 +33,7 @@ from utilities.dashboard.liss.data_functions import prepare_liss_data
     default="",
     help="Path to regions identifiers (geojson file). If not passed, mock regions will be used.",
 )
-def from_data_to_dashboard(lang, data_path, out_dir, path_to_regions):
+def process_dashboard_source_data(lang, data_path, out_dir, path_to_regions):
     """Convert datasets to dictionaries that will be used by the dashboard
     components.
 
@@ -120,4 +120,4 @@ def from_data_to_dashboard(lang, data_path, out_dir, path_to_regions):
 
 
 if __name__ == "__main__":
-    from_data_to_dashboard()
+    process_dashboard_source_data()
