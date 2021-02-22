@@ -1,5 +1,4 @@
 """Build the data description table for creating the overview_tab data."""
-
 import pandas as pd
 
 # from utilities.dashboard.liss_data_functions import check_no_variables_lost
@@ -74,12 +73,14 @@ def _use_group_info(desc, group_info, language):
 def _keep_only_vars_in_the_data(desc, data):
     expected_vars = desc.index
     keep_vars = [x for x in expected_vars if x in data.columns]
+    dropped_vars = [x for x in expected_vars if x not in data.columns]
     old_len = len(desc)
     desc = desc.loc[keep_vars]
     len_after_var_drop = len(desc)
     if old_len - len_after_var_drop > 0:
         print(
-            f"{old_len - len_after_var_drop} variables dropped because no data."
+            f"""{old_len - len_after_var_drop} variables dropped because no data.
+            Variablest lost: {dropped_vars}"""
         )  # noqa
     return desc
 
@@ -97,7 +98,8 @@ def _check_groups_unique(desc, language):
 def _check_vars_in_every_group(desc, language):
     gb = desc.groupby(f"group_{language}")
     nr_uniques_by_group = gb.apply(lambda x: len(x.index.unique()))
-    assert (nr_uniques_by_group > 0).all(), (
-        "Some groups have no variables:\n\t"
-        + "\n\t".join(nr_uniques_by_group[nr_uniques_by_group == 0].index.tolist())
+    assert (
+        nr_uniques_by_group > 0
+    ).all(), "Some groups have no variables:\n\t" + "\n\t".join(
+        nr_uniques_by_group[nr_uniques_by_group == 0].index.tolist()
     )
