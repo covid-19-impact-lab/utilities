@@ -1,5 +1,5 @@
 """
-usage: bokeh serve run_dashboard.py --show --args path/to/overview_tab_data_dict.pickle
+usage: bokeh server run_dashboard.py --show --args path/to/overview_tab_data_dict.pickle
 
 """
 import sys

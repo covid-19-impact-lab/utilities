@@ -1,16 +1,19 @@
 """Functions for LISS data preparation."""
+import pickle
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import yaml
 from pandas.api.types import is_categorical
-from pathlib import Path
+from pandas.api.types import is_float_dtype
 
 
 def prepare_liss_data(data, language, path_to_regions):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
+    data = _convert_floats_to_booleans(data)
     data = _add_variables(data)
     data = _bin_variables(data)
     data = _add_regions(data, path_to_regions)
@@ -35,23 +38,21 @@ def check_no_variables_lost(current_desc):
         "quarantaine_symptoms": "quarantine_symptoms",
         "quarantaine_no_symptoms": "quarantine_no_symptoms",
         "cc_coment": "cc_other_str",
-        "not_work_fear_corona": "not_work_fear_infection",
-        "less_work_fear_corona": "less_work_fear_infection",
-        "postpone_purchase": "intend_postpone_purchase",
-        "postpone_house": "intend_postpone_house",
-        "reduce_housing": "intend_reduce_housing",
-        "sell_shares": "intend_sell_shares",
-        "buy_shares": "intend_buy_shares",
-        "save_more": "intend_save_more",
-        "no_consum_response": "intend_no_consum_response",
+        "not_work_fear_corona": "empl_not_work_fear_infection",
+        "less_work_fear_corona": "empl_less_work_fear_infection",
+        "postpone_purchase": "intend_crisis_postpone_purchase",
+        "postpone_house": "intend_crisis_postpone_house",
+        "reduce_housing": "intend_crisis_reduce_housing",
+        "sell_shares": "intend_crisis_sell_shares",
+        "buy_shares": "intend_crisis_buy_shares",
+        "save_more": "intend_crisis_save_more",
         "selfempl_less_bc_business": "selfempl_less_business",
         "selfempl_less_bc_care": "selfempl_less_care",
         "selfempl_less_bc_closure": "selfempl_less_closure",
         "selfempl_less_bc_other": "selfempl_less_other",
-        "comply_bc_protect_vulnerable": "comply_bc_vulnerable",
         "cc_comment": "cc_emergency_comment",
-        "not_work_emp_corona": "not_work_employer",
-        "less_work_emp_corona": "less_work_employer",
+        "not_work_emp_corona": "empl_not_work_infection_empl",
+        "less_work_emp_corona": "empl_less_work_infection_empl",
     }
 
     current_raw_vars = current_desc["xyx-corona-questionnaire.dta"].unique()
@@ -64,38 +65,28 @@ def check_no_variables_lost(current_desc):
                     lost_vars.append((raw_name, new_name))
     assert len(lost_vars) == 0, f"You lost {lost_vars}"
 
+    # =====================================================================================
 
-# =====================================================================================
+
+def _convert_floats_to_booleans(data):
+    data = data.copy()
+    vars = [
+        col
+        for col in data.columns
+        if is_float_dtype(data[col]) and _check_value_counts(data[col])
+    ]
+    for var in vars:
+        data[var] = data[var].astype("boolean")
+
+    return data
+
+
+def _check_value_counts(var):
+    return sorted(var.value_counts().index.tolist()) == [0.0, 1.0]
 
 
 def _fix_categories(data):
     data = data.copy()
-    aprop_vars = [
-        "nervous",
-        "depressed",
-        "calm",
-        "gloomy",
-        "happy",
-        "nervous_back",
-        "depressed_back",
-        "calm_back",
-        "gloomy_back",
-        "happy_back",
-    ]
-    aprop_cats = [
-        (1, "never"),
-        (2, "rarely"),
-        (3, "sometimes"),
-        (4, "often"),
-        (5, "mostly"),
-        (6, "constantly"),
-    ]
-
-    for col in aprop_vars:
-        data[col] = data[col].replace({nl: en for nl, en in aprop_cats})
-        data[col] = pd.Categorical(
-            values=data[col], categories=[en for nl, en in aprop_cats], ordered=True
-        )
 
     data["edu"] = data["edu"].cat.rename_categories(
         {
@@ -115,10 +106,12 @@ def _fix_categories(data):
     )
 
     data["gender"] = data["gender"].cat.rename_categories(
-        {"man": "men", "woman": "women"}
+        {"male": "men", "female": "women"}
     )
 
-    data["duration_restrictions"] = data["duration_restrictions"].cat.rename_categories(
+    data["duration_restrictions_general"] = data[
+        "duration_restrictions_general"
+    ].cat.rename_categories(
         {
             "btw. April 6 and 2 months": "April 6 to 2 months",
             "btw. 2 and 4 months": "2 to 4 months",
@@ -135,55 +128,26 @@ def _fix_categories(data):
         }
     )
 
-    concern_vars = [
-        "concern_bored",
-        "concern_infect_others",
-        "concern_loved_ill",
-        "concern_serious_ill",
-        "concern_health_care",
-        "concern_fav_shop_bancrupt",
-        "concern_company",
-        "concern_unemp",
-        "concern_new_job",
-        "concern_food",
-    ]
-    for var in concern_vars:
-        data[var] = data[var].cat.rename_categories(
-            {
-                1: "1 <br> not at all worried",
-                2: "2",
-                3: "3",
-                4: "4",
-                5: "5 <br> very worrried",
-            }
-        )
-
     return data
 
 
 def _fix_numeric(data):
     data = data.copy()
     convert_to_float = [
-        "comply_curfew_others",
-        "workplace_h_before",
-        "workplace_h_after",
-        "home_h_before",
-        "home_h_after",
-        "p_employed_keep",
-        "p_employed_keep_gov",
-        "p_employed_lost",
-        "p_employed_other",
-        "p_severe_financial_distress",
+        "p_2m_employee_keep",
+        "p_2m_employee_keep_gov",
+        "p_2m_employee_lost",
+        "p_2m_employee_other",
         "eur_1k_basic_needs",
         "eur_1k_expenses",
         "eur_1k_durables",
         "eur_1k_savings",
         "eur_1k_support_others",
-        "p_selfempl_as_normal",
-        "p_selfempl_fewer",
-        "p_selfempl_shutdown_gov",
-        "p_selfempl_shutdown_no_gov",
-        "p_selfempl_other",
+        "p_3m_selfempl_normal",
+        "p_3m_selfempl_fewer",
+        "p_3m_selfempl_helped_by_gov",
+        "p_3m_selfempl_shutdown",
+        "p_3m_selfempl_other",
     ]
     for var in convert_to_float:
         data[var] = data[var].astype(float)
@@ -192,21 +156,20 @@ def _fix_numeric(data):
 
 def _bin_variables(data):
     data = data.copy()
-    data = _zero_plus_quartiles(data=data, var="p_severe_financial_distress")
 
     self_empl_emp_vars = [
-        "p_selfempl_as_normal",
-        "p_selfempl_fewer",
-        "p_selfempl_shutdown_gov",
-        "p_selfempl_shutdown_no_gov",
-        "p_selfempl_other",
+        "p_3m_selfempl_normal",
+        "p_3m_selfempl_fewer",
+        "p_3m_selfempl_helped_by_gov",
+        "p_3m_selfempl_shutdown",
+        "p_3m_selfempl_other",
     ]
 
     empl_emp_vars = [
-        "p_employed_keep",
-        "p_employed_keep_gov",
-        "p_employed_lost",
-        "p_employed_other",
+        "p_2m_employee_keep",
+        "p_2m_employee_keep_gov",
+        "p_2m_employee_lost",
+        "p_2m_employee_other",
     ]
 
     for var in self_empl_emp_vars + empl_emp_vars:
@@ -222,41 +185,6 @@ def _bin_variables(data):
                 nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
         data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
 
-    work_hours = [
-        "workplace_h_before",
-        "home_h_before",
-        "workplace_h_after",
-        "home_h_after",
-        "hours_before",
-        "hours_after",
-    ]
-
-    cuts = [-1, 0.5, 10, 20, 30, 40, 100]
-    for var in work_hours:
-        data[var + "_binned"] = pd.cut(data[var], cuts)
-        nice_cats = {}
-        for intv in data[var + "_binned"].cat.categories:
-            if intv.left < 0:
-                nice_cats[intv] = "0h"
-            elif intv.right > 40:
-                nice_cats[intv] = ">40h"
-            else:
-                nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
-        data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
-
-    hour_changes = ["change_workplace_h", "change_home_h", "change_all_hours"]
-    cuts = [-np.inf, -20, -10, -5, 0, 15, np.inf]
-    for var in hour_changes:
-        data[var + "_binned"] = pd.cut(data[var], cuts)
-        nice_cats = {}
-        for intv in data[var + "_binned"].cat.categories:
-            if intv.left == -np.inf:
-                nice_cats[intv] = ">10h reduction"
-            elif intv.right > 15:
-                nice_cats[intv] = ">15h increase"
-            else:
-                nice_cats[intv] = "{} to {}h".format(int(intv.left), int(intv.right))
-        data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
     return data
 
 
@@ -307,13 +235,6 @@ def _add_variables(data):
         data["equiv_net_inc"], approx_quartiles, labels=labels
     )
 
-    # add changes in each type and overall hours
-    data["change_workplace_h"] = data["workplace_h_after"] - data["workplace_h_before"]
-    data["change_home_h"] = data["home_h_after"] - data["home_h_before"]
-    data["hours_before"] = data["workplace_h_before"] + data["home_h_before"]
-    data["hours_after"] = data["workplace_h_after"] + data["home_h_after"]
-    data["change_all_hours"] = data["hours_after"] - data["hours_before"]
-
     return data
 
 
@@ -342,6 +263,10 @@ def _add_regions(data, path_to_regions):
     else:
         prov = pd.read_pickle(path_to_regions)
         data = pd.merge(
-            left=data, right=prov, left_on=["hh_id"], right_index=True, how="left",
+            left=data,
+            right=prov,
+            left_on=["hh_id"],
+            right_index=True,
+            how="left",
         )
     return data

@@ -17,36 +17,52 @@ utilities folder.
 Running the Dashboard
 ----------------------
 
-To run dashboard, there are two steps.
+To run the dashboard, there are two steps.
 
-First, you must create the dictionary with the aggregated data that will be passed to
-the bokeh app. To do so, call the `from_data_to_dashboard.py` with the following arguments:
+First, you must create the dictionaries with the aggregated data that will be passed to
+the Bokeh app. To do so, call `process_dashboard_source_data.py`. You will be asked for
+the following arguments:
 
-`python from_data_to_dashboard.py [lang] [path/to/data]`
+- `Language`, which can be either `english` or `german`.
+- `Path to dataset`, the path to the folder containing the Covid LISS datasets.
+  The folder needs to contain thre files, `background_data_merged.pickle` and
+  `covid_data_2020_03.pickle` (for Maps and Group Differences Tabs) and
+  `liss_all_waves_data.pickle` (for Labor Supply Tab).
+- `Path to the output directory`, where the dictionary of aggregate data should be
+  saved.
+- `Path to regions` (optional), the path to the regions' identifiers. If no third
+  argument is passed, mock regions are created and you are warned about this.
 
-`lang` can be either english or german.
+This will generate `liss/{language}/dashboard_data_{suffix}.pickle`, where `suffix`
+depends on the source LISS dataset, in the output directory you specified.
 
-`path/to/data` must be the path to the Covid LISS dataset.
-
-This will create a `dashboard_data_liss_{lang}_current.pickle` file in the folder you are in.
-
-Only Hans-Martin has the true region codes. He passes a third argument to the command
-that is the path to the regions identifiers. If no third argument is passed, mock regions
-are created and you are warned about this.
-
-Secondly, you must start the bokeh server passing the created pickle to it. To do so, run:
-
-`python run_dashboard.py dashboard_data_liss_{lang}_current.pickle`
-
-Assuming - as the Python module does - that you are in the same directory as the app
-directory and that the dashboard_data pickle was also created there.
+Secondly, you must start the Bokeh server passing the created pickle to it.
+To do so, run `python run_dashboard.py`. You will be asked to specify the path
+to the folder where the pickle files previously created resides.
 
 
 Instructions for Uploading the Package to anaconda
 ---------------------------------------------------
 
-Before uploading the package to the anaconda cloud, you need to bump the version.
+Before uploading the package to the Anaconda Cloud, you need to bump the version.
 This has to be done in the `__init__.py` in the outermost folder and in `setup.py`.
 
 The package can be built and uploaded to anaconda using the command
 `conda build . --user opensourceeconomics` in the main utilities repository.
+
+
+Instructions for Adding a Component
+-----------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   how_to_add_a_component
+
+Instructions for Updating the Dashboard Data
+--------------------------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   how_to_update_dashboard_data
