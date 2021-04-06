@@ -18,14 +18,14 @@ from pandas.core.common import flatten
 from bokeh.plotting import figure, output_notebook, show
 
 
-def _preprocess_data(df, bg_vars_1, bg_var_2, outcome, sample_var):
+def _preprocess_data(df, bg_vars_1, bg_var_2, outcomes, sample_var):
     """Pre-process data.
 
      Args:
         df (pandas.DataFrame): Raw dataset.
         bg_vars_1 (list): List of main background variables.
         bg_var_2 (str): Secondary background variable.
-        outcome (str): Outcome variable.
+        outcomes (list): Outcome variables.
         sample_var (str): Variable that divides the dataset into samples
 
     Returns
@@ -58,12 +58,9 @@ def _preprocess_data(df, bg_vars_1, bg_var_2, outcome, sample_var):
         default=np.nan,
     )
 
-    if outcome == "relative_cc_gap":
-        df["relative_cc_gap"] = df["cc_gap"] / (df["hours_cc_female"] + df["hours_cc_male"])
-    else:
-        pass
+    df["relative_cc_gap"] = df["cc_gap"] / (df["hours_cc_female"] + df["hours_cc_male"])
 
-    df = df[bg_vars_1 + [bg_var_2] + [outcome] + [sample_var] + ["youngest_child"]]
+    df = df[bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]]
 
     return df
 
@@ -92,14 +89,14 @@ def compute_quantities(df, bg_var_1, bg_var_2, outcome):
         if bg_var_1 == "child_id":
 
             # compute quantiles for (grouped) data
-            groups = pre_data.groupby([bg_var_1, bg_var_2])
+            groups = df.groupby([bg_var_1, bg_var_2])
             out = pd.Series.to_frame(groups[outcome].quantile(q=val).rename(key))
 
         else:
 
             df = df[(df["youngest_child"] == 1)]
             # compute quantiles for (grouped) data
-            groups = pre_data.groupby([bg_var_1, bg_var_2])
+            groups = df.groupby([bg_var_1, bg_var_2])
             out = pd.Series.to_frame(groups[outcome].quantile(q=val).rename(key))
 
         # store data
@@ -124,14 +121,14 @@ def compute_quantities(df, bg_var_1, bg_var_2, outcome):
     return res
 
 
-def process_data(df, bg_vars_1, bg_var_2, outcome, sample_var, nice_names_dict):
+def process_data(df, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names_dict):
     """Compute data for boxplot, for arbitrary number of main background variables.
 
     Args:
         df (pd.DataFrame): Dataset.
         bg_vars_1 (list): List of main background variables.
         bg_var_2 (str): Secondary background variable.
-        outcome (str): Outcome variable.
+        outcomes (list): Outcome variables.
         sample_var (str): Variable that divides the dataset into samples
         nice_names_dict (dict): Dictionary mapping variables to nice names.
 
@@ -140,30 +137,35 @@ def process_data(df, bg_vars_1, bg_var_2, outcome, sample_var, nice_names_dict):
 
     """
 
-    df = _preprocess_data(df, bg_vars_1, bg_var_2, outcome, sample_var)
+    df = _preprocess_data(df, bg_vars_1, bg_var_2, outcomes, sample_var)
 
     tot_res = {}
 
-    all_res = {}
-    for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
+    for outcome in outcomes:
+        out_res = {}
 
-        res = compute_quantities(df, var_1, var_2, outcome)
-        all_res.update(res)
-
-    tot_res["all"] = all_res
-
-
-    for s in df[sample_var]:
-
-        s_res = {}
-        s_df = df[df[sample_var] == s]
-
+        all_res = {}
         for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
 
-            res = compute_quantities(s_df, var_1, var_2, outcome)
-            s_res.update(res)
+            res = compute_quantities(df, var_1, var_2, outcome)
+            all_res.update(res)
 
-        tot_res[s] = s_res
+        out_res["all"] = all_res
+
+
+        for s in df[sample_var]:
+
+            s_res = {}
+            s_df = df[df[sample_var] == s]
+
+            for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
+
+                res = compute_quantities(s_df, var_1, var_2, outcome)
+                s_res.update(res)
+
+            out_res[s] = s_res
+
+        tot_res[outcome] = out_res
 
     tot_res["nice_names"] = nice_names_dict
 
@@ -213,14 +215,16 @@ def _apply_styling(p):
     return p
 
 
-def boxplot(data_dict, bg_var_1, bg_var_2, sample):
+def boxplot(data_dict, bg_var_1, bg_var_2, outcome, sample):
     """Create boxplot.
 
     Args:
         data_dict (dict): Dictionary of data.
         bg_var_1 (str): Main background variable.
         bg_var_2 (str): Secondary background variable.
-        sample (str): Either one of the categories of the variable dividing dataset into samples or "all" for the whole dataset.
+        outcome (str): Outcome variable.
+        sample (str): Either one of the categories of the variable dividing
+                      dataset into samples or "all" for the whole dataset.
 
     Returns:
         Bokeh.figure
@@ -228,9 +232,9 @@ def boxplot(data_dict, bg_var_1, bg_var_2, sample):
     """
 
     # get data from dictionary
-    cats = data_dict[sample][(bg_var_1, bg_var_2)]["cats"]
-    data = data_dict[sample][(bg_var_1, bg_var_2)]["data"]
-    order = data_dict[sample][(bg_var_1, bg_var_2)]["order"]
+    cats = data_dict[outcome][sample][(bg_var_1, bg_var_2)]["cats"]
+    data = data_dict[outcome][sample][(bg_var_1, bg_var_2)]["data"]
+    order = data_dict[outcome][sample][(bg_var_1, bg_var_2)]["order"]
 
     #change names according to nice_names
     cats = [(data_dict["nice_names"][s], data_dict["nice_names"][f]) for s,f in cats]
