@@ -18,11 +18,11 @@ from pandas.core.common import flatten
 from bokeh.plotting import figure, output_notebook, show
 
 
-def _preprocess_data(df, bg_vars_1, bg_var_2, outcomes, sample_var):
+def _preprocess_data(data, bg_vars_1, bg_var_2, outcomes, sample_var):
     """Pre-process data.
 
      Args:
-        df (pandas.DataFrame): Raw dataset.
+        data (pandas.DataFrame): Raw dataset.
         bg_vars_1 (list): List of main background variables.
         bg_var_2 (str): Secondary background variable.
         outcomes (list): Outcome variables.
@@ -32,44 +32,44 @@ def _preprocess_data(df, bg_vars_1, bg_var_2, outcomes, sample_var):
         pd.DataFrame: Formatted dataset.
     """
 
-    df.reset_index(level=["month", "child_id"], inplace=True)
+    data.reset_index(level=["month", "child_id"], inplace=True)
 
-    df = df[(df["single_parent"] == 0)]
+    data = data[(data["single_parent"] == 0)]
 
-    df["covid"] = np.select(
-            condlist=[df["month"] <= "2020-02-01", df["month"] > "2020-02-01"],
+    data["covid"] = np.select(
+            condlist=[data["month"] <= "2020-02-29", data["month"] > "2020-02-29"],
             choicelist=["pre", "post"],
              default=np.nan
              )
 
-    df["work_perc_home_cat"] = np.select(
-        condlist=[df["gender"] == "female", df["gender"] == "male"],
-        choicelist=[df["work_perc_home_cat_mother"], df["work_perc_home_cat_father"]],
+    data["work_perc_home_cat"] = np.select(
+        condlist=[data["gender"] == "female", data["gender"] == "male"],
+        choicelist=[data["work_perc_home_cat_mother"], data["work_perc_home_cat_father"]],
         default=np.nan,
     )
 
-    df["work_status_family"] = np.select(
+    data["work_status_family"] = np.select(
         condlist=[
-        (np.logical_or(df["labor_force_coarse_father"] == "full-time", df["labor_force_coarse_father"] == "part-time") &
-        np.logical_or(df["labor_force_coarse_mother"] == "full-time", df["labor_force_coarse_mother"] == "part-time")),
-        (np.logical_or(df["labor_force_coarse_father"] == "full-time", df["labor_force_coarse_father"] == "part-time") &
-        (df["labor_force_coarse_mother"] == "not working"))],
+        (np.logical_or(data["labor_force_coarse_father"] == "full-time", data["labor_force_coarse_father"] == "part-time") &
+        np.logical_or(data["labor_force_coarse_mother"] == "full-time", data["labor_force_coarse_mother"] == "part-time")),
+        (np.logical_or(data["labor_force_coarse_father"] == "full-time", data["labor_force_coarse_father"] == "part-time") &
+        (data["labor_force_coarse_mother"] == "not working"))],
         choicelist=["both work", "father works"],
         default=np.nan,
     )
 
-    df["relative_cc_gap"] = df["cc_gap"] / (df["hours_cc_female"] + df["hours_cc_male"])
+    data["relative_cc_gap"] = data["cc_gap"] / (data["hours_cc_female"] + data["hours_cc_male"])
 
-    df = df[bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]]
+    data = data[bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]]
 
-    return df
+    return data
 
 
-def compute_quantities(df, bg_var_1, bg_var_2, outcome):
+def compute_quantities(data, bg_var_1, bg_var_2, outcome):
     """Compute data for boxplot, for one main background variable.
 
     Args:
-        df (pd.DataFrame): Dataset.
+        data (pd.DataFrame): Dataset.
         bg_var_1 (str): Main background variable.
         bg_var_2 (str): Secondary background variable.
         outcome (str): Outcome variable.
@@ -89,14 +89,14 @@ def compute_quantities(df, bg_var_1, bg_var_2, outcome):
         if bg_var_1 == "child_id":
 
             # compute quantiles for (grouped) data
-            groups = df.groupby([bg_var_1, bg_var_2])
+            groups = data.groupby([bg_var_1, bg_var_2])
             out = pd.Series.to_frame(groups[outcome].quantile(q=val).rename(key))
 
         else:
 
-            df = df[(df["youngest_child"] == 1)]
+            data = data[(data["youngest_child"] == 1)]
             # compute quantiles for (grouped) data
-            groups = df.groupby([bg_var_1, bg_var_2])
+            groups = data.groupby([bg_var_1, bg_var_2])
             out = pd.Series.to_frame(groups[outcome].quantile(q=val).rename(key))
 
         # store data
@@ -111,33 +111,33 @@ def compute_quantities(df, bg_var_1, bg_var_2, outcome):
     data.append(lower)
 
     # concatenate pd.DataFrames
-    df_final = pd.concat(data, axis=1).rename(columns={0:"upper", 1:"lower"})
+    data_final = pd.concat(data, axis=1).rename(columns={0:"upper", 1:"lower"})
 
     # convert result to dictionary of results
     key = (bg_var_1, bg_var_2)
-    index = df_final.index.tolist()
-    res = {key: {"cats": index, "data": df_final.to_dict("list"), "order": [i[1] for i in index]}}
+    index = data_final.index.tolist()
+    res = {key: {"cats": index, "data": data_final.to_dict("list"), "order": [i[1] for i in index]}}
 
     return res
 
 
-def process_data(df, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names_dict):
+def process_data(data, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names):
     """Compute data for boxplot, for arbitrary number of main background variables.
 
     Args:
-        df (pd.DataFrame): Dataset.
+        data (pd.DataFrame): Dataset.
         bg_vars_1 (list): List of main background variables.
         bg_var_2 (str): Secondary background variable.
         outcomes (list): Outcome variables.
         sample_var (str): Variable that divides the dataset into samples
-        nice_names_dict (dict): Dictionary mapping variables to nice names.
+        nice_names (dict): Dictionary mapping variables to nice names.
 
     Returns:
         dict
 
     """
 
-    df = _preprocess_data(df, bg_vars_1, bg_var_2, outcomes, sample_var)
+    data = _preprocess_data(data, bg_vars_1, bg_var_2, outcomes, sample_var)
 
     tot_res = {}
 
@@ -147,27 +147,27 @@ def process_data(df, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names_dict)
         all_res = {}
         for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
 
-            res = compute_quantities(df, var_1, var_2, outcome)
+            res = compute_quantities(data, var_1, var_2, outcome)
             all_res.update(res)
 
         out_res["all"] = all_res
 
 
-        for s in df[sample_var]:
+        for s in data[sample_var]:
 
             s_res = {}
-            s_df = df[df[sample_var] == s]
+            s_data = data[data[sample_var] == s]
 
             for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
 
-                res = compute_quantities(s_df, var_1, var_2, outcome)
+                res = compute_quantities(s_data, var_1, var_2, outcome)
                 s_res.update(res)
 
             out_res[s] = s_res
 
         tot_res[outcome] = out_res
 
-    tot_res["nice_names"] = nice_names_dict
+    tot_res["nice_names"] = nice_names
 
     return tot_res
 

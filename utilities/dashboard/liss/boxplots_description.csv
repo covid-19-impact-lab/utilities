@@ -1,0 +1,26 @@
+name;type
+cc_gap;Outcome Variable
+relative_cc_gap;Outcome Variable
+net_income_2y_equiv_q3;Background Variable
+essential_worker_w2;Background Variable
+edu;Background Variable
+upper_secondary;Category
+lower_secondary_and_lower;Category
+tertiary;Category
+labor_force_coarse;Background Variable
+part-time;Category
+full-time;Category
+not working;Category
+child_id;Background Variable
+young;Category
+school;Category
+work_perc_home_cat_;Background Variable
+up to 10%;Category
+10-90%;Category
+more than 90%;Category
+covid;Secondary Background Variable
+post;Category
+pre;Category
+work_status_family;Sample Variable
+both work;Category
+father works;Category

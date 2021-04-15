@@ -50,6 +50,7 @@ def process_dashboard_source_data(lang, data_path, out_dir, path_to_regions):
         raw_data_single = pd.read_pickle(f"{data_path}/covid_data_2020_03.pickle")
         raw_data_waves = pd.read_pickle(f"{data_path}/liss_all_waves_data.pickle")
         bg_data = pd.read_pickle(f"{data_path}/background_data_merged.pickle")
+        raw_data_boxplot = pd.read_parquet(f"{data_path}/child-long.parquet")
 
         # merge data
         raw_data_single["id"] = raw_data_single.index.get_level_values(0)
@@ -58,7 +59,7 @@ def process_dashboard_source_data(lang, data_path, out_dir, path_to_regions):
 
     dashboard_path = Path(__file__).resolve().parent
 
-    dataDict = {"single": raw_data_single, "waves": raw_data_waves}
+    dataDict = {"single": raw_data_single, "waves": raw_data_waves, "boxplot": raw_data_boxplot}
 
     for suffix, raw_data in dataDict.items():
         if suffix == "waves":
@@ -72,6 +73,19 @@ def process_dashboard_source_data(lang, data_path, out_dir, path_to_regions):
                 "run_charts_desc": run_charts_desc,
                 "language": lang,
                 "data_name": "liss",
+            }
+
+        elif suffix == "boxplot":
+            boxplots_desc = pd.read_csv(
+                dashboard_path / data_name / "boxplots_description.csv",
+                sep=";",
+                encoding="latin3",
+            )
+            kwargs = {
+                "data": raw_data,
+                "boxplots_desc": boxplots_desc,
+                "language": lang,
+                "data_name": "liss"
             }
 
         elif suffix == "single":

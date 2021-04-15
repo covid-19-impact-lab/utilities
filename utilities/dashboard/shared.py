@@ -38,7 +38,7 @@ def create_caption_for_variable_group(
 
 
 def create_general_variable_mappings(
-    data, language, data_name, data_desc=None, group_info=None, run_charts_desc=None
+    data, language, data_name, data_desc=None, group_info=None, run_charts_desc=None, boxplots_desc=None
 ):
     """Create a dict of dicts that allows to look up metadata of variables.
 
@@ -65,6 +65,8 @@ def create_general_variable_mappings(
             maps and univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
+        boxplots_desc (pd.DataFrame): Description of variables displayed in
+            the boxplots dashboard tab. Default is None.
 
     Returns:
         dict: Dictionary wich may contain the following entries:
@@ -78,6 +80,8 @@ def create_general_variable_mappings(
             - "nice_name_to_variable": dict
             - "outcome_variables": list
             - "background_variables": list
+            - "secondary_background_variable": string
+            - "sample_variable": string
 
     """
     res = {}
@@ -148,6 +152,25 @@ def create_general_variable_mappings(
         res["nice_name_to_background"] = {
             v: k for k, v in background_variable_to_nice_name.items()
         }
+
+    if boxplots_desc is not None:
+        # description of data for boxplots
+        res["outcome_variables"] = boxplots_desc.query("type == 'Outcome Variable'")[
+            "new_name"].values.tolist()
+        res["background_variables"] = boxplots_desc.query(
+            "type == 'Background Variable'"
+        )["new_name"].values.tolist()
+        res["secondary_background_variable"] = boxplots_desc.query(
+            "type == 'Secondary Background Variable'"
+        )["new_name"].values.tolist()
+        res["sample_variable"] = boxplots_desc.query(
+            "type == 'Sample Variable'"
+        )["new_name"].values.tolist()
+
+        nice_names = boxplots_desc.set_index("name")[
+            f"nice_name_{language}"
+        ].to_dict()
+        res["nice_names_boxplots"] = nice_names
 
     return res
 
