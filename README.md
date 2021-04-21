@@ -21,9 +21,6 @@ contain three datasets: Two, `background_data_merged.pickle` and
 `liss_all_waves_data.pickle`, for the Labor Supply tab.
 Note that the name "liss" must appear in `path/to/data`.
 
-- `path/to/region/ids`, the path to the regions identifiers. If not passed, mock
-regions are created and you are warned about this.
-
 This will create pickle files in `out_dir/data_name/lang/`, where `data_name` is
 "liss".
 
