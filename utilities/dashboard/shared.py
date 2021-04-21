@@ -57,7 +57,7 @@ def create_general_variable_mappings(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        language (str): One of ["english", "german", "dutch"]
+        language (str): One of ["english", "german"]
         data_name (str): "liss"
         data_desc (pd.DataFrame): Description of variables displayed in the maps
             and univariate distributions dashboard tabs. Default is None.
