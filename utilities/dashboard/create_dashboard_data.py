@@ -26,7 +26,7 @@ def create_dashboard_data(
             the run charts dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
             maps and univariate distributions dashboard tabs. Default is None.
-        data_name (str): "liss" or "gesis".
+        data_name (str): "liss".
         language (str): One of ["english", "german", "dutch"].
 
     Returns:
@@ -107,9 +107,9 @@ def _create_shared_dashboad_data(
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
+            univariate distributions dashboard tabs. Default is None.
         language (str): One of ["english", "german", "dutch"].
-        data_name (str): "liss" or "gesis".
+        data_name (str): "liss".
 
     Returns:
         dict: Dictionary with the following entries:
