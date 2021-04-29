@@ -58,6 +58,10 @@ def _preprocess_data(data, bg_vars_1, bg_var_2, outcomes, sample_var):
         default=np.nan,
     )
 
+    data["essential_worker_w2"] = data['essential_worker_w2'].replace({1.0: 'yes', 0.0: 'no'})
+    data["net_income_2y_equiv_q3"] = data['net_income_2y_equiv_q3'].replace({1.0: 'first', 2.0: 'second', 3.0: 'third'})
+
+
     data["relative_cc_gap"] = data["cc_gap"] / (data["hours_cc_female"] + data["hours_cc_male"])
 
     data = data[bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]]
@@ -215,7 +219,7 @@ def _apply_styling(p):
     return p
 
 
-def boxplot(data_dict, bg_var_1, bg_var_2, outcome, sample):
+def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample):
     """Create boxplot.
 
     Args:

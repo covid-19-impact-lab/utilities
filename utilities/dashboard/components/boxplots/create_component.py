@@ -1,0 +1,219 @@
+from functools import partial
+
+from bokeh.layouts import Column
+from bokeh.layouts import Row
+from bokeh.models import Select
+
+from utilities.dashboard.components.boxplots.boxplot import setup_plot
+
+
+def create_boxplots(data, variable_mappings):
+    """Create the childcare tab, showing boxplots for selected outcome and
+    background variables.
+
+    Args:
+        data (dict): Dictionary of boxplots data.
+        variable_mappings (dict): Dictionary of boxplots metadata.
+
+    Returns:
+        bokeh Column
+
+    """
+    outcome_variables = variable_mappings["outcome_variables"]
+    background_variables = variable_mappings["background_variables"]
+    secondary_background_variable = variable_mappings["Secondary Background Variable"]
+    sample_categories = variable_mappings["sample_categories"]
+    nice_name_to_outcome = variable_mappings["nice_name_to_outcome"]
+    nice_name_to_background = variable_mappings["nice_name_to_background"]
+    nice_name_to_sample_cat = variable_mappings["nice_name_to_sample_cat"]
+
+    dict_var = variable_mappings["outcome_variable_to_nice_name"]
+    dict_bg_var = variable_mappings["background_variable_to_nice_name"]
+    dict_sample_cat = variable_mappings["sample_cat_to_nice_name"]
+
+    outcome_variable = outcome_variables[0]
+    background_variable = background_variables[0]
+    sample_category = sample_categories[0]
+
+    selection_menus = [
+        Select(
+            title="Outcome",
+            options=[dict_var[var] for var in outcome_variables],
+            value=dict_var[outcome_variable],
+            name="outcome_variable_selector",
+            width=220,
+        ),
+        Select(
+            title="Split By",
+            options=[dict_bg_var[var] for var in background_variables],
+            value=dict_bg_var[background_variable],
+            name="background_variable_selector",
+            width=220,
+        ),
+        Select(
+            title="Sample",
+            options=[dict_sample_cat[cat] for cat in sample_categories],
+            value=dict_sample_cat[sample_category],
+            name="sample_category_selector",
+            width=220,
+        ),
+    ]
+
+    boxplot = setup_plot(
+        data_dict=data,
+        bg_var_1=background_variable,
+        bg_var_2=secondary_background_variable,
+        outcome=outcome_variable,
+        sample=sample_category
+    )
+
+    boxplots_page = Column(
+        Row(*selection_menus), boxplot
+    )
+
+    _add_boxplots_callbacks(
+        update_outcome_variable,
+        boxplots_page=boxplots_page,
+        data_dict=data,
+        nice_name_to_background=nice_name_to_background,
+        nice_name_to_outcome=nice_name_to_outcome,
+        nice_name_to_sample_cat=nice_name_to_sample_cat,
+        selection_menus=selection_menus,
+        setup_plot=setup_plot,
+        secondary_background_variable=secondary_background_variable,
+    )
+
+    return boxplots_page
+
+
+def _add_boxplots_callbacks(
+    boxplots_page,
+    data_dict,
+    nice_name_to_background,
+    nice_name_to_outcome,
+    nice_name_to_sample_cat,
+    selection_menus,
+    setup_plot,
+    secondary_background_variable,
+):
+    # get selectors (0: Outcome variables, 1: Background variables, 2: Sample)
+    boxplots_selectors = boxplots_page.children[0].children
+
+    outcome_variable_callback = partial(
+        update_outcome_variable,
+        boxplots_page=boxplots_page,
+        data_dict=data,
+        nice_name_to_background=nice_name_to_background,
+        nice_name_to_outcome=nice_name_to_outcome,
+        nice_name_to_sample_cat=nice_name_to_sample_cat,
+        selection_menus=selection_menus,
+        setup_plot=setup_plot,
+        secondary_background_variable=secondary_background_variable,
+    )
+
+    boxplots_selectors[0].on_change("value", outcome_variable_callback)
+
+    background_variable_callback = partial(
+        update_background_variable,
+        boxplots_page=boxplots_page,
+        data_dict=data,
+        nice_name_to_background=nice_name_to_background,
+        nice_name_to_outcome=nice_name_to_outcome,
+        nice_name_to_sample_cat=nice_name_to_sample_cat,
+        selection_menus=selection_menus,
+        setup_plot=setup_plot,
+        secondary_background_variable=secondary_background_variable,
+    )
+
+    boxplots_selectors[1].on_change("value", background_variable_callback)
+
+    sample_callback = partial(
+        update_sample,
+        boxplots_page=boxplots_page,
+        data_dict=data,
+        nice_name_to_background=nice_name_to_background,
+        nice_name_to_outcome=nice_name_to_outcome,
+        nice_name_to_sample_cat=nice_name_to_sample_cat,
+        selection_menus=selection_menus,
+        setup_plot=setup_plot,
+        secondary_background_variable=secondary_background_variable,
+    )
+
+    boxplots_selectors[2].on_change("value", sample_callback)
+
+
+def update_outcome_variable(
+    attr,
+    old,
+    new,
+    boxplots_page,
+    data_dict,
+    nice_name_to_background,
+    nice_name_to_outcome,
+    nice_name_to_sample_cat,
+    selection_menus,
+    setup_plot,
+    secondary_background_variable,
+):
+    bg_var_1 = nice_name_to_background[selection_menus[1].value]
+    sample = nice_name_to_sample_cat[selection_menus[2].value]
+    outcome = nice_name_to_outcome[new]
+    setup_plot(
+        data_dict=data,
+        bg_var_1=bg_var_1,
+        bg_var_2=secondary_background_variable,
+        outcome=outcome,
+        sample=sample
+    )
+    selection_menus[0].value = new
+
+
+def update_background_variable(
+    attr,
+    old,
+    new,
+    boxplots_page,
+    data_dict,
+    nice_name_to_background,
+    nice_name_to_outcome,
+    nice_name_to_sample_cat,
+    selection_menus,
+    setup_plot,
+    secondary_background_variable,
+):
+    bg_var_1 = nice_name_to_background[new]
+    sample = nice_name_to_sample_cat[selection_menus[2].value]
+    outcome = nice_name_to_outcome[selection_menus[0].value]
+    setup_plot(
+        data_dict=data,
+        bg_var_1=bg_var_1,
+        bg_var_2=secondary_background_variable,
+        outcome=outcome,
+        sample=sample
+    )
+    selection_menus[1].value = new
+
+def update_sample(
+    attr,
+    old,
+    new,
+    boxplots_page,
+    data_dict,
+    nice_name_to_background,
+    nice_name_to_outcome,
+    nice_name_to_sample_cat,
+    selection_menus,
+    setup_plot,
+    secondary_background_variable,
+):
+    bg_var_1 = nice_name_to_background[selection_menus[1].value]
+    sample = nice_name_to_sample_cat[new]
+    outcome = nice_name_to_outcome[selection_menus[0].value]
+    setup_plot(
+        data_dict=data,
+        bg_var_1=bg_var_1,
+        bg_var_2=secondary_background_variable,
+        outcome=outcome,
+        sample=sample
+    )
+    selection_menus[2].value = new

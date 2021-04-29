@@ -9,14 +9,13 @@ from pandas.api.types import is_categorical
 from pandas.api.types import is_float_dtype
 
 
-def prepare_liss_data(data, language, path_to_regions):
+def prepare_liss_data(data, language):
     data = data.copy()
     data = _fix_categories(data)
     data = _fix_numeric(data)
     data = _convert_floats_to_booleans(data)
     data = _add_variables(data)
     data = _bin_variables(data)
-    data = _add_regions(data, path_to_regions)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
         with open(cat_path, "r") as f:
@@ -235,38 +234,4 @@ def _add_variables(data):
         data["equiv_net_inc"], approx_quartiles, labels=labels
     )
 
-    return data
-
-
-def _add_regions(data, path_to_regions):
-    if path_to_regions is None:
-        data = data.copy()
-        print("\n\n\nCAREFUL: CREATING MOCK REGIONS!\n\n\n")
-        liss_regions = [
-            "Groningen",
-            "Friesland",
-            "Drenthe",
-            "Overijssel",
-            "Flevoland",
-            "Gelderland",
-            "Utrecht",
-            "Noord-Holland",
-            "Zuid-Holland",
-            "Zeeland",
-            "Noord-Brabant",
-            "Limburg",
-        ]
-        mock_regions = np.random.choice(liss_regions, len(data))
-        data["prov"] = pd.Categorical(
-            values=mock_regions, categories=liss_regions, ordered=False
-        )
-    else:
-        prov = pd.read_pickle(path_to_regions)
-        data = pd.merge(
-            left=data,
-            right=prov,
-            left_on=["hh_id"],
-            right_index=True,
-            how="left",
-        )
     return data

@@ -1,26 +1,32 @@
-name;type
-cc_gap;Outcome Variable
-relative_cc_gap;Outcome Variable
-net_income_2y_equiv_q3;Background Variable
-essential_worker_w2;Background Variable
-edu;Background Variable
-upper_secondary;Category
-lower_secondary_and_lower;Category
-tertiary;Category
-labor_force_coarse;Background Variable
-part-time;Category
-full-time;Category
-not working;Category
-child_id;Background Variable
-young;Category
-school;Category
-work_perc_home_cat_;Background Variable
-up to 10%;Category
-10-90%;Category
-more than 90%;Category
-covid;Secondary Background Variable
-post;Category
-pre;Category
-work_status_family;Sample Variable
-both work;Category
-father works;Category
+new_name;type;nice_name_english;nice_name_german
+cc_gap;Outcome Variable;Childcare gap;Childcare gap
+relative_cc_gap;Outcome Variable;Relative childcare gap;Relative childcare gap
+net_income_2y_equiv_q3;Background Variable;Tercile of the pre-CoViD net equivalised household income;Tercile of the pre-CoViD net equivalised household income
+first;Category;First;First
+second;Category;Second;Second
+third;Category;Third;Third
+essential_worker_w2;Background Variable;Essential worker;Essential worker
+yes;Category;Yes;Ja
+no ;Category;No;Nein
+edu;Background Variable;Education;Education
+upper_secondary;Category;Upper secondary;Upper secondary
+lower_secondary_and_lower;Category;Lower secondary and lower;Lower secondary and lower
+tertiary;Category;Tertiary;Tertiary
+labor_force_coarse;Background Variable;Work schedule;Work schedule
+part-time;Category;Part-time;Part-time
+full-time;Category;Full-time;Full-time
+not working;Category;Not working;Not working
+child_id;Background Variable;Age of a child;Age of a child
+young;Category;Pre-school age;Pre-school age
+school;Category;School age;School age
+work_perc_home_cat_;Background Variable;Degree of telecommutability;Degree of telecommutability
+up to 10%;Category;Up to 10%;Up to 10%
+10-90%;Category;Between 10% and 90%;Between 10% and 90%
+more than 90%;Category;More than 90%;More than 90%
+covid;Secondary Background Variable;Time period;Time period
+post;Category;April 2020;April 2020
+pre;Category;Before CoVid-19;Before CoVid-19
+work_status_family;Sample Variable;Parents' work status;Parents' work status
+both work;Sample Category;Both work;Both work
+father works;Sample Category;Father works;Father works
+all;Sample Category;All;All
