@@ -159,15 +159,19 @@ def process_data(data, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names):
 
         for s in data[sample_var]:
 
-            s_res = {}
-            s_data = data[data[sample_var] == s]
+            if s == np.nan:
+                pass
 
-            for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
+            else:
+                s_res = {}
+                s_data = data[data[sample_var] == s]
 
-                res = compute_quantities(s_data, var_1, var_2, outcome)
-                s_res.update(res)
+                for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
 
-            out_res[s] = s_res
+                    res = compute_quantities(s_data, var_1, var_2, outcome)
+                    s_res.update(res)
+
+                out_res[s] = s_res
 
         tot_res[outcome] = out_res
 

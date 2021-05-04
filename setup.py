@@ -20,9 +20,6 @@ setup(
         "utilities": [
             "dashboard/app/static/*.*",
             "dashboard/app/templates/*.html",
-            "dashboard/components/maps/liss_provinces.geojson",
-            "dashboard/gesis/provinces.geojson",
-            "dashboard/liss/provinces.geojson",
             "dashboard/*/*.txt",
             "dashboard/*/*.csv",
             "dashboard/*/*.yaml",

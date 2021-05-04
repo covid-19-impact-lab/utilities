@@ -16,13 +16,10 @@ and follow the CLI. The arguments required are:
 - `out_dir`, the path to the output directory.
 
 - `path/to/data`, the path to the Covid LISS datasets folder, which needs to
-contain three datasets: Two, `background_data_merged.pickle` and 
+contain three datasets: Two, `background_data_merged.pickle` and
 `covid_data_2020_03.pickle`, for the Maps and Group Differences tabs, and one,
 `liss_all_waves_data.pickle`, for the Labor Supply tab.
 Note that the name "liss" must appear in `path/to/data`.
-
-- `path/to/region/ids`, the path to the regions identifiers. If not passed, mock
-regions are created and you are warned about this.
 
 This will create pickle files in `out_dir/data_name/lang/`, where `data_name` is
 "liss".

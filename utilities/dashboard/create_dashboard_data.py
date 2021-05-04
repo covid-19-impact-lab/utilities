@@ -29,9 +29,9 @@ def create_dashboard_data(
         boxplots_desc (pd.DataFrame): Description of variables displayed in
             the boxplots dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
-        data_name (str): "liss" or "gesis".
-        language (str): One of ["english", "german", "dutch"].
+            univariate distributions dashboard tabs. Default is None.
+        data_name (str): "liss".
+        language (str): One of ["english", "german"].
 
     Returns:
         dict: Dictionary whose entries depend on the pd.DataFrame(s) passed.
@@ -96,8 +96,8 @@ def _get_groups(group_info, language):
 
     Args:
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
-        language (str): One of ["english", "german", "dutch"].
+            univariate distributions dashboard tabs. Default is None.
+        language (str): One of ["english", "german"].
 
      Returns:
         list: List of groups.
@@ -116,16 +116,16 @@ def _create_shared_dashboad_data(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of variables displayed in the maps
-            and univariate distributions dashboard tabs. Default is None.
+        data_desc (pd.DataFrame): Description of variables displayed in the
+            univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
         boxplots_desc (pd.DataFrame): Description of variables displayed in
             the boxplots dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
-        language (str): One of ["english", "german", "dutch"].
-        data_name (str): "liss" or "gesis".
+            univariate distributions dashboard tabs. Default is None.
+        language (str): One of ["english", "german"].
+        data_name (str): "liss".
 
     Returns:
         dict: Dictionary with the following entries:

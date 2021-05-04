@@ -57,8 +57,8 @@ def create_general_variable_mappings(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        language (str): One of ["english", "german", "dutch"]
-        data_name (str): "liss" or "gesis"
+        language (str): One of ["english", "german"]
+        data_name (str): "liss"
         data_desc (pd.DataFrame): Description of variables displayed in the maps
             and univariate distributions dashboard tabs. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
@@ -69,7 +69,7 @@ def create_general_variable_mappings(
             the boxplots dashboard tab. Default is None.
 
     Returns:
-        dict: Dictionary wich may contain the following entries:
+        dict: Dictionary which may contain the following entries:
             - "topics": List of strings
             - "topic_to_groups": dict
             - "group_to_header": dict
