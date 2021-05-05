@@ -19,7 +19,7 @@ not working;Category;Not working;Not working
 child_id;Background Variable;Age of a child;Age of a child
 young;Category;Pre-school age;Pre-school age
 school;Category;School age;School age
-work_perc_home_cat_;Background Variable;Degree of telecommutability;Degree of telecommutability
+work_perc_home_cat;Background Variable;Degree of telecommutability;Degree of telecommutability
 up to 10%;Category;Up to 10%;Up to 10%
 10-90%;Category;Between 10% and 90%;Between 10% and 90%
 more than 90%;Category;More than 90%;More than 90%

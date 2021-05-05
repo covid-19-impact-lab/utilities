@@ -78,11 +78,12 @@ def create_dashboard_data(
         res["mapping"] = shared_data
         res["run_charts_data"] = run_charts_data
 
-    if boxplots_data is not None:
+    if boxplots_desc is not None:
         boxplots_data = create_boxplots_data(
             data=data,
             variable_mappings=variable_mappings,
             nice_names=variable_mappings["nice_names_boxplots"],
+            language=language
         )
         res = {}
         res["mapping"] = shared_data

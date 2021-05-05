@@ -86,7 +86,7 @@ def compute_quantities(data, bg_var_1, bg_var_2, outcome):
     temp_dict = {"q25": 0.25, "q50": 0.5, "q75": 0.75}
 
     # empty list where to store data
-    data = []
+    data_res = []
 
     for key, val in temp_dict.items():
 
@@ -104,23 +104,23 @@ def compute_quantities(data, bg_var_1, bg_var_2, outcome):
             out = pd.Series.to_frame(groups[outcome].quantile(q=val).rename(key))
 
         # store data
-        data.append(out)
+        data_res.append(out)
 
     # compute "upper" and "lower" extreme for boxplot stems
-    upper = data[2]["q75"] + 1.5*(data[2]["q75"] - data[0]["q25"])
-    lower = data[0]["q25"] - 1.5*(data[2]["q75"] - data[0]["q25"])
+    upper = data_res[2]["q75"] + 1.5*(data_res[2]["q75"] - data_res[0]["q25"])
+    lower = data_res[0]["q25"] - 1.5*(data_res[2]["q75"] - data_res[0]["q25"])
 
     # add "upper" and "lower" to data. The result is a list of pd.DataFrames
-    data.append(upper)
-    data.append(lower)
+    data_res.append(upper)
+    data_res.append(lower)
 
     # concatenate pd.DataFrames
-    data_final = pd.concat(data, axis=1).rename(columns={0:"upper", 1:"lower"})
+    data_res_final = pd.concat(data_res, axis=1).rename(columns={0:"upper", 1:"lower"})
 
     # convert result to dictionary of results
     key = (bg_var_1, bg_var_2)
-    index = data_final.index.tolist()
-    res = {key: {"cats": index, "data": data_final.to_dict("list"), "order": [i[1] for i in index]}}
+    index = data_res_final.index.tolist()
+    res = {key: {"cats": index, "data": data_res_final.to_dict("list"), "order": [i[1] for i in index]}}
 
     return res
 

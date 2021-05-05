@@ -3,8 +3,11 @@ from functools import partial
 from bokeh.layouts import Column
 from bokeh.layouts import Row
 from bokeh.models import Select
+from bokeh.models.widgets import Div
 
 from utilities.dashboard.components.boxplots.boxplot import setup_plot
+from utilities.dashboard.config import PLOT_WIDTH
+from utilities.dashboard.config import TITLE_STYLE
 
 
 def create_boxplots(data, variable_mappings):
@@ -21,7 +24,7 @@ def create_boxplots(data, variable_mappings):
     """
     outcome_variables = variable_mappings["outcome_variables"]
     background_variables = variable_mappings["background_variables"]
-    secondary_background_variable = variable_mappings["Secondary Background Variable"]
+    secondary_background_variable = variable_mappings["secondary_background_variable"]
     sample_categories = variable_mappings["sample_categories"]
     nice_name_to_outcome = variable_mappings["nice_name_to_outcome"]
     nice_name_to_background = variable_mappings["nice_name_to_background"]
@@ -67,8 +70,26 @@ def create_boxplots(data, variable_mappings):
         sample=sample_category
     )
 
+    title = Div(
+        text=data["title"], style=TITLE_STYLE, margin=(10, 0, 10, 0), width=PLOT_WIDTH
+    )
+
+    top_text = Div(
+        text=data["top_text"],
+        margin=(10, 0, 10, 0),
+        style={"text-align": "justify"},
+        width=PLOT_WIDTH,
+    )
+
+    bottom_text = Div(
+        text=data["bottom_text"],
+        margin=(10, 0, 10, 0),
+        style={"text-align": "justify"},
+        width=PLOT_WIDTH,
+    )
+
     boxplots_page = Column(
-        Row(*selection_menus), boxplot
+        title, top_text, Row(*selection_menus), boxplot, bottom_text
     )
 
     _add_boxplots_callbacks(

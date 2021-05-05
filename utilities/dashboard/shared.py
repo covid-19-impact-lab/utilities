@@ -173,7 +173,7 @@ def create_general_variable_mappings(
             "type == 'Sample Category'"
         )["new_name"].values.tolist()
 
-        nice_names = boxplots_desc.set_index("name")[
+        nice_names = boxplots_desc.set_index("new_name")[
             f"nice_name_{language}"
         ].to_dict()
         res["nice_names_boxplots"] = nice_names
