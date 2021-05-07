@@ -1,0 +1,44 @@
+The Covid-19 pandemic in the Netherlands has prompted the Dutch government to impose restrictionson the economic and social life 
+to impede the spread of the Corona Virus. 
+
+<br><br>
+In mid-March, all schools and childcare facilities were closed along with restaurants, cafes, bars, and several other businesses 
+involving personal contacts. 
+<br> 
+Beginning in May, the restrictions were gradually lifted. Daycare facilities
+and primary schools started opening in mid-May, businesses such as hairdressers and beauty saloons were allowed to accept customers 
+again. 
+<br> 
+In the beginning of June, secondary schools started opening; restaurants, cafes, and cinemas could operate under restricted capacity. 
+<br> 
+With the main exceptions of bans on larger (inside) gatherings, the requirement to wear masks in public transport, and the
+mandate to keep a distance of 1.5 meters to other people, in June and September the social and economic life was largely back to what it was before.
+
+<br><br>
+<i> Explore the changes in working hours by socioeconomic status and job characteristics in the different stages of the pandemic. <b> Click and drag 
+</b> to move the lines to the center of the plot, <b>hover over the lines</b> to discover more information.</i>
+
+After economic restrictions were introduced in mid March, average working hours decreased by 12% although the unemployment rate only midly increased.
+During the lockdown, working hours kept on decreasing and reached a minimum at 82% of pre-pandemic working hours in May.
+As restrictions were lifted, working hours started increasing again, but the economy did not fully recover.
+In September, average working hours still only totaled 86% of pre-pandemic working hours.
+This loss in working hours is not equally distributed across the socioeconomic spectrum
+and job characteristics. Further, the underlying dynamics change between the lockdown period and post-lockdown.
+
+<br> <br>
+During lockdown, the ability to work from home
+and being an essential worker have a preserving effect on working hours.
+As the level of education is strongly correlated with the ability to work from home, the working hours of highly educated
+workers are better preserved than those of lower educated workers.
+These lockdown-specific mechanisms become much
+less important as social distancing restrictions are eased between May and September as do other
+socio-economic determinants. This is unlikely caused
+by pandemic-induced supply changes. Diminished demand is a more plausible explanation.
+
+<br><br>
+<b>Notes on sample</b>:
+The sample is restricted to individuals that are between the ages 18 and 66 and worked at least 10 hours in one of the periods (early March-September).
+
+<br><br>
+<b>Citation</b>: <a href="https://www.iza.org/publications/dp/13623"> von Gaudecker, H.-M., R. Holler, L. Janys, B. Siflinger, C. Zimpelmann (2020): Working hours during lockdown and a "New
+Normal": The case of the Netherlands </a>. 
