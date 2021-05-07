@@ -2,6 +2,7 @@ from utilities.dashboard.components.debugging import no_plot
 from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
+from utilities.dashboard.config import UNIVARIATE_DISTRIBUTIONS_DIR
 
 
 plot_modules = {
@@ -39,9 +40,19 @@ def create_univariate_distributions_data(
             nothing_string=menu_labels["nothing_category"],
         )
 
+    # text for plot is processed separately
+    metadata_path = UNIVARIATE_DISTRIBUTIONS_DIR / "metadata"
+    with open(metadata_path / f"plot_intro_english.txt", "r") as f:
+        plot_data["plot_intro"] = f.read()
+
+    plot_data[
+        "title"
+    ] = "How Does the CoVid-19 Pandemic Affect Different Groups?"
+
     res["plot_data"] = plot_data
     res["background_variables"] = [
         nice_names[var] for var in relevant_bg_vars if var != "prov"
     ]
+
 
     return res
