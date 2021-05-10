@@ -1,24 +1,20 @@
-After economic restrictions were introduced in mid March, average working hours decreased by 12% although the unemployment rate only midly increased.
-During the lockdown, working hours kept on decreasing and reached a minimum at 82% of pre-pandemic working hours in May.
-As restrictions were lifted, working hours started increasing again, but the economy did not fully recover.
-In September, average working hours still only totaled 86% of pre-pandemic working hours.
-This loss in working hours is not equally distributed across the socioeconomic spectrum
-and job characteristics. Further, the underlying dynamics change between the lockdown period and post-lockdown.
+Nachdem in den Niederlanden Mitte März 2020 Einschränkungen in Kraft getreten sind, hat sich die Anzahl der geleisteten Arbeitszeiten um 12% reduziert, auch wenn die Arbeitslosigkeit nur leicht gestiegen ist.
+Während des Lockdowns sind die Arbeitszeiten weiter gefallen - auf ein Minimum von 82% der geleisteten vor-Pandemie Stunden im Mai.
+Die Arbeitszeiten sind wieder gestiegen als Lockerungen beschlossen wurden, aber die Volkswirtschaft hat sich nicht völlig erholt.
+Im September lagen die Arbeitszeiten immer noch 14% unterhalb des vor Pandemie Niveaus.
+Die Reduktion der Arbeitszeiten ist ungleich verteilt über sozio-ökonomische Gruppen und Jobs. Darüber hinaus haben sich die Dynamiken während des Lockdowns und der Zeit danach verändert.
 
 <br> <br>
-During lockdown, the ability to work from home
-and being an essential worker have a preserving effect on working hours.
-As the level of education is strongly correlated with the ability to work from home, the working hours of highly educated
-workers are better preserved than those of lower educated workers.
-These lockdown-specific mechanisms become much
-less important as social distancing restrictions are eased between May and September as do other
-socio-economic determinants. This is unlikely caused
-by pandemic-induced supply changes. Diminished demand is a more plausible explanation.
+
+Während des Lockdowns haben Menschen in systemrelevanten Berufen und mit der Möglichkeit, von zuhause zu arbeiten, ihre Arbeitszeiten am wenigsten reduziert.
+Da das Bildungsniveau und die Fähigkeit, von zuhause zu arbeiten, stark korreliert sind, haben sehr gebildete Arbeiter ihre Arbeitszeiten weniger reduziert als weniger gebildete Arbeiter.
+Diese lockdownspezifischen Mechanismen - ebenso wie andere sozio-ökonomische Faktoren - verlieren an Bedeutung im Zeitraum Mai bis September, in denen die Beschränkungen gelockert werden.
+Es ist unwahrscheinlich, dass dies auf Pandemie induzierte Änderungen im Arbeitsangebot  zurückzuführen sind. Deutlich plausibler scheint eine verringerte Arbeitsnachfrage.
 
 <br><br>
-<b>Notes on sample</b>:
-The sample is restricted to individuals that are between the ages 18 and 66 and worked at least 10 hours in one of the periods (early March-September).
+<b>Bemerkungen zur Stichprobe</b>:
+Die Stichprobe umfasst Individuen zwischen 18 und 66 Jahren, die zu mindestens einem Befragungszeitpunkt zwischen Anfang März und September 2020 mindestens 10 Stunden gearbeitet haben.
 
 <br><br>
-<b>Citation</b>: <a href="https://www.iza.org/publications/dp/13623"> von Gaudecker, H.-M., R. Holler, L. Janys, B. Siflinger, C. Zimpelmann (2020): Working hours during lockdown and a "New
-Normal": The case of the Netherlands </a>. 
+<b>Referenz</b>: <a href="https://www.iza.org/publications/dp/13623"> von Gaudecker, H.-M., R. Holler, L. Janys, B. Siflinger, C. Zimpelmann (2020): Working hours during lockdown and a "New
+Normal": The case of the Netherlands </a>.
