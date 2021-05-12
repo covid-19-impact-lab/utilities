@@ -23,7 +23,7 @@ def create_intro_page_data(language, dataset_name):
             + "sind sie von ihr betroffen und wie passen sie ihr Verhalten an?"
         )
         res["groupby_title"] = "Unterschiede zwischen Bevölkerungsgruppen"
-        res["bottom_title"] = "Arbeitskräfteangebot"
+        res["bottom_title"] = "Arbeitsangebot"
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
     return res
