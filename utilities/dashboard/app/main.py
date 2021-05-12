@@ -30,7 +30,7 @@ def assemble_dashboard_components(
         intro_page_data (dict): Data to generate Introduction tab.
         univariate_distributions_data (dict): Data to generate Group Differences
             tab.
-        shared_data (dict): Metadata shared between Maps and Group Differences tab.
+        shared_data (dict): Metadata of Group Differences tab.
         run_charts_data (dict): Data for Labor Supply tab.
         run_charts_mapping (dict): Metadata for Labor Supply tab.
 
