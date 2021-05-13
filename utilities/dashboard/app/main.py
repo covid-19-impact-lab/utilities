@@ -55,9 +55,8 @@ def assemble_dashboard_components(
     if language == "german":
         tab_names = [
             "Einleitung",
-            "Karten",
             "Unterschiede zw. Gruppen",
-            "Arbeitskräfteangebot",
+            "Arbeitsangebot",
         ]
     elif language == "english":
         tab_names = ["Introduction", "Group Differences", "Labor Supply"]

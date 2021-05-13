@@ -45,9 +45,14 @@ def create_univariate_distributions_data(
     with open(metadata_path / f"plot_intro_english.txt", "r") as f:
         plot_data["plot_intro"] = f.read()
 
-    plot_data[
+    if language == "english":
+         plot_data[
         "title"
     ] = "How Does the CoVid-19 Pandemic Affect Different Groups?"
+    elif language == "german":
+         plot_data[
+        "title"
+    ] = "Wie sind unterschiedliche Gruppen von der Corona Pandemie betroffen?"
 
     res["plot_data"] = plot_data
     res["background_variables"] = [
