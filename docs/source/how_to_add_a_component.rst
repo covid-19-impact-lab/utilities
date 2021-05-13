@@ -51,16 +51,14 @@ The first step is adding a folder with the PY files that generate your component
 in `utilities/dashboard/components`. To ensure that integrating the new component
 is smooth, your code should be divided into three modules:
 
-- Plotting module (e.g. `lineplot.py` or `mapplot.py`), containing the component's
+- Plotting module (e.g. `lineplot.py`), containing the component's
   core functions. In particular, the plotting module contains:
 
     - **Data-processing functions**, that return the statistics to be displayed
-      in the plot. E.g. `prepare_data` in `components/run_charts/lineplot.py`,
-      and `prepare_maps_data` in `components/maps/mapplot.py`.
+      in the plot. E.g. `prepare_data` in `components/run_charts/lineplot.py`.
     - **Plot-generating functions**, that generate the Bokeh Figure(s) to be
       displayed in the dashboard Tab. E.g. `setup_plot` and `update_plot` in
-      `components/run_charts/lineplot.py`, and `setup_map` in
-      `components/maps/mapplot.py`.
+      `components/run_charts/lineplot.py`.
 
   It is convenient to develop the plotting module first and independently from
   the dashboard, for instance in a Jupyter Notebook.
