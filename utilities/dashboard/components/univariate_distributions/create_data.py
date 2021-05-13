@@ -42,8 +42,12 @@ def create_univariate_distributions_data(
 
     # text for plot is processed separately
     metadata_path = UNIVARIATE_DISTRIBUTIONS_DIR / "metadata"
-    with open(metadata_path / f"plot_intro_english.txt", "r") as f:
-        plot_data["plot_intro"] = f.read()
+    if language == "english":
+        with open(metadata_path / f"plot_intro_english.txt", "r") as f:
+            plot_data["plot_intro"] = f.read()
+    elif language == "german":
+        with open(metadata_path / f"plot_intro_german.txt", "r") as f:
+            plot_data["plot_intro"] = f.read()
 
     if language == "english":
          plot_data[

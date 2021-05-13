@@ -69,6 +69,7 @@ def create_dashboard_data(
             data=data,
             variable_mappings=variable_mappings,
             nice_names=variable_mappings["nice_names_run_charts"],
+            language=language,
         )
         res = {}
         res["mapping"] = shared_data
