@@ -1,3 +1,4 @@
+import sys
 import io
 import textwrap
 import numpy as np
@@ -115,12 +116,22 @@ def compute_quantities(data, bg_var_1, bg_var_2, outcome):
     data_res.append(lower)
 
     # concatenate pd.DataFrames
-    data_res_final = pd.concat(data_res, axis=1).rename(columns={0:"upper", 1:"lower"})
+    data_res_fin = pd.concat(data_res, axis=1).rename(columns={0:"upper", 1:"lower"})
+
+    # delete the raws that contains nan values
+    if data_res_fin.isnull().values.any():
+        c = data_res_fin.index.names
+        data_res_fin = data_res_fin.reset_index()
+        rows_with_nan = data_res_fin[data_res_fin.isna().any(axis=1)][bg_var_1].to_list()
+        data_res_fin = data_res_fin[~data_res_fin[bg_var_1].isin(rows_with_nan)]
+        data_res_fin = data_res_fin.set_index(c)
+    else:
+        pass
 
     # convert result to dictionary of results
     key = (bg_var_1, bg_var_2)
-    index = data_res_final.index.tolist()
-    res = {key: {"cats": index, "data": data_res_final.to_dict("list"), "order": [i[1] for i in index]}}
+    index = data_res_fin.index.tolist()
+    res = {key: {"cats": index, "data": data_res_fin.to_dict("list"), "order": [i[1] for i in index]}}
 
     return res
 
@@ -159,19 +170,15 @@ def process_data(data, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names):
 
         for s in data[sample_var]:
 
-            if s == np.nan:
-                pass
+            s_res = {}
+            s_data = data[data[sample_var] == s]
 
-            else:
-                s_res = {}
-                s_data = data[data[sample_var] == s]
+            for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
 
-                for var_1, var_2 in itertools.product(bg_vars_1, [bg_var_2]):
+                res = compute_quantities(s_data, var_1, var_2, outcome)
+                s_res.update(res)
 
-                    res = compute_quantities(s_data, var_1, var_2, outcome)
-                    s_res.update(res)
-
-                out_res[s] = s_res
+            out_res[s] = s_res
 
         tot_res[outcome] = out_res
 

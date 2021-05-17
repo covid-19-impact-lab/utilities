@@ -26,6 +26,7 @@ setup(
             "dashboard/*/*.py",
             "dashboard/components/intro_page/metadata/*/*.*",
             "dashboard/components/run_charts/metadata/*.*",
+            "dashboard/components/boxplots/metadata/*.*",
         ],
     },
     include_package_data=True,
