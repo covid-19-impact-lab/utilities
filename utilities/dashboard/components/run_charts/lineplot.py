@@ -22,7 +22,7 @@ from utilities.colors import get_colors
 from utilities.colors import plot_colors
 
 
-def prepare_data(data, period, variables, bg_vars, nice_names):
+def prepare_data(data, period, variables, bg_vars, nice_names, language):
     """Prepare the run chart data.
 
     Args:
@@ -34,6 +34,7 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
         bg_vars (list): List of background variables by which the sample can be
             splitted.
         nice_names (dict): Dictionary mapping variables to nice names.
+        language (string): german or english
 
     Returns:
         dict: A dictionary that contains all the possible lineplot points.
@@ -57,7 +58,10 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
         periods = sorted(data[period].unique())
         periods = [pd.to_datetime(period) for period in periods]
         periods = [period.strftime("%b %Y") for period in periods]
-        periods[0] = "Pre-CoVid 19"
+        if language != "german":
+            periods[0] = "Pre-CoVid 19"
+        else:
+            periods[0] = "Vor-CoVid 19"
         res["data"]["period"] = periods
 
         # add selectors to the result dictionary

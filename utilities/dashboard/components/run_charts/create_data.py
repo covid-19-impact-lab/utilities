@@ -24,6 +24,7 @@ def create_run_charts_data(data, variable_mappings, nice_names, language):
         variables=variables,
         bg_vars=bg_vars,
         nice_names=nice_names,
+        language=language,
     )
 
     # text for plot is processed separately
