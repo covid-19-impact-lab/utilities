@@ -160,6 +160,7 @@ def setup_plot(
     variable,
     bg_var,
     nice_names_dict,
+    language,
 ):
     """Create the basic plot.
 
@@ -173,6 +174,7 @@ def setup_plot(
         variable (str): Name of the variable that will be shown intially.
         bg_var (str): Name of the initially selected background variable.
         nice_names_dict (dict): Dictionary mapping variables to nice names.
+        language (string): german or english
 
     Returns:
         bokeh.figure: Basic plot.
@@ -206,7 +208,7 @@ def setup_plot(
                 line_width=3,
             )
 
-            _add_HoverTool(fig, r, col, nice_names_dict)
+            _add_HoverTool(fig, r, col, nice_names_dict, language)
 
     _apply_styling(fig)
 
@@ -215,16 +217,24 @@ def setup_plot(
     return fig
 
 
-def _add_HoverTool(p, renderers, col, nice_names_dict):
+def _add_HoverTool(p, renderers, col, nice_names_dict, language):
     """Add HoverTool to main plot."""
     bg_var_name = col[-1]
     var_name = col[0]
 
-    TOOLTIPS = [
-        (nice_names_dict.get(var_name), "@y"),
-        ("Date of survey", "@x"),
-        (nice_names_dict.get(bg_var_name), "@cat"),
-    ]
+    if language == "german":
+        TOOLTIPS = [
+            (nice_names_dict.get(var_name), "@y"),
+            ("Datum der Umfrage", "@x"),
+            (nice_names_dict.get(bg_var_name), "@cat"),
+        ]
+        
+    else: 
+        TOOLTIPS = [
+            (nice_names_dict.get(var_name), "@y"),
+            ("Date of survey", "@x"),
+            (nice_names_dict.get(bg_var_name), "@cat"),
+        ]
 
     kwargs = {"tooltips": TOOLTIPS[:-1]} if col[1] is None else {"tooltips": TOOLTIPS}
 

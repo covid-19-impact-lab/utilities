@@ -50,6 +50,7 @@ def assemble_dashboard_components(
     run_charts_page = create_run_charts(
         data=run_charts_data,
         variable_mappings=run_charts_mapping["variable_mappings"],
+        language=language
     )
 
     if language == "german":
