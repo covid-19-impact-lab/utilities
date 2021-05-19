@@ -4,10 +4,10 @@ gender;Background Variable;Gender;Geschlect
 gender_female;Category;Female;Weiblich
 gender_male;Category;Male;Männlich
 edu;Background Variable;Education;Ausbildung
-edu_lower_secondary_and_lower;Category;Lower secondary and lower;Lower secondary and lower
-edu_upper_secondary;Category;Upper secondary;Upper secondary
-edu_tertiary;Category;Tertiary;Tertiary
-work_perc_home_cat;Background Variable;Degree of telecommutability;Degree of telecommutability
+edu_lower_secondary_and_lower;Category;Lower secondary and lower;Sekundarstufe I und II
+edu_upper_secondary;Category;Upper secondary;Obere Sekundarstufe
+edu_tertiary;Category;Tertiary;Tertiärbereich
+work_perc_home_cat;Background Variable;Degree of telecommutability;Grad der Telearbeitbarkeit
 work_perc_home_cat_up to 10%;Category;Up to 10%;Bis zu 10%
 work_perc_home_cat_10-90%;Category;Between 10% and 90%;Zwischen 10% und 90%
 work_perc_home_cat_more than 90%;Category;More than 90%;Mehr als 90%
