@@ -62,6 +62,8 @@ def prepare_data(data, period, variables, bg_vars, nice_names, language):
             periods[0] = "Pre-CoVid 19"
         else:
             periods[0] = "Vor-CoVid 19"
+            periods[1] = "März 2020"
+            periods[3] = "Mai 2020"
         res["data"]["period"] = periods
 
         # add selectors to the result dictionary
