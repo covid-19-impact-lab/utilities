@@ -57,7 +57,7 @@ def process_dashboard_source_data(lang, data_path, out_dir):
             run_charts_desc = pd.read_csv(
                 dashboard_path / data_name / "run_charts_description.csv",
                 sep=";",
-                encoding="latin1",
+                encoding="utf8",
             )
             kwargs = {
                 "data": raw_data,
