@@ -92,33 +92,7 @@ def create_boxplots(data, variable_mappings):
         title, top_text, Row(*selection_menus), boxplot, bottom_text
     )
 
-    _add_boxplots_callbacks(
-        update_outcome_variable,
-        boxplots_page=boxplots_page,
-        data_dict=data,
-        nice_name_to_background=nice_name_to_background,
-        nice_name_to_outcome=nice_name_to_outcome,
-        nice_name_to_sample_cat=nice_name_to_sample_cat,
-        selection_menus=selection_menus,
-        setup_plot=setup_plot,
-        secondary_background_variable=secondary_background_variable,
-    )
-
-    return boxplots_page
-
-
-def _add_boxplots_callbacks(
-    boxplots_page,
-    data_dict,
-    nice_name_to_background,
-    nice_name_to_outcome,
-    nice_name_to_sample_cat,
-    selection_menus,
-    setup_plot,
-    secondary_background_variable,
-):
-    # get selectors (0: Outcome variables, 1: Background variables, 2: Sample)
-    boxplots_selectors = boxplots_page.children[0].children
+    boxplots_selectors = boxplots_page.children[2].children
 
     outcome_variable_callback = partial(
         update_outcome_variable,
@@ -162,6 +136,8 @@ def _add_boxplots_callbacks(
 
     boxplots_selectors[2].on_change("value", sample_callback)
 
+    return boxplots_page
+
 
 def update_outcome_variable(
     attr,
@@ -179,13 +155,14 @@ def update_outcome_variable(
     bg_var_1 = nice_name_to_background[selection_menus[1].value]
     sample = nice_name_to_sample_cat[selection_menus[2].value]
     outcome = nice_name_to_outcome[new]
-    setup_plot(
-        data_dict=data,
-        bg_var_1=bg_var_1,
-        bg_var_2=secondary_background_variable,
-        outcome=outcome,
-        sample=sample
-    )
+    new_boxplot = setup_plot(
+                    data_dict=data_dict,
+                    bg_var_1=bg_var_1,
+                    bg_var_2=secondary_background_variable,
+                    outcome=outcome,
+                    sample=sample
+                )
+    boxplots_page.children[3] = new_boxplot
     selection_menus[0].value = new
 
 
@@ -205,13 +182,14 @@ def update_background_variable(
     bg_var_1 = nice_name_to_background[new]
     sample = nice_name_to_sample_cat[selection_menus[2].value]
     outcome = nice_name_to_outcome[selection_menus[0].value]
-    setup_plot(
-        data_dict=data,
-        bg_var_1=bg_var_1,
-        bg_var_2=secondary_background_variable,
-        outcome=outcome,
-        sample=sample
-    )
+    new_boxplot = setup_plot(
+                    data_dict=data_dict,
+                    bg_var_1=bg_var_1,
+                    bg_var_2=secondary_background_variable,
+                    outcome=outcome,
+                    sample=sample
+                )
+    boxplots_page.children[3] = new_boxplot
     selection_menus[1].value = new
 
 def update_sample(
@@ -230,11 +208,12 @@ def update_sample(
     bg_var_1 = nice_name_to_background[selection_menus[1].value]
     sample = nice_name_to_sample_cat[new]
     outcome = nice_name_to_outcome[selection_menus[0].value]
-    setup_plot(
-        data_dict=data,
-        bg_var_1=bg_var_1,
-        bg_var_2=secondary_background_variable,
-        outcome=outcome,
-        sample=sample
-    )
+    new_boxplot = setup_plot(
+                    data_dict=data_dict,
+                    bg_var_1=bg_var_1,
+                    bg_var_2=secondary_background_variable,
+                    outcome=outcome,
+                    sample=sample
+                )
+    boxplots_page.children[3] = new_boxplot
     selection_menus[2].value = new

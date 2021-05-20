@@ -325,5 +325,4 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample):
             tooltips=TOOLTIPS,
         ))
 
-
-    show(p)
+    return p
