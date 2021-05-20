@@ -10,13 +10,14 @@ from utilities.dashboard.config import PLOT_WIDTH
 from utilities.dashboard.config import TITLE_STYLE
 
 
-def create_boxplots(data, variable_mappings):
+def create_boxplots(data, variable_mappings, language):
     """Create the childcare tab, showing boxplots for selected outcome and
     background variables.
 
     Args:
         data (dict): Dictionary of boxplots data.
         variable_mappings (dict): Dictionary of boxplots metadata.
+        language (str): One of ["english", "german"].
 
     Returns:
         bokeh Column
@@ -67,7 +68,8 @@ def create_boxplots(data, variable_mappings):
         bg_var_1=background_variable,
         bg_var_2=secondary_background_variable,
         outcome=outcome_variable,
-        sample=sample_category
+        sample=sample_category,
+        language=language
     )
 
     title = Div(
@@ -104,6 +106,7 @@ def create_boxplots(data, variable_mappings):
         selection_menus=selection_menus,
         setup_plot=setup_plot,
         secondary_background_variable=secondary_background_variable,
+        language=language,
     )
 
     boxplots_selectors[0].on_change("value", outcome_variable_callback)
@@ -118,6 +121,7 @@ def create_boxplots(data, variable_mappings):
         selection_menus=selection_menus,
         setup_plot=setup_plot,
         secondary_background_variable=secondary_background_variable,
+        language=language,
     )
 
     boxplots_selectors[1].on_change("value", background_variable_callback)
@@ -132,6 +136,7 @@ def create_boxplots(data, variable_mappings):
         selection_menus=selection_menus,
         setup_plot=setup_plot,
         secondary_background_variable=secondary_background_variable,
+        language=language,
     )
 
     boxplots_selectors[2].on_change("value", sample_callback)
@@ -151,6 +156,7 @@ def update_outcome_variable(
     selection_menus,
     setup_plot,
     secondary_background_variable,
+    language,
 ):
     bg_var_1 = nice_name_to_background[selection_menus[1].value]
     sample = nice_name_to_sample_cat[selection_menus[2].value]
@@ -160,7 +166,8 @@ def update_outcome_variable(
                     bg_var_1=bg_var_1,
                     bg_var_2=secondary_background_variable,
                     outcome=outcome,
-                    sample=sample
+                    sample=sample,
+                    language=language
                 )
     boxplots_page.children[3] = new_boxplot
     selection_menus[0].value = new
@@ -178,6 +185,7 @@ def update_background_variable(
     selection_menus,
     setup_plot,
     secondary_background_variable,
+    language,
 ):
     bg_var_1 = nice_name_to_background[new]
     sample = nice_name_to_sample_cat[selection_menus[2].value]
@@ -187,7 +195,8 @@ def update_background_variable(
                     bg_var_1=bg_var_1,
                     bg_var_2=secondary_background_variable,
                     outcome=outcome,
-                    sample=sample
+                    sample=sample,
+                    language=language
                 )
     boxplots_page.children[3] = new_boxplot
     selection_menus[1].value = new
@@ -204,6 +213,7 @@ def update_sample(
     selection_menus,
     setup_plot,
     secondary_background_variable,
+    language,
 ):
     bg_var_1 = nice_name_to_background[selection_menus[1].value]
     sample = nice_name_to_sample_cat[new]
@@ -213,7 +223,8 @@ def update_sample(
                     bg_var_1=bg_var_1,
                     bg_var_2=secondary_background_variable,
                     outcome=outcome,
-                    sample=sample
+                    sample=sample,
+                    language=language
                 )
     boxplots_page.children[3] = new_boxplot
     selection_menus[2].value = new

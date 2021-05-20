@@ -60,6 +60,7 @@ def assemble_dashboard_components(
     boxplots_page = create_boxplots(
         data=boxplots_data,
         variable_mappings=boxplots_mapping["variable_mappings"],
+        language=shared_data["language"],
     )
 
     if language == "german":

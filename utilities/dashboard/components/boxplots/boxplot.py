@@ -187,7 +187,7 @@ def process_data(data, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names):
     return tot_res
 
 
-def _apply_styling(p):
+def _apply_styling(p, language):
 
     # grid
     p.xgrid.grid_line_color = None
@@ -195,7 +195,10 @@ def _apply_styling(p):
     p.outline_line_color = None
 
     # title
-    p.title.text = "Childcare hours: mother's - father's"
+    if language == "english":
+        p.title.text = "Childcare hours: mother's - father's"
+    elif language == "german":
+        p.title.text = "Kinderbetreuungstunden: Mutter - Vaters"
     p.title.align = "center"
     p.title_location = "below"
     p.title.text_font_size = "15pt"
@@ -230,7 +233,7 @@ def _apply_styling(p):
     return p
 
 
-def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample):
+def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample, language):
     """Create boxplot.
 
     Args:
@@ -240,6 +243,7 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample):
         outcome (str): Outcome variable.
         sample (str): Either one of the categories of the variable dividing
                       dataset into samples or "all" for the whole dataset.
+        language (str): One of ["english", "german"].
 
     Returns:
         Bokeh.figure
@@ -305,7 +309,7 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample):
     r_lower = p.rect("lower", "x", 0.05, 0.3, line_color="black", source=source)
     r_upper = p.rect("upper", "x", 0.05, 0.3, line_color="black", source=source)
 
-    _apply_styling(p)
+    _apply_styling(p, language)
 
     # NOTE: legend items are reversed because of a bug, see https://github.com/holoviz/holoviews/issues/4799
     p.legend.orientation = "vertical"
