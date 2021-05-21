@@ -9,6 +9,8 @@ from utilities.dashboard.components.univariate_distributions import barplot
 from utilities.dashboard.components.univariate_distributions import distplot
 from utilities.dashboard.components.univariate_distributions import stacked_barplot
 from utilities.dashboard.config import HEADER_STYLE
+from utilities.dashboard.config import PLOT_WIDTH
+from utilities.dashboard.config import TITLE_STYLE
 from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_higher_level
 from utilities.dashboard.shared import create_caption_for_variable_group
 
@@ -100,8 +102,18 @@ def create_univariate_distributions(
     plot_caption = create_caption(group=group)
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=HEADER_STYLE)
 
+    title = Div(
+        text=plot_data["title"], style=TITLE_STYLE, margin=(10, 0, 10, 0), width=PLOT_WIDTH
+    )
+    plot_intro = Div(
+        text=plot_data["plot_intro"],
+        margin=(10, 0, 10, 0),
+        style={"text-align": "justify"},
+        width=PLOT_WIDTH,
+    )
+
     plot_page = Column(
-        # plot_title, plot_intro,
+        title, plot_intro,
         Row(*plot_selectors),
         plot,
         plot_caption,

@@ -10,7 +10,7 @@ wie sehr sind sie von den Einschränkungen betroffen?
 <br> <br>
 
 Um sich die Verteilung der gegebenen Antworten im Detail anzusehen,
-wählen Sie einen der Reiter "Karten" oder "Unterschiede zw. Gruppen"  aus.
+wählen Sie einen der Reiter "Unterschiede zw. Gruppen"  aus.
 Dort können Sie einen übergeordneten Fragenbereich, ein Thema und ein Fragestichwort auswählen,
 das sie interessiert.
 Bewegen sie die Maus über die Karte oder graphische Darstellung, um mehr zu erfahren.

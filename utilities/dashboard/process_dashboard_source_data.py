@@ -27,19 +27,11 @@ from utilities.dashboard.liss.data_functions import prepare_liss_data
     prompt="Path to the output directory",
     help='Path to the output directory (e.g. "bld").',
 )
-@click.option(
-    "--path_to_regions",
-    prompt="Path to regions (press ENTER to use mock regions)",
-    default="",
-    help="Path to regions identifiers (geojson file). If not passed, mock regions will be used.",
-)
-def process_dashboard_source_data(lang, data_path, out_dir, path_to_regions):
+def process_dashboard_source_data(lang, data_path, out_dir):
     """Convert datasets to dictionaries that will be used by the dashboard
     components.
 
     """
-    if path_to_regions == "":
-        path_to_regions = None
     if "liss" in data_path:
         data_name = "liss"
     else:
@@ -65,7 +57,7 @@ def process_dashboard_source_data(lang, data_path, out_dir, path_to_regions):
             run_charts_desc = pd.read_csv(
                 dashboard_path / data_name / "run_charts_description.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
             kwargs = {
                 "data": raw_data,
@@ -75,24 +67,24 @@ def process_dashboard_source_data(lang, data_path, out_dir, path_to_regions):
             }
 
         elif suffix == "single":
-            data = prepare_liss_data(raw_data, lang, path_to_regions)
+            data = prepare_liss_data(raw_data, lang)
 
             raw_group_info = pd.read_csv(
                 dashboard_path / data_name / "group_info.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
             group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
 
             raw_desc = pd.read_csv(
                 dashboard_path / data_name / "data_description.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
             bg_desc = pd.read_csv(
                 dashboard_path / data_name / "background_variables.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
 
             desc = create_description_table(

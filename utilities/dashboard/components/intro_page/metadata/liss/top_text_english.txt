@@ -15,14 +15,15 @@ How much have the new regulations affected their ability to work and how do they
 
 <br> <br>
 
-You can explore the answers in two different ways. Firstly, there is a tab with maps,
-where you can see how different regions of the Netherlands answered these questions.
-
-If you are more interested in the behavior of different groups, such as whether the elderly
+You can explore the answers in different ways. 
+If you are interested in the behavior of different groups, such as whether the elderly
 practice more social distancing, you can go to the Group Differences tab.
+If you are interested in working hour changes among different groups, such as whether 
+women need to decrease their working hours compared to their men, you can go to the 
+Labor Supply tab. 
 In each you can choose different topics and subtopics that interest you.
 To get additional information on the question and answers,
-hover your mouse over the map or plot.
+hover your mouse over the plot or the dropdown menu.
 
 <br> <br>
 

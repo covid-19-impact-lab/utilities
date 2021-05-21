@@ -1,5 +1,4 @@
 from utilities.dashboard.components.intro_page.create_data import create_intro_page_data
-from utilities.dashboard.components.maps.create_data import create_maps_data
 from utilities.dashboard.components.run_charts.create_data import create_run_charts_data
 from utilities.dashboard.components.univariate_distributions.create_data import (
     create_univariate_distributions_data,
@@ -21,14 +20,14 @@ def create_dashboard_data(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of variables displayed in the maps
-            and univariate distributions dashboard tabs. Default is None.
+        data_desc (pd.DataFrame): Description of variables displayed in the
+            univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
-        data_name (str): "liss" or "gesis".
-        language (str): One of ["english", "german", "dutch"].
+            univariate distributions dashboard tabs. Default is None.
+        data_name (str): "liss".
+        language (str): One of ["english", "german"].
 
     Returns:
         dict: Dictionary whose entries depend on the pd.DataFrame(s) passed.
@@ -49,15 +48,7 @@ def create_dashboard_data(
         groups = _get_groups(group_info, language)
 
     if data_desc is not None:
-        maps_data = create_maps_data(
-            data=data,
-            variable_mappings=variable_mappings,
-            nice_names=variable_mappings["variable_to_nice_name"],
-            groups=groups,
-            language=language,
-            data_name=data_name,
-        )
-
+        
         univariate_distributions_data = create_univariate_distributions_data(
             data=data,
             variable_mappings=variable_mappings,
@@ -72,13 +63,13 @@ def create_dashboard_data(
         res["shared_data"] = shared_data
         res["intro_page_data"] = create_intro_page_data(language, data_name)
         res["univariate_distributions_data"] = univariate_distributions_data
-        res["maps_data"] = maps_data
 
     if run_charts_desc is not None:
         run_charts_data = create_run_charts_data(
             data=data,
             variable_mappings=variable_mappings,
             nice_names=variable_mappings["nice_names_run_charts"],
+            language=language,
         )
         res = {}
         res["mapping"] = shared_data
@@ -92,8 +83,8 @@ def _get_groups(group_info, language):
 
     Args:
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
-        language (str): One of ["english", "german", "dutch"].
+            univariate distributions dashboard tabs. Default is None.
+        language (str): One of ["english", "german"].
 
      Returns:
         list: List of groups.
@@ -112,14 +103,14 @@ def _create_shared_dashboad_data(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of variables displayed in the maps
-            and univariate distributions dashboard tabs. Default is None.
+        data_desc (pd.DataFrame): Description of variables displayed in the
+            univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
-        language (str): One of ["english", "german", "dutch"].
-        data_name (str): "liss" or "gesis".
+            univariate distributions dashboard tabs. Default is None.
+        language (str): One of ["english", "german"].
+        data_name (str): "liss".
 
     Returns:
         dict: Dictionary with the following entries:

@@ -11,7 +11,6 @@ from bokeh.models import Tabs
 from bokeh.plotting import curdoc
 
 from utilities.dashboard.components.intro_page.create_component import create_intro_page
-from utilities.dashboard.components.maps.create_component import create_maps
 from utilities.dashboard.components.run_charts.create_component import create_run_charts
 from utilities.dashboard.components.univariate_distributions.create_component import (
     create_univariate_distributions,
@@ -21,7 +20,6 @@ from utilities.dashboard.components.univariate_distributions.create_component im
 def assemble_dashboard_components(
     intro_page_data,
     univariate_distributions_data,
-    maps_data,
     shared_data,
     run_charts_data,
     run_charts_mapping,
@@ -32,8 +30,7 @@ def assemble_dashboard_components(
         intro_page_data (dict): Data to generate Introduction tab.
         univariate_distributions_data (dict): Data to generate Group Differences
             tab.
-        maps_data (dict): Data to generate Maps tab.
-        shared_data (dict): Metadata shared between Maps and Group Differences tab.
+        shared_data (dict): Metadata of Group Differences tab.
         run_charts_data (dict): Data for Labor Supply tab.
         run_charts_mapping (dict): Metadata for Labor Supply tab.
 
@@ -44,12 +41,6 @@ def assemble_dashboard_components(
 
     intro_page = create_intro_page(**intro_page_data, language=shared_data["language"])
 
-    map_page = create_maps(
-        maps_data=maps_data,
-        menu_labels=shared_data["menu_labels"],
-        variable_mappings=shared_data["variable_mappings"],
-    )
-
     univariate_distributions_page = create_univariate_distributions(
         **univariate_distributions_data,
         menu_labels=shared_data["menu_labels"],
@@ -59,24 +50,23 @@ def assemble_dashboard_components(
     run_charts_page = create_run_charts(
         data=run_charts_data,
         variable_mappings=run_charts_mapping["variable_mappings"],
+        language=language
     )
 
     if language == "german":
         tab_names = [
             "Einleitung",
-            "Karten",
             "Unterschiede zw. Gruppen",
-            "Arbeitskräfteangebot",
+            "Arbeitsangebot",
         ]
     elif language == "english":
-        tab_names = ["Introduction", "Maps", "Group Differences", "Labor Supply"]
+        tab_names = ["Introduction", "Group Differences", "Labor Supply"]
 
     page = Tabs(
         tabs=[
             Panel(child=intro_page, title=tab_names[0]),
-            Panel(child=map_page, title=tab_names[1]),
-            Panel(child=univariate_distributions_page, title=tab_names[2]),
-            Panel(child=run_charts_page, title=tab_names[3]),
+            Panel(child=univariate_distributions_page, title=tab_names[1]),
+            Panel(child=run_charts_page, title=tab_names[2]),
         ]
     )
     return page
@@ -95,7 +85,6 @@ kwargs = {
     "univariate_distributions_data": dashboard_data_shared[
         "univariate_distributions_data"
     ],
-    "maps_data": dashboard_data_shared["maps_data"],
     "shared_data": dashboard_data_shared["shared_data"],
     "run_charts_data": dashboard_data_waves["run_charts_data"],
     "run_charts_mapping": dashboard_data_waves["mapping"],
