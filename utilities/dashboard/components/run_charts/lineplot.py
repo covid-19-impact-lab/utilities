@@ -22,7 +22,7 @@ from utilities.colors import get_colors
 from utilities.colors import plot_colors
 
 
-def prepare_data(data, period, variables, bg_vars, nice_names):
+def prepare_data(data, period, variables, bg_vars, nice_names, language):
     """Prepare the run chart data.
 
     Args:
@@ -34,6 +34,7 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
         bg_vars (list): List of background variables by which the sample can be
             splitted.
         nice_names (dict): Dictionary mapping variables to nice names.
+        language (string): german or english
 
     Returns:
         dict: A dictionary that contains all the possible lineplot points.
@@ -57,7 +58,12 @@ def prepare_data(data, period, variables, bg_vars, nice_names):
         periods = sorted(data[period].unique())
         periods = [pd.to_datetime(period) for period in periods]
         periods = [period.strftime("%b %Y") for period in periods]
-        periods[0] = "Pre-CoVid 19"
+        if language != "german":
+            periods[0] = "Pre-CoVid 19"
+        else:
+            periods[0] = "Vor-CoVid 19"
+            periods[1] = "März 2020"
+            periods[3] = "Mai 2020"
         res["data"]["period"] = periods
 
         # add selectors to the result dictionary
@@ -154,6 +160,7 @@ def setup_plot(
     variable,
     bg_var,
     nice_names_dict,
+    language,
 ):
     """Create the basic plot.
 
@@ -167,6 +174,7 @@ def setup_plot(
         variable (str): Name of the variable that will be shown intially.
         bg_var (str): Name of the initially selected background variable.
         nice_names_dict (dict): Dictionary mapping variables to nice names.
+        language (string): german or english
 
     Returns:
         bokeh.figure: Basic plot.
@@ -200,7 +208,7 @@ def setup_plot(
                 line_width=3,
             )
 
-            _add_HoverTool(fig, r, col, nice_names_dict)
+            _add_HoverTool(fig, r, col, nice_names_dict, language)
 
     _apply_styling(fig)
 
@@ -209,16 +217,24 @@ def setup_plot(
     return fig
 
 
-def _add_HoverTool(p, renderers, col, nice_names_dict):
+def _add_HoverTool(p, renderers, col, nice_names_dict, language):
     """Add HoverTool to main plot."""
     bg_var_name = col[-1]
     var_name = col[0]
 
-    TOOLTIPS = [
-        (nice_names_dict.get(var_name), "@y"),
-        ("Date of survey", "@x"),
-        (nice_names_dict.get(bg_var_name), "@cat"),
-    ]
+    if language == "german":
+        TOOLTIPS = [
+            (nice_names_dict.get(var_name), "@y"),
+            ("Datum der Umfrage", "@x"),
+            (nice_names_dict.get(bg_var_name), "@cat"),
+        ]
+        
+    else: 
+        TOOLTIPS = [
+            (nice_names_dict.get(var_name), "@y"),
+            ("Date of survey", "@x"),
+            (nice_names_dict.get(bg_var_name), "@cat"),
+        ]
 
     kwargs = {"tooltips": TOOLTIPS[:-1]} if col[1] is None else {"tooltips": TOOLTIPS}
 

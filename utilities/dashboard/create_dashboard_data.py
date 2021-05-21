@@ -22,8 +22,8 @@ def create_dashboard_data(
 
     Args:
         data (pd.DataFrame): The empirical dataset.
-        data_desc (pd.DataFrame): Description of variables displayed in the maps
-            and univariate distributions dashboard tabs. Default is None.
+        data_desc (pd.DataFrame): Description of variables displayed in the
+            univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
         boxplots_desc (pd.DataFrame): Description of variables displayed in
@@ -53,6 +53,7 @@ def create_dashboard_data(
         groups = _get_groups(group_info, language)
 
     if data_desc is not None:
+
         univariate_distributions_data = create_univariate_distributions_data(
             data=data,
             variable_mappings=variable_mappings,
@@ -73,6 +74,7 @@ def create_dashboard_data(
             data=data,
             variable_mappings=variable_mappings,
             nice_names=variable_mappings["nice_names_run_charts"],
+            language=language,
         )
         res = {}
         res["mapping"] = shared_data

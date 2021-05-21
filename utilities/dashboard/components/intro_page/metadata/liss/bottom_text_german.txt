@@ -1,3 +1,17 @@
+Die Corona Pandemie in den Niederlanden hat die Regierung dazu veranlasst, das öffentliche Leben einzuschränken, um die Ausbreitung des Coronavirus zu bremsen.
+
+<br><br>
+Mitte März, alle Bildungseinrichtungen, Restaurants, Cafés, Bars und viele andere Geschäfte mit persönlichen Kontakten wurden geschlossen.
+<br>
+Ab Mai, die Einschränkungen wurden nach und nach gelockert. Kindertagesstätten und Grundschulen und Geschäfte wie Friseure durften Mitte März wieder öffnen.
+<br>
+Weiterführende Schulen haben seit Anfang Juni wieder geöffnet und auch Restaurants, Cafés und Kinos konnten mit beschränkten Kapazitäten wieder Gäste empfangen.
+<br>
+Von Juni bis September lief das soziale und wirtschaftliche Leben in großen Teilen wieder normal, abgesehen von Verboten für größere Innenveranstaltungen, Maskenpflicht im öffenltichen Nahverkehr und Abstandsregeln.
+
+<br><br>
+<i>Sehen Sie sich Unterschiede in Arbeitszeiten nach sozio-ökonomischem Status und Jobeigenschaften in verschiedenen Phasen der Pandemie an. <b> Klicken und ziehen Sie, </b> um Linien in die Mitte der Graphik zu bewegen. <b>Halten Sie die Maus über die Linien</b> um mehr Informationen angezeigt zu bekommen.</i>
+
 Nachdem in den Niederlanden Mitte März 2020 Einschränkungen in Kraft getreten sind, hat sich die Anzahl der geleisteten Arbeitszeiten um 12% reduziert, auch wenn die Arbeitslosigkeit nur leicht gestiegen ist.
 Während des Lockdowns sind die Arbeitszeiten weiter gefallen - auf ein Minimum von 82% der geleisteten vor-Pandemie Stunden im Mai.
 Die Arbeitszeiten sind wieder gestiegen als Lockerungen beschlossen wurden, aber die Volkswirtschaft hat sich nicht völlig erholt.

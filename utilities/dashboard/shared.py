@@ -59,10 +59,10 @@ def create_general_variable_mappings(
         data (pd.DataFrame): The empirical dataset.
         language (str): One of ["english", "german"]
         data_name (str): "liss"
-        data_desc (pd.DataFrame): Description of variables displayed in the maps
-            and univariate distributions dashboard tabs. Default is None.
+        data_desc (pd.DataFrame): Description of variables displayed in the
+        univariate distributions and labour supply dashboard tabs. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
-            maps and univariate distributions dashboard tabs. Default is None.
+            univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
         boxplots_desc (pd.DataFrame): Description of variables displayed in
@@ -90,7 +90,7 @@ def create_general_variable_mappings(
     res = {}
 
     if group_info is not None:
-        # information on groups for maps and distribution plots
+        # information on groups for distribution plots
         raw_groups = group_info[f"group_{language}"].unique().tolist()  # noqa
         raw_topics = group_info[f"topic_{language}"].unique().tolist()  # noqa
         res["topics"] = [
@@ -109,7 +109,7 @@ def create_general_variable_mappings(
         ].to_dict()
 
     if data_desc is not None:
-        # description of data for maps and distribution plots
+        # description of data for distribution plots
         res["group_to_variables"] = _dict_of_uniques_from_df(
             data_desc, f"group_{language}", "new_name"
         )

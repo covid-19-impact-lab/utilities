@@ -1,10 +1,10 @@
 How to update the dashboard data
 ================================
 
-Maps & Group Differences
+Group Differences
 ------------------------
 
-Currently, the Maps and Group Differences Tabs rely on the same data source,
+Currently, the Group Differences Tabs rely on the same data source,
 therefore they will be updated together. To update these Tabs you need to:
 
 - Include the new variables/remove the old variables from `group_info.csv` and

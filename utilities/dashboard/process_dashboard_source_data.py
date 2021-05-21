@@ -58,7 +58,7 @@ def process_dashboard_source_data(lang, data_path, out_dir):
             run_charts_desc = pd.read_csv(
                 dashboard_path / data_name / "run_charts_description.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
             kwargs = {
                 "data": raw_data,
@@ -86,19 +86,19 @@ def process_dashboard_source_data(lang, data_path, out_dir):
             raw_group_info = pd.read_csv(
                 dashboard_path / data_name / "group_info.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
             group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
 
             raw_desc = pd.read_csv(
                 dashboard_path / data_name / "data_description.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
             bg_desc = pd.read_csv(
                 dashboard_path / data_name / "background_variables.csv",
                 sep=";",
-                encoding="latin3",
+                encoding="utf8",
             )
 
             desc = create_description_table(

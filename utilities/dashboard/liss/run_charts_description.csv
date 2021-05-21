@@ -1,30 +1,30 @@
 new_name;type;nice_name_english;nice_name_german
-None;Background Variable;Nothing;Nothing
-gender;Background Variable;Gender;Gender
-gender_female;Category;Female;Female
-gender_male;Category;Male;Male
-edu;Background Variable;Education;Education
-edu_lower_secondary_and_lower;Category;Lower secondary and lower;Lower secondary and lower
-edu_upper_secondary;Category;Upper secondary;Upper secondary
-edu_tertiary;Category;Tertiary;Tertiary
-work_perc_home_cat;Background Variable;Degree of telecommutability;Degree of telecommutability
-work_perc_home_cat_up to 10%;Category;Up to 10%;Up to 10%
-work_perc_home_cat_10-90%;Category;Between 10% and 90%;Between 10% and 90%
-work_perc_home_cat_more than 90%;Category;More than 90%;More than 90%
-gross_income_groups;Background Variable;Gross Income;Gross Income
-gross_income_groups_above 3500;Category;Above EUR 3500;Above EUR 3500
-gross_income_groups_bet. 2500 and 3500;Category;Between EUR 2500 and EUR 3500;Between EUR 2500 and EUR 3500
-gross_income_groups_below 2500;Category;Below EUR 2500;Below EUR 2500
-essential_worker_w2;Background Variable;Working status;Working status
-essential_worker_w2_essential_worker;Category;Essential worker;Essential worker
-essential_worker_w2_not_essential_worker;Category;Not an essential worker;Not an essential worker
-parttime_baseline_covid;Background Variable;Working time;Working time
-parttime_baseline_covid_parttime;Category;Working part-time;Working part-time
-parttime_baseline_covid_not_parttime;Category;Not working part-time;Not working part-time
-self_employed_baseline;Background Variable;Employment status;Employment status
-self_employed_baseline_self_employed;Category;Self-employed;Self-employed
-self_employed_baseline_employee;Category;Employee;Employee
-hours_total_uncond;Outcome Variable;Working hours;Working hours
-hours_home_uncond;Outcome Variable;Hours worked from home;Hours worked from home
-abs_change_hours_home_uncond;Outcome Variable;Change in hours worked from home;Change in hours worked from home
-abs_change_hours_uncond;Outcome Variable;Change in working hours;Change in working hours
+None;Background Variable;Nothing;Nichts
+gender;Background Variable;Gender;Geschlect
+gender_female;Category;Female;Weiblich
+gender_male;Category;Male;Männlich
+edu;Background Variable;Education;Ausbildung
+edu_lower_secondary_and_lower;Category;Lower secondary and lower;Sekundarstufe I und II
+edu_upper_secondary;Category;Upper secondary;Obere Sekundarstufe
+edu_tertiary;Category;Tertiary;Tertiärbereich
+work_perc_home_cat;Background Variable;Degree of telecommutability;Grad der Telearbeitbarkeit
+work_perc_home_cat_up to 10%;Category;Up to 10%;Bis zu 10%
+work_perc_home_cat_10-90%;Category;Between 10% and 90%;Zwischen 10% und 90%
+work_perc_home_cat_more than 90%;Category;More than 90%;Mehr als 90%
+gross_income_groups;Background Variable;Gross Income;Bruttoeinkommen
+gross_income_groups_above 3500;Category;Above EUR 3500;Über EUR 3500
+gross_income_groups_bet. 2500 and 3500;Category;Between EUR 2500 and EUR 3500;Zwischen EUR 2500 and EUR 3500
+gross_income_groups_below 2500;Category;Below EUR 2500;Unter EUR 2500
+essential_worker_w2;Background Variable;Working status;Arbeitsstatus
+essential_worker_w2_essential_worker;Category;Essential worker;Wesentlicher Arbeitnehmer
+essential_worker_w2_not_essential_worker;Category;Not an essential worker;Nicht wesentlicher Arbeitnehmer
+parttime_baseline_covid;Background Variable;Working time;Arbeitszeit
+parttime_baseline_covid_parttime;Category;Working part-time;Teilzeitarbeit
+parttime_baseline_covid_not_parttime;Category;Not working part-time;Nicht teilzeitbeschäftigt
+self_employed_baseline;Background Variable;Employment status;Status der Beschäftigung
+self_employed_baseline_self_employed;Category;Self-employed;Selbstständig
+self_employed_baseline_employee;Category;Employee;Angestellter
+hours_total_uncond;Outcome Variable;Working hours;Arbeitszeiten
+hours_home_uncond;Outcome Variable;Hours worked from home;Von zu Hause aus geleistete Arbeitsstunden
+abs_change_hours_home_uncond;Outcome Variable;Change in hours worked from home;Veränderung der von zu Hause aus geleisteten Arbeitsstunden
+abs_change_hours_uncond;Outcome Variable;Change in working hours;Veränderung der Arbeitsstunden

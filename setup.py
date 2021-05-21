@@ -6,7 +6,7 @@ print(p)
 
 setup(
     name="utilities",
-    version="0.4.0",
+    version="0.4.1",
     description=(
         "Package with code that has to be shared across repos of covid-19-impact-lab"
     ),
