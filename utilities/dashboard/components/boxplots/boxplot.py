@@ -1,6 +1,7 @@
 import sys
 import io
 import textwrap
+import copy
 import numpy as np
 import pandas as pd
 from bokeh.models import ColumnDataSource, FactorRange
@@ -33,41 +34,43 @@ def _preprocess_data(data, bg_vars_1, bg_var_2, outcomes, sample_var):
         pd.DataFrame: Formatted dataset.
     """
 
-    data.reset_index(level=["month", "child_id"], inplace=True)
+    data_copy = copy.deepcopy(data)
 
-    data = data[(data["single_parent"] == 0)]
+    data_copy.reset_index(level=["month", "child_id"], inplace=True)
 
-    data["covid"] = np.select(
-            condlist=[data["month"] <= "2020-02-29", data["month"] > "2020-02-29"],
+    data_copy = data_copy[(data_copy["single_parent"] == 0)]
+
+    data_copy["covid"] = np.select(
+            condlist=[data_copy["month"] <= "2020-02-29", data_copy["month"] > "2020-02-29"],
             choicelist=["pre", "post"],
              default=np.nan
              )
 
-    data["work_perc_home_cat"] = np.select(
-        condlist=[data["gender"] == "female", data["gender"] == "male"],
-        choicelist=[data["work_perc_home_cat_mother"], data["work_perc_home_cat_father"]],
+    data_copy["work_perc_home_cat"] = np.select(
+        condlist=[data_copy["gender"] == "female", data_copy["gender"] == "male"],
+        choicelist=[data_copy["work_perc_home_cat_mother"], data_copy["work_perc_home_cat_father"]],
         default=np.nan,
     )
 
-    data["work_status_family"] = np.select(
+    data_copy["work_status_family"] = np.select(
         condlist=[
-        (np.logical_or(data["labor_force_coarse_father"] == "full-time", data["labor_force_coarse_father"] == "part-time") &
-        np.logical_or(data["labor_force_coarse_mother"] == "full-time", data["labor_force_coarse_mother"] == "part-time")),
-        (np.logical_or(data["labor_force_coarse_father"] == "full-time", data["labor_force_coarse_father"] == "part-time") &
-        (data["labor_force_coarse_mother"] == "not working"))],
+        (np.logical_or(data_copy["labor_force_coarse_father"] == "full-time", data_copy["labor_force_coarse_father"] == "part-time") &
+        np.logical_or(data_copy["labor_force_coarse_mother"] == "full-time", data_copy["labor_force_coarse_mother"] == "part-time")),
+        (np.logical_or(data_copy["labor_force_coarse_father"] == "full-time", data_copy["labor_force_coarse_father"] == "part-time") &
+        (data_copy["labor_force_coarse_mother"] == "not working"))],
         choicelist=["both work", "father works"],
         default=np.nan,
     )
 
-    data["essential_worker_w2"] = data['essential_worker_w2'].replace({1.0: 'yes', 0.0: 'no'})
-    data["net_income_2y_equiv_q3"] = data['net_income_2y_equiv_q3'].replace({1.0: 'first', 2.0: 'second', 3.0: 'third'})
+    data_copy["essential_worker_w2"] = data_copy['essential_worker_w2'].replace({1.0: 'yes', 0.0: 'no'})
+    data_copy["net_income_2y_equiv_q3"] = data_copy['net_income_2y_equiv_q3'].replace({1.0: 'first', 2.0: 'second', 3.0: 'third'})
 
 
-    data["relative_cc_gap"] = data["cc_gap"] / (data["hours_cc_female"] + data["hours_cc_male"])
+    data_copy["relative_cc_gap"] = data_copy["cc_gap"] / (data_copy["hours_cc_female"] + data_copy["hours_cc_male"])
 
-    data = data[bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]]
+    data_copy = data_copy[bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]]
 
-    return data
+    return data_copy
 
 
 def compute_quantities(data, bg_var_1, bg_var_2, outcome):
