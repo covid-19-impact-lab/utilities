@@ -20,7 +20,7 @@ from utilities.dashboard.liss.data_functions import prepare_liss_data
 @click.option(
     "--data_path",
     prompt="Path to dataset",
-    help="Path to datasets folder, which must contain name of dataset (LISS or GESIS).",
+    help="Path to datasets folder, which must contain name of dataset (LISS).",
 )
 @click.option(
     "--out_dir",
@@ -39,7 +39,7 @@ def process_dashboard_source_data(lang, data_path, out_dir):
 
     # load data
     if data_name == "liss":
-        raw_data_single = pd.read_pickle(f"{data_path}/covid_data_2020_03.pickle")
+        raw_data_single = pd.read_pickle(f"{data_path}/covid_data_2020_04.pickle")
         raw_data_waves = pd.read_pickle(f"{data_path}/liss_all_waves_data.pickle")
         bg_data = pd.read_pickle(f"{data_path}/background_data_merged.pickle")
 

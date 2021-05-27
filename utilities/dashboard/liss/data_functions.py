@@ -15,7 +15,7 @@ def prepare_liss_data(data, language):
     data = _fix_numeric(data)
     data = _convert_floats_to_booleans(data)
     data = _add_variables(data)
-    data = _bin_variables(data)
+#    data = _bin_variables(data)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
         with open(cat_path, "r") as f:
@@ -120,37 +120,41 @@ def _fix_categories(data):
         }
     )
 
-    data["trust_gov"] = data["trust_gov"].cat.rename_categories(
-        {
-            "1 no confidence at all": "1 <br> none at all",
-            "5 a lot of confidence": "5 <br> a lot",
-        }
-    )
+    #data["trust_gov"] = data["trust_gov"].cat.rename_categories(
+    #    {
+    #        "1 no confidence at all": "1 <br> none at all",
+    #        "5 a lot of confidence": "5 <br> a lot",
+    #    }
+    #)
 
     return data
 
 
 def _fix_numeric(data):
-    data = data.copy()
-    convert_to_float = [
-        "p_2m_employee_keep",
-        "p_2m_employee_keep_gov",
-        "p_2m_employee_lost",
-        "p_2m_employee_other",
-        "eur_1k_basic_needs",
-        "eur_1k_expenses",
-        "eur_1k_durables",
-        "eur_1k_savings",
-        "eur_1k_support_others",
-        "p_3m_selfempl_normal",
-        "p_3m_selfempl_fewer",
-        "p_3m_selfempl_helped_by_gov",
-        "p_3m_selfempl_shutdown",
-        "p_3m_selfempl_other",
-    ]
-    for var in convert_to_float:
-        data[var] = data[var].astype(float)
-    return data
+     data = data.copy()
+     convert_to_float = [
+         "p_2m_infected",
+         "p_2m_acquaintance_infected",
+         "p_2m_hospital_if_infect_self",
+         "p_2m_infected_and_pass_on",
+#         "p_2m_employee_keep",
+#         "p_2m_employee_keep_gov",
+#         "p_2m_employee_lost",
+#         "p_2m_employee_other",
+#         "eur_1k_basic_needs",
+#         "eur_1k_expenses",
+#         "eur_1k_durables",
+#         "eur_1k_savings",
+#         "eur_1k_support_others",
+#         "p_3m_selfempl_normal",
+#         "p_3m_selfempl_fewer",
+#         "p_3m_selfempl_helped_by_gov",
+#         "p_3m_selfempl_shutdown",
+#         "p_3m_selfempl_other",
+     ]
+     for var in convert_to_float:
+         data[var] = data[var].astype(float)
+     return data
 
 
 def _bin_variables(data):
@@ -164,27 +168,27 @@ def _bin_variables(data):
         "p_3m_selfempl_other",
     ]
 
-    empl_emp_vars = [
-        "p_2m_employee_keep",
-        "p_2m_employee_keep_gov",
-        "p_2m_employee_lost",
-        "p_2m_employee_other",
-    ]
+    # empl_emp_vars = [
+    #     "p_2m_employee_keep",
+    #     "p_2m_employee_keep_gov",
+    #     "p_2m_employee_lost",
+    #     "p_2m_employee_other",
+    # ]
 
-    for var in self_empl_emp_vars + empl_emp_vars:
-        # cuts = [-1, 0.5, 50.0, 99, 110]
-        # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
-        cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
-        data[var + "_binned"] = pd.cut(data[var], cuts)
-        nice_cats = {}
-        for intv in data[var + "_binned"].cat.categories:
-            if intv.right - intv.left < 1:
-                nice_cats[intv] = f"{int(intv.right)}%"
-            else:
-                nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
-        data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
+    # for var in self_empl_emp_vars + empl_emp_vars:
+    #     # cuts = [-1, 0.5, 50.0, 99, 110]
+    #     # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
+    #     cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
+    #     data[var + "_binned"] = pd.cut(data[var], cuts)
+    #     nice_cats = {}
+    #     for intv in data[var + "_binned"].cat.categories:
+    #         if intv.right - intv.left < 1:
+    #             nice_cats[intv] = f"{int(intv.right)}%"
+    #         else:
+    #             nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
+    #     data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
 
-    return data
+    # return data
 
 
 def _zero_plus_quartiles(data, var):
