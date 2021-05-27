@@ -27,4 +27,5 @@ dependencies:
     - blackcellmagic
     - bump2version
     - pre-commit
-
+    - fastparquet==0.6.3
+    - pyarrow==4.0.0
