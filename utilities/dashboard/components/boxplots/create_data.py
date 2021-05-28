@@ -37,8 +37,13 @@ def create_boxplots_data(data, variable_mappings, nice_names, language):
     with open(metadata_path / f"bottom_text_{language}.txt", "r") as f:
         boxplots_data["bottom_text"] = f.read()
 
-    boxplots_data[
-        "title"
-    ] = "How Does the CoVid-19 Pandemic Affect Childcare?"
+    if language == "english":
+        boxplots_data[
+            "title"
+        ] = "How Does the CoVid-19 Pandemic Affect Childcare?"
+    elif language == "german":
+        boxplots_data[
+            "title"
+        ] = "Wie wirkt sich die CoVid-19-Pandemie auf die Kinderbetreuung aus?"
 
     return boxplots_data

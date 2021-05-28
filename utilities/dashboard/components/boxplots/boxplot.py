@@ -199,12 +199,13 @@ def _apply_styling(p, language):
 
     # title
     if language == "english":
-        p.title.text = "Childcare hours: mother's - father's"
+        p.title.text = "Difference between mother's and father's childcare hours"
     elif language == "german":
-        p.title.text = "Kinderbetreuungstunden: Mutter - Vaters"
+        p.title.text = "Unterschied zwischen den Kinderbetreuungszeiten von Mutter und Vater"
     p.title.align = "center"
     p.title_location = "below"
-    p.title.text_font_size = "15pt"
+    p.title.text_font_size = "12pt"
+    p.title.text_font_style = "normal"
 
     # y-axis
     p.yaxis.axis_line_color = None
@@ -286,7 +287,7 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample, language):
 
 
     # get palette
-    palette=get_colors("categorical", number=2)
+    palette=get_colors("categorical", number=2)*3
     palette.reverse()
 
 
@@ -309,8 +310,8 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample, language):
     r_box_2 = p.hbar("x", left="q50", right="q75", height=0.575, line_color="black", source=source, color=mapper)
 
     # whiskers (almost-0 height rectangles, simpler than segments)
-    r_lower = p.rect("lower", "x", 0.05, 0.3, line_color="black", source=source)
-    r_upper = p.rect("upper", "x", 0.05, 0.3, line_color="black", source=source)
+    r_lower = p.rect("lower", "x", 0.001, 0.3, line_color="black", source=source)
+    r_upper = p.rect("upper", "x", 0.001, 0.3, line_color="black", source=source)
 
     _apply_styling(p, language)
 
@@ -319,11 +320,11 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample, language):
     p.legend.location = "center_right"
 
     TOOLTIPS = [
-    ("Lower whisker", "@lower"),
-    ("25th quantile", "@q25"),
-    ("Median", "@q50"),
+    ("Maximum value", "@upper"),
     ("75th quantile", "@q75"),
-    ("Upper whisker", "@upper")
+    ("Median", "@q50"),
+    ("25th quantile", "@q25"),
+    ("Minimum value", "@lower")
     ]
 
     p.add_tools(
