@@ -152,8 +152,10 @@ def _fix_numeric(data):
 #         "p_3m_selfempl_shutdown",
 #         "p_3m_selfempl_other",
      ]
+     bins = [-np.inf, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90., 100.0]
+     labels = ['0-10%','10-20%','20-30%','30-40%', '40-50%','50-60%', '60-70%', '70-80%', '80-90%', '90-100%']
      for var in convert_to_float:
-         data[var] = data[var].astype(float)
+         data[var] = pd.cut(data[var], bins=bins, labels=labels)
      return data
 
 
