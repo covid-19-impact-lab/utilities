@@ -9,13 +9,16 @@ from pandas.api.types import is_categorical
 from pandas.api.types import is_float_dtype
 
 
-def prepare_liss_data(data, language):
+def prepare_liss_data(data, language, suffix=None):
     data = data.copy()
-    data = _fix_categories(data)
-    data = _fix_numeric(data)
+    data = _fix_categories(data, suffix)
+    data = _fix_numeric(data, suffix)
     data = _convert_floats_to_booleans(data)
     data = _add_variables(data)
-#    data = _bin_variables(data)
+    if suffix == "single_april":
+        pass
+    else:
+        data = _bin_variables(data)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
         with open(cat_path, "r") as f:
@@ -84,7 +87,7 @@ def _check_value_counts(var):
     return sorted(var.value_counts().index.tolist()) == [0.0, 1.0]
 
 
-def _fix_categories(data):
+def _fix_categories(data, suffix):
     data = data.copy()
 
     data["edu"] = data["edu"].cat.rename_categories(
@@ -120,42 +123,54 @@ def _fix_categories(data):
         }
     )
 
-    #data["trust_gov"] = data["trust_gov"].cat.rename_categories(
-    #    {
-    #        "1 no confidence at all": "1 <br> none at all",
-    #        "5 a lot of confidence": "5 <br> a lot",
-    #    }
-    #)
+    if suffix == "single_april":
+        pass
+
+    else:
+        data["trust_gov"] = data["trust_gov"].cat.rename_categories(
+           {
+               "1 no confidence at all": "1 <br> none at all",
+               "5 a lot of confidence": "5 <br> a lot",
+           }
+        )
 
     return data
 
 
-def _fix_numeric(data):
+def _fix_numeric(data, suffix):
      data = data.copy()
-     convert_to_float = [
-         "p_2m_infected",
-         "p_2m_acquaintance_infected",
-         "p_2m_hospital_if_infect_self",
-         "p_2m_infected_and_pass_on",
-#         "p_2m_employee_keep",
-#         "p_2m_employee_keep_gov",
-#         "p_2m_employee_lost",
-#         "p_2m_employee_other",
-#         "eur_1k_basic_needs",
-#         "eur_1k_expenses",
-#         "eur_1k_durables",
-#         "eur_1k_savings",
-#         "eur_1k_support_others",
-#         "p_3m_selfempl_normal",
-#         "p_3m_selfempl_fewer",
-#         "p_3m_selfempl_helped_by_gov",
-#         "p_3m_selfempl_shutdown",
-#         "p_3m_selfempl_other",
-     ]
-     bins = [-np.inf, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90., 100.0]
-     labels = ['0-10%','10-20%','20-30%','30-40%', '40-50%','50-60%', '60-70%', '70-80%', '80-90%', '90-100%']
-     for var in convert_to_float:
-         data[var] = pd.cut(data[var], bins=bins, labels=labels)
+     if suffix == "single_april":
+         convert_to_float = [
+             "p_2m_infected",
+             "p_2m_acquaintance_infected",
+             "p_2m_hospital_if_infect_self",
+             "p_2m_infected_and_pass_on",
+         ]
+         bins = [-np.inf, 20.0, 40.0, 60.0, 80.0, 100.0]
+         labels = ['0%-20%','20%-40%', '40%-60%', '60%-80%', '80%-100%']
+         for var in convert_to_float:
+             data[var] = pd.cut(data[var], bins=bins, labels=labels)
+
+     else:
+         convert_to_float = [
+        "p_2m_employee_keep",
+        "p_2m_employee_keep_gov",
+        "p_2m_employee_lost",
+        "p_2m_employee_other",
+        "eur_1k_basic_needs",
+        "eur_1k_expenses",
+        "eur_1k_durables",
+        "eur_1k_savings",
+        "eur_1k_support_others",
+        "p_3m_selfempl_normal",
+        "p_3m_selfempl_fewer",
+        "p_3m_selfempl_helped_by_gov",
+        "p_3m_selfempl_shutdown",
+        "p_3m_selfempl_other",
+        ]
+         for var in convert_to_float:
+            data[var] = data[var].astype(float)
+
      return data
 
 
@@ -170,27 +185,27 @@ def _bin_variables(data):
         "p_3m_selfempl_other",
     ]
 
-    # empl_emp_vars = [
-    #     "p_2m_employee_keep",
-    #     "p_2m_employee_keep_gov",
-    #     "p_2m_employee_lost",
-    #     "p_2m_employee_other",
-    # ]
+    empl_emp_vars = [
+        "p_2m_employee_keep",
+        "p_2m_employee_keep_gov",
+        "p_2m_employee_lost",
+        "p_2m_employee_other",
+    ]
 
-    # for var in self_empl_emp_vars + empl_emp_vars:
-    #     # cuts = [-1, 0.5, 50.0, 99, 110]
-    #     # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
-    #     cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
-    #     data[var + "_binned"] = pd.cut(data[var], cuts)
-    #     nice_cats = {}
-    #     for intv in data[var + "_binned"].cat.categories:
-    #         if intv.right - intv.left < 1:
-    #             nice_cats[intv] = f"{int(intv.right)}%"
-    #         else:
-    #             nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
-    #     data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
+    for var in self_empl_emp_vars + empl_emp_vars:
+        # cuts = [-1, 0.5, 50.0, 99, 110]
+        # cuts = [-0.2, 0.2, 49.8, 50.2, 99.8, 100.3]
+        cuts = [-0.2, 0.2, 10.2, 49.8, 50.2, 99.8, 100.3]
+        data[var + "_binned"] = pd.cut(data[var], cuts)
+        nice_cats = {}
+        for intv in data[var + "_binned"].cat.categories:
+            if intv.right - intv.left < 1:
+                nice_cats[intv] = f"{int(intv.right)}%"
+            else:
+                nice_cats[intv] = "{} to {}%".format(int(intv.left), int(intv.right))
+        data[var + "_binned"] = data[var + "_binned"].cat.rename_categories(nice_cats)
 
-    # return data
+    return data
 
 
 def _zero_plus_quartiles(data, var):
