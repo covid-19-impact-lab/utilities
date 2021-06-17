@@ -1,1 +1,11 @@
-top_text_english
+The closure of school and childcare facilities from mid-March to May 2020 led to an extra time burden on parents. 
+Parents had to take care of children while keeping with their normal working life. Here we illustrate how parents 
+divided this additional burden among each other according to their socio-demographic characteristics.
+
+<br> <br>
+The data was collected in April 2020 in the midst of the first wave of the pandemic. If survey participants had 
+a child in school or younger, they were asked how many hours they spent taking care of their child before the 
+closure of school and childcare facilities as well as in the last week before the survey. Participants were 
+additionally asked how many hours their partner -- if applicable took care of the children. Participants were 
+asked these questions about their youngest child in two age groups: children not yet in school, and children in 
+school age.

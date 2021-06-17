@@ -12,11 +12,14 @@ def create_intro_page_data(language, dataset_name):
         res["plot_intro"] = f.read()
     with open(metadata_path / f"bottom_text_{language}.txt", "r") as f:
         res["bottom_text"] = f.read()
+    with open(metadata_path / f"boxplot_text_{language}.txt", "r") as f:
+        res["boxplot_text"] = f.read()
 
     if language == "english":
         res["title"] = "Explore What People Believe and Do in Response to CoViD-19"
         res["groupby_title"] = "Group Differences"
         res["bottom_title"] = "Labour Supply"
+        res["boxplot_title"] = "Childcare"
     elif language == "german":
         res["title"] = (
             "Was denken die Menschen zur Corona-Pandemie, wie stark "
@@ -24,6 +27,7 @@ def create_intro_page_data(language, dataset_name):
         )
         res["groupby_title"] = "Unterschiede zwischen Gruppen"
         res["bottom_title"] = "Arbeitsangebot"
+        res["boxplot_title"] = "Kinderbetreuung"
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
     return res

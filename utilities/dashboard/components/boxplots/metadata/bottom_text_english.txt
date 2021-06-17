@@ -1,1 +1,9 @@
-bottom_text_english
+The graph displays the absolute difference in time spent with the youngest child between mothers and fathers for 
+two-parent opposing gender households split by different socio-demographic characteristics (<b>gender care gap</b>). 
+It shows that mothers on average carry more of the additional childcare burden, however, this is driven by mothers 
+working part-time or not working at all pre-pandemic. In households in which mothers worked full-time before the 
+pandemic, the gender care gap does not increase. Additionally, the ability of fathers to work from home also 
+cushions the effect of the closure of school and childcare facilities on the gender care gap.
+
+<br><br>
+<b>Citation</b>: Holler, R.; H.-M. von Gaudecker; L. Janys; B. Siflinger; C. Zimpelmann: Flexibility driven changes in the gender care gap during the CoVid-19 pandemic.
