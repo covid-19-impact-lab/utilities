@@ -141,6 +141,7 @@ def process_dashboard_source_data(lang, data_path, out_dir):
                 "group_info": group_info,
                 "language": lang,
                 "data_name": "liss",
+                "april_wave": "yes"
             }
 
         dashboard_data = create_dashboard_data(**kwargs)

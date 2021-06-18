@@ -15,6 +15,7 @@ def create_dashboard_data(
     group_info=None,
     run_charts_desc=None,
     kde_cutoff=7,
+    april_wave=None
 ):
     """Create a dict with all data needed to generate a dashboard component.
 
@@ -27,7 +28,9 @@ def create_dashboard_data(
         group_info (pd.DataFrame): Description of groups, as defined for
             univariate distributions dashboard tabs. Default is None.
         data_name (str): "liss".
-        language (str): One of ["english", "german"].
+        language (str): One of ["english", "german"]
+        april_wave (str): "yes" if the data is april wave data for the
+            univariate distributions: april dashboard tab. Default is None.
 
     Returns:
         dict: Dictionary whose entries depend on the pd.DataFrame(s) passed.
@@ -48,7 +51,7 @@ def create_dashboard_data(
         groups = _get_groups(group_info, language)
 
     if data_desc is not None:
-        
+
         univariate_distributions_data = create_univariate_distributions_data(
             data=data,
             variable_mappings=variable_mappings,
@@ -57,6 +60,7 @@ def create_dashboard_data(
             group_info=group_info,
             menu_labels=menu_labels,
             language=language,
+            april_wave=april_wave,
         )
 
         res = {}
