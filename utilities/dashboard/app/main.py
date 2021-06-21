@@ -67,12 +67,12 @@ def assemble_dashboard_components(
     if language == "german":
         tab_names = [
             "Einleitung",
-            "Unterschiede zw. Gruppen",
+            "Unterschiede zw. Gruppen: März",
             "Unterschiede zw. Gruppen: April",
             "Arbeitsangebot",
         ]
     elif language == "english":
-        tab_names = ["Introduction", "Group Differences", "Group Differences: April", "Labor Supply"]
+        tab_names = ["Introduction", "Group Differences: March", "Group Differences: April", "Labor Supply"]
 
     page = Tabs(
         tabs=[
