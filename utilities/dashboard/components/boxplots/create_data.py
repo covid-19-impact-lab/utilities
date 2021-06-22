@@ -31,10 +31,10 @@ def create_boxplots_data(data, variable_mappings, nice_names, language):
     )
 
     metadata_path = BOXPLOTS_DIR / "metadata"
-    with open(metadata_path / f"top_text_{language}.txt", "r") as f:
+    with open(metadata_path / f"top_text_{language}.txt", "r", encoding="utf-8") as f:
         boxplots_data["top_text"] = f.read()
 
-    with open(metadata_path / f"bottom_text_{language}.txt", "r") as f:
+    with open(metadata_path / f"bottom_text_{language}.txt", "r", encoding="utf-8") as f:
         boxplots_data["bottom_text"] = f.read()
 
     if language == "english":

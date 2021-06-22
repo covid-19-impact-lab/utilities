@@ -6,13 +6,13 @@ def create_intro_page_data(language, dataset_name):
     metadata_path = INTRO_PAGE_DIR / "metadata" / dataset_name
 
     res = {}
-    with open(metadata_path / f"top_text_{language}.txt", "r") as f:
+    with open(metadata_path / f"top_text_{language}.txt", "r", encoding="utf-8") as f:
         res["top_text"] = f.read()
-    with open(metadata_path / f"plot_intro_{language}.txt", "r") as f:
+    with open(metadata_path / f"plot_intro_{language}.txt", "r", encoding="utf-8") as f:
         res["plot_intro"] = f.read()
-    with open(metadata_path / f"bottom_text_{language}.txt", "r") as f:
+    with open(metadata_path / f"bottom_text_{language}.txt", "r", encoding="utf-8") as f:
         res["bottom_text"] = f.read()
-    with open(metadata_path / f"boxplot_text_{language}.txt", "r") as f:
+    with open(metadata_path / f"boxplot_text_{language}.txt", "r", encoding="utf-8") as f:
         res["boxplot_text"] = f.read()
 
     if language == "english":

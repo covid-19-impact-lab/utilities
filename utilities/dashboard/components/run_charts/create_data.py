@@ -30,21 +30,21 @@ def create_run_charts_data(data, variable_mappings, nice_names, language):
     # text for plot is processed separately
     metadata_path = RUN_CHARTS_DIR / "metadata"
     if language == "english":
-        with open(metadata_path / f"top_text_english.txt", "r") as f:
+        with open(metadata_path / f"top_text_english.txt", "r", encoding="utf-8") as f:
             run_charts_data["top_text"] = f.read()
 
-        with open(metadata_path / f"bottom_text_english.txt", "r") as f:
+        with open(metadata_path / f"bottom_text_english.txt", "r", encoding="utf-8") as f:
             run_charts_data["bottom_text"] = f.read()
 
         run_charts_data[
             "title"
         ] = "How Does the CoVid-19 Pandemic Affect Labor Market Outcomes?"
-    
+
     elif language == "german":
-        with open(metadata_path / f"top_text_german.txt", "r") as f:
+        with open(metadata_path / f"top_text_german.txt", "r", encoding="utf-8") as f:
             run_charts_data["top_text"] = f.read()
 
-        with open(metadata_path / f"bottom_text_german.txt", "r") as f:
+        with open(metadata_path / f"bottom_text_german.txt", "r", encoding="utf-8") as f:
             run_charts_data["bottom_text"] = f.read()
 
         run_charts_data[
