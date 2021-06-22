@@ -111,17 +111,31 @@ def _fix_categories(data, suffix):
         {"male": "men", "female": "women"}
     )
 
-    data["duration_restrictions_general"] = data[
+    if suffix == "single_april":
+        data["duration_restrictions_general"] = data[
         "duration_restrictions_general"
-    ].cat.rename_categories(
-        {
-            "btw. April 6 and 2 months": "April 6 to 2 months",
-            "btw. 2 and 4 months": "2 to 4 months",
-            "btw. 4 and 8 months": "4 to 8 months",
-            "btw. 8 and 12 months": "8 to 12 months",
-            "for more than 1 year": "more than 1 year",
-        }
-    )
+        ].cat.rename_categories(
+            {
+                "until April 28": "until April 28",
+                "btw. April 28 and 2 months": "April 28 to 2 months",
+                "btw. 2 and 4 months": "2 to 4 months",
+                "btw. 4 and 8 months": "4 to 8 months",
+                "btw. 8 and 12 months": "8 to 12 months",
+                "for more than 1 year": "more than 1 year",
+            }
+        )
+    else:
+        data["duration_restrictions_general"] = data[
+            "duration_restrictions_general"
+        ].cat.rename_categories(
+            {
+                "btw. April 6 and 2 months": "April 6 to 2 months",
+                "btw. 2 and 4 months": "2 to 4 months",
+                "btw. 4 and 8 months": "4 to 8 months",
+                "btw. 8 and 12 months": "8 to 12 months",
+                "for more than 1 year": "more than 1 year",
+            }
+         )
 
     if suffix == "single_april":
         pass

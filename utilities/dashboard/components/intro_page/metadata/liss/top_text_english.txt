@@ -16,8 +16,11 @@ How much have the new regulations affected their ability to work and how do they
 <br> <br>
 
 You can explore the answers in different ways. 
-If you are interested in the behavior of different groups, such as whether the elderly
-practice more social distancing, you can go to the Group Differences tab.
+If you are interested in the behavior of different groups, such as how do different income groups 
+deal with closure of schools,
+you can go to the Group Differences tabs. Furthermore,
+you can compare how different groups' responses changed to CoViD-19 crisis between March
+2020 and April 2020.
 If you are interested in working hour changes among different groups, such as whether 
 women need to decrease their working hours compared to their men, you can go to the 
 Labor Supply tab. 
@@ -26,7 +29,3 @@ To get additional information on the question and answers,
 hover your mouse over the plot or the dropdown menu.
 
 <br> <br>
-
-A <a href="https://www.iza.org/publications/dp/13158/labour-supply-in-the-early-stages-of-the-covid-19-pandemic-empirical-evidence-on-hours-home-office-and-expectations"> first systematic analysis of the survey</a> has shown that less qualified workers who are less able to work from home
-have suffered more from the current crisis than more educated workers who have succesfully
-started working more from home.
