@@ -26,7 +26,7 @@ def create_intro_page_data(language, dataset_name):
             + "sind sie von ihr betroffen und wie passen sie ihr Verhalten an?"
         )
         res["groupby_title"] = "Unterschiede zwischen Gruppen: März"
-        res["groupby_april_title"] = "Unterschiede zw. Gruppen: April"
+        res["april_title"] = "Unterschiede zw. Gruppen: April"
         res["bottom_title"] = "Arbeitsangebot"
     else:
         raise NotImplementedError("The language you supplied is not supported yet.")
