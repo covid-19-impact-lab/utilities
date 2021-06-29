@@ -266,8 +266,8 @@ def add_legend_if_necessary(
             label_entry = Div(text=_as_html(x), style=style_dict, width=legend_width)
             legend_entries.append(label_entry)
 
-        legend_text = Row(*legend_entries, align="end", margin=(0, 25, 0, 0))
-        layout = Column(legend_text, plot)
+        legend_text = Row(*legend_entries, align="center", margin=(0, 70, 0, 70))
+        layout = Column(legend_text, plot, sizing_mode='scale_width')
     return layout
 
 
