@@ -1,0 +1,22 @@
+The closure of school and childcare facilities from mid-March to May 2020 led to an extra time burden on parents. 
+Parents had to take care of children while keeping with their normal working life. Here we illustrate how parents 
+divided this additional burden among each other according to their socio-demographic characteristics.
+
+<br> <br>
+The data was collected in April 2020 in the midst of the first wave of the pandemic. If survey participants had 
+a child in school or younger, they were asked how many hours they spent taking care of their child before the 
+closure of school and childcare facilities as well as in the last week before the survey. Participants were 
+additionally asked how many hours their partner -- if applicable took care of the children. Participants were 
+asked these questions about their youngest child in two age groups: children not yet in school, and children in 
+school age.
+
+<br><br>
+The graph displays the absolute difference in time spent with the youngest child between mothers and fathers for 
+two-parent opposing gender households split by different socio-demographic characteristics (<b>gender care gap</b>). 
+It shows that mothers on average carry more of the additional childcare burden, however, this is driven by mothers 
+working part-time or not working at all pre-pandemic. In households in which mothers worked full-time before the 
+pandemic, the gender care gap does not increase. Additionally, the ability of fathers to work from home also 
+cushions the effect of the closure of school and childcare facilities on the gender care gap.
+
+<br><br>
+<b>Citation</b>: Holler, R.; H.-M. von Gaudecker; L. Janys; B. Siflinger; C. Zimpelmann: Flexibility driven changes in the gender care gap during the CoVid-19 pandemic.
