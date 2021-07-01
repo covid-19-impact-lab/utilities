@@ -3,10 +3,11 @@ Because of this, knowing and understanding people's attitudes and expectations o
 are central for policy makers and scientists alike.
 
 The CoViD-19 Impact Lab conducted a comprehensive survey with over 5000 Dutch men and women on these topics.
-The results can be expected to be similar in Germany and other Western societies.
+The results can be expected to be similar in Germany and other Western societies. For more information on the data you can click <a href= "https://covid-19-impact-lab.readthedocs.io/en/latest/"> here </a>.
+<br> <br>
 
 The survey focused on questions regarding risk assessments and risk mitigation behaviors,
-opinions on the political actions taken and changes and expectations regarding job security
+opinions on the political actions taken and changes, household divison of labor, expectations regarding job security
 and the economy in general.
 
 How have different groups adapted to the economic and social changes?
@@ -15,18 +16,8 @@ How much have the new regulations affected their ability to work and how do they
 
 <br> <br>
 
-You can explore the answers in different ways. 
-If you are interested in the behavior of different groups, such as whether the elderly
-practice more social distancing, you can go to the Group Differences tab.
-If you are interested in working hour changes among different groups, such as whether 
-women need to decrease their working hours compared to their men, you can go to the 
-Labor Supply tab. 
-In each you can choose different topics and subtopics that interest you.
+You can explore the answers in different ways. In each you can choose different topics and subtopics that interest you.
 To get additional information on the question and answers,
 hover your mouse over the plot or the dropdown menu.
 
 <br> <br>
-
-A <a href="https://www.iza.org/publications/dp/13158/labour-supply-in-the-early-stages-of-the-covid-19-pandemic-empirical-evidence-on-hours-home-office-and-expectations"> first systematic analysis of the survey</a> has shown that less qualified workers who are less able to work from home
-have suffered more from the current crisis than more educated workers who have succesfully
-started working more from home.

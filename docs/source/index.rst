@@ -25,13 +25,12 @@ the following arguments:
 
 - `Language`, which can be either `english` or `german`.
 - `Path to dataset`, the path to the folder containing the Covid LISS datasets.
-  The folder needs to contain thre files, `background_data_merged.pickle` and
+  The folder needs to contain three files, `background_data_merged.pickle` and
   `covid_data_2020_03.pickle` (for Group Differences Tab) and
   `liss_all_waves_data.pickle` (for Labor Supply Tab).
 - `Path to the output directory`, where the dictionary of aggregate data should be
   saved.
-- `Path to regions` (optional), the path to the regions' identifiers. If no third
-  argument is passed, mock regions are created and you are warned about this.
+
 
 This will generate `liss/{language}/dashboard_data_{suffix}.pickle`, where `suffix`
 depends on the source LISS dataset, in the output directory you specified.

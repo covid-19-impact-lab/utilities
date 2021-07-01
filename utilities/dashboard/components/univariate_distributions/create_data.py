@@ -14,7 +14,7 @@ plot_modules = {
 
 
 def create_univariate_distributions_data(
-    data, variable_mappings, nice_names, groups, group_info, menu_labels, language
+    data, variable_mappings, nice_names, groups, group_info, menu_labels, language, april_wave=None
 ):
     vm = variable_mappings
 
@@ -42,21 +42,33 @@ def create_univariate_distributions_data(
 
     # text for plot is processed separately
     metadata_path = UNIVARIATE_DISTRIBUTIONS_DIR / "metadata"
-    if language == "english":
-        with open(metadata_path / f"plot_intro_english.txt", "r") as f:
-            plot_data["plot_intro"] = f.read()
-    elif language == "german":
-        with open(metadata_path / f"plot_intro_german.txt", "r") as f:
-            plot_data["plot_intro"] = f.read()
+    if april_wave == "yes":
+        if language == "english":
+            with open(metadata_path / f"plot_intro_april_english.txt", "r") as f:
+                plot_data["plot_intro"] = f.read()
+            plot_data[
+            "title"
+            ] = "How Does the CoVid-19 Pandemic Affect Different Groups?"
+        elif language == "german":
+            with open(metadata_path / f"plot_intro_april_german.txt", "r") as f:
+                plot_data["plot_intro"] = f.read()
+            plot_data[
+            "title"
+            ] = "Wie sind unterschiedliche Gruppen von der Corona Pandemie betroffen?"
 
-    if language == "english":
-         plot_data[
-        "title"
-    ] = "How Does the CoVid-19 Pandemic Affect Different Groups?"
-    elif language == "german":
-         plot_data[
-        "title"
-    ] = "Wie sind unterschiedliche Gruppen von der Corona Pandemie betroffen?"
+    else:
+        if language == "english":
+            with open(metadata_path / f"plot_intro_english.txt", "r") as f:
+                plot_data["plot_intro"] = f.read()
+            plot_data[
+            "title"
+            ] = "How Does the CoVid-19 Pandemic Affect Different Groups?"
+        elif language == "german":
+            with open(metadata_path / f"plot_intro_german.txt", "r") as f:
+                plot_data["plot_intro"] = f.read()
+            plot_data[
+            "title"
+            ] = "Wie sind unterschiedliche Gruppen von der Corona Pandemie betroffen?"
 
     res["plot_data"] = plot_data
     res["background_variables"] = [
