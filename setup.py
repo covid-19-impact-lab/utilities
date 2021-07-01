@@ -27,6 +27,7 @@ setup(
             "dashboard/components/intro_page/metadata/*/*.*",
             "dashboard/components/run_charts/metadata/*.*",
             "dashboard/components/boxplots/metadata/*.*",
+            "dashboard/components/univariate_distributions/metadata/*.*",
         ],
     },
     include_package_data=True,

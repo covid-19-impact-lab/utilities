@@ -9,13 +9,16 @@ from pandas.api.types import is_categorical
 from pandas.api.types import is_float_dtype
 
 
-def prepare_liss_data(data, language):
+def prepare_liss_data(data, language, suffix=None):
     data = data.copy()
-    data = _fix_categories(data)
-    data = _fix_numeric(data)
+    data = _fix_categories(data, suffix)
+    data = _fix_numeric(data, suffix)
     data = _convert_floats_to_booleans(data)
     data = _add_variables(data)
-    data = _bin_variables(data)
+    if suffix == "single_april":
+        pass
+    else:
+        data = _bin_variables(data)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
         with open(cat_path, "r", encoding="utf-8") as f:
@@ -84,7 +87,7 @@ def _check_value_counts(var):
     return sorted(var.value_counts().index.tolist()) == [0.0, 1.0]
 
 
-def _fix_categories(data):
+def _fix_categories(data, suffix):
     data = data.copy()
 
     data["edu"] = data["edu"].cat.rename_categories(
@@ -108,31 +111,62 @@ def _fix_categories(data):
         {"male": "men", "female": "women"}
     )
 
-    data["duration_restrictions_general"] = data[
+    if suffix == "single_april":
+        data["duration_restrictions_general"] = data[
         "duration_restrictions_general"
-    ].cat.rename_categories(
-        {
-            "btw. April 6 and 2 months": "April 6 to 2 months",
-            "btw. 2 and 4 months": "2 to 4 months",
-            "btw. 4 and 8 months": "4 to 8 months",
-            "btw. 8 and 12 months": "8 to 12 months",
-            "for more than 1 year": "more than 1 year",
-        }
-    )
+        ].cat.rename_categories(
+            {
+                "until April 6": "until April 28",
+                "btw. April 6 and 2 months": "April 28 to 2 months",
+                "btw. 2 and 4 months": "2 to 4 months",
+                "btw. 4 and 8 months": "4 to 8 months",
+                "btw. 8 and 12 months": "8 to 12 months",
+                "for more than 1 year": "more than 1 year",
+            }
+        )
+    else:
+        data["duration_restrictions_general"] = data[
+            "duration_restrictions_general"
+        ].cat.rename_categories(
+            {
+                "btw. April 6 and 2 months": "April 6 to 2 months",
+                "btw. 2 and 4 months": "2 to 4 months",
+                "btw. 4 and 8 months": "4 to 8 months",
+                "btw. 8 and 12 months": "8 to 12 months",
+                "for more than 1 year": "more than 1 year",
+            }
+         )
 
-    data["trust_gov"] = data["trust_gov"].cat.rename_categories(
-        {
-            "1 no confidence at all": "1 <br> none at all",
-            "5 a lot of confidence": "5 <br> a lot",
-        }
-    )
+    if suffix == "single_april":
+        pass
+
+    else:
+        data["trust_gov"] = data["trust_gov"].cat.rename_categories(
+           {
+               "1 no confidence at all": "1 <br> none at all",
+               "5 a lot of confidence": "5 <br> a lot",
+           }
+        )
 
     return data
 
 
-def _fix_numeric(data):
-    data = data.copy()
-    convert_to_float = [
+def _fix_numeric(data, suffix):
+     data = data.copy()
+     if suffix == "single_april":
+         convert_to_float = [
+             "p_2m_infected",
+             "p_2m_acquaintance_infected",
+             "p_2m_hospital_if_infect_self",
+             "p_2m_infected_and_pass_on",
+         ]
+         bins = [-np.inf, 20.0, 40.0, 60.0, 80.0, 100.0]
+         labels = ['0%-20%','20%-40%', '40%-60%', '60%-80%', '80%-100%']
+         for var in convert_to_float:
+             data[var] = pd.cut(data[var], bins=bins, labels=labels)
+
+     else:
+         convert_to_float = [
         "p_2m_employee_keep",
         "p_2m_employee_keep_gov",
         "p_2m_employee_lost",
@@ -147,10 +181,11 @@ def _fix_numeric(data):
         "p_3m_selfempl_helped_by_gov",
         "p_3m_selfempl_shutdown",
         "p_3m_selfempl_other",
-    ]
-    for var in convert_to_float:
-        data[var] = data[var].astype(float)
-    return data
+        ]
+         for var in convert_to_float:
+            data[var] = data[var].astype(float)
+
+     return data
 
 
 def _bin_variables(data):

@@ -20,7 +20,7 @@ from utilities.dashboard.liss.data_functions import prepare_liss_data
 @click.option(
     "--data_path",
     prompt="Path to dataset",
-    help="Path to datasets folder, which must contain name of dataset (LISS or GESIS).",
+    help="Path to datasets folder, which must contain name of dataset (LISS).",
 )
 @click.option(
     "--out_dir",
@@ -40,18 +40,21 @@ def process_dashboard_source_data(lang, data_path, out_dir):
     # load data
     if data_name == "liss":
         raw_data_single = pd.read_pickle(f"{data_path}/covid_data_2020_03.pickle")
+        raw_data_single_april = pd.read_pickle(f"{data_path}/covid_data_2020_04.pickle")
         raw_data_waves = pd.read_pickle(f"{data_path}/liss_all_waves_data.pickle")
         bg_data = pd.read_pickle(f"{data_path}/background_data_merged.pickle")
         raw_data_boxplot = pd.read_parquet(f"{data_path}/child-long.parquet")
 
         # merge data
         raw_data_single["id"] = raw_data_single.index.get_level_values(0)
+        raw_data_single_april["id"] = raw_data_single_april.index.get_level_values(0)
         bg_data["id"] = bg_data.index
         raw_data_single = raw_data_single.merge(bg_data, how="left", on="id")
+        raw_data_single_april = raw_data_single_april.merge(bg_data, how="left", on="id")
 
     dashboard_path = Path(__file__).resolve().parent
 
-    dataDict = {"single": raw_data_single, "waves": raw_data_waves, "boxplot": raw_data_boxplot}
+    dataDict = {"single": raw_data_single, "waves": raw_data_waves, "single_april": raw_data_single_april, "boxplot": raw_data_boxplot}
 
     for suffix, raw_data in dataDict.items():
         if suffix == "waves":
@@ -81,7 +84,7 @@ def process_dashboard_source_data(lang, data_path, out_dir):
             }
 
         elif suffix == "single":
-            data = prepare_liss_data(raw_data, lang)
+            data = prepare_liss_data(raw_data, lang, suffix)
 
             raw_group_info = pd.read_csv(
                 dashboard_path / data_name / "group_info.csv",
@@ -115,6 +118,44 @@ def process_dashboard_source_data(lang, data_path, out_dir):
                 "group_info": group_info,
                 "language": lang,
                 "data_name": "liss",
+            }
+
+        elif suffix == "single_april":
+            data = prepare_liss_data(raw_data, lang, suffix)
+
+            raw_group_info = pd.read_csv(
+                dashboard_path / data_name / "group_info_april.csv",
+                sep=";",
+                encoding="utf8",
+            )
+            group_info = raw_group_info[raw_group_info[f"group_{lang}"].notnull()]
+
+            raw_desc = pd.read_csv(
+                dashboard_path / data_name / "data_description_april.csv",
+                sep=";",
+                encoding="utf8",
+            )
+            bg_desc = pd.read_csv(
+                dashboard_path / data_name / "background_variables.csv",
+                sep=";",
+                encoding="utf8",
+            )
+
+            desc = create_description_table(
+                raw_desc=raw_desc,
+                background_table=bg_desc,
+                group_info=group_info,
+                data=data,
+                language=lang,
+            )
+
+            kwargs = {
+                "data": data,
+                "data_desc": desc,
+                "group_info": group_info,
+                "language": lang,
+                "data_name": "liss",
+                "april_wave": "yes"
             }
 
         dashboard_data = create_dashboard_data(**kwargs)
