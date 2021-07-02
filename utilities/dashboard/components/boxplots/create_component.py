@@ -10,7 +10,7 @@ from utilities.dashboard.config import PLOT_WIDTH
 from utilities.dashboard.config import TITLE_STYLE
 
 
-def create_boxplots(data, variable_mappings, language):
+def create_boxplots(data, variable_mappings, language, menu_labels):
     """Create the childcare tab, showing boxplots for selected outcome and
     background variables.
 
@@ -18,6 +18,7 @@ def create_boxplots(data, variable_mappings, language):
         data (dict): Dictionary of boxplots data.
         variable_mappings (dict): Dictionary of boxplots metadata.
         language (str): One of ["english", "german"].
+        menu_labels (dict): Dictionary of menu labels.
 
     Returns:
         bokeh Column
@@ -41,21 +42,21 @@ def create_boxplots(data, variable_mappings, language):
 
     selection_menus = [
         Select(
-            title="Outcome",
+            title=menu_labels["outcome"],
             options=[dict_var[var] for var in outcome_variables],
             value=dict_var[outcome_variable],
             name="outcome_variable_selector",
             width=220,
         ),
         Select(
-            title="Split By",
+            title=menu_labels["split_by"],
             options=[dict_bg_var[var] for var in background_variables],
             value=dict_bg_var[background_variable],
             name="background_variable_selector",
             width=220,
         ),
         Select(
-            title="Sample",
+            title=menu_labels["sample"],
             options=[dict_sample_cat[cat] for cat in sample_categories],
             value=dict_sample_cat[sample_category],
             name="sample_category_selector",

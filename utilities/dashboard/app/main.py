@@ -60,13 +60,15 @@ def assemble_dashboard_components(
     run_charts_page = create_run_charts(
         data=run_charts_data,
         variable_mappings=run_charts_mapping["variable_mappings"],
-        language=language
+        language=language,
+        menu_labels=shared_data["menu_labels"],
     )
 
     boxplots_page = create_boxplots(
         data=boxplots_data,
         variable_mappings=boxplots_mapping["variable_mappings"],
         language=shared_data["language"],
+        menu_labels=shared_data["menu_labels"],
     )
 
     univariate_distributions_april_page = create_univariate_distributions(

@@ -225,6 +225,8 @@ def get_menu_labels(language):
             "split_by": "Split By",
             "nothing_category": "Nothing",
             "question": "Question",
+            "outcome": "Variable",
+            "sample": "Sample",
         }
     elif language == "german":
         res = {
@@ -233,6 +235,8 @@ def get_menu_labels(language):
             "split_by": "Gruppieren nach",
             "nothing_category": "Nichts",
             "question": "Frage",
+            "outcome": "Variable",
+            "sample": "Lohnarbeitsverteilung",
         }
 
     return res
