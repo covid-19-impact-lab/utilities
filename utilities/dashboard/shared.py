@@ -225,7 +225,7 @@ def get_menu_labels(language):
             "split_by": "Split By",
             "nothing_category": "Nothing",
             "question": "Question",
-            "outcome": "Variable",
+            "outcome": "Outcome",
             "sample": "Sample",
         }
     elif language == "german":
