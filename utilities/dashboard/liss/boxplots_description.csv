@@ -1,17 +1,17 @@
 new_name;type;nice_name_english;nice_name_german
-cc_gap;Outcome Variable;Childcare gap;Kinderbetreuungslück
-relative_cc_gap;Outcome Variable;Relative childcare gap;Relative Kinderbetreuungslück
-net_income_2y_equiv_q3;Background Variable;Tercile of the pre-CoViD net equivalised household income;Terzile des Haushaltsnettoäquivalenzeinkommens vor CoVi
-first;Category;First;Erste
-second;Category;Second;Zweite
-third;Category;Third;Dritte
+cc_gap;Outcome Variable;Childcare gap;Kinderbetreuungslücke
+relative_cc_gap;Outcome Variable;Relative childcare gap;Relative Kinderbetreuungslücke
+net_income_2y_equiv_q3;Background Variable;Tercile of the pre-CoViD net equivalised household income;Terzile des Haushaltsnettoäquivalenzeinkommens vor CoVid-19
+first;Category;First;Erstes
+second;Category;Second;Zweites
+third;Category;Third;Drittes
 essential_worker_w2;Background Variable;Essential worker;Systemrelevanter Arbeiter
-yes;Category;Essential worker;Systemrelevanter Arbeiter
-no;Category;Non-essential worker;Kein systemrelevanter Arbeiter
+yes;Category;Essential worker;Systemrelevante Arbeit
+no;Category;Non-essential worker;Nicht systemrelevante Arbeit
 edu;Background Variable;Education;Ausbildung
-upper_secondary;Category;Upper secondary;Zweite Sekundarstufe
-lower_secondary_and_lower;Category;Lower secondary and lower;Erste Sekundarstuffe oder niedriger
-tertiary;Category;Tertiary;Tertiä
+upper_secondary;Category;Upper secondary;Obere Sekundarstufe
+lower_secondary_and_lower;Category;Lower secondary and lower;Sekundarstufe I und II
+tertiary;Category;Tertiary;Universitätsabschluss
 labor_force_coarse;Background Variable;Work schedule;Arbeitszeit
 part-time;Category;Part-time;Teilzeit
 full-time;Category;Full-time;Vollzeit
@@ -19,10 +19,10 @@ not working;Category;Not working;Arbeitet nicht
 child_id;Background Variable;Age of a child;Kindesalter
 young;Category;Pre-school age;Vorschulalter
 school;Category;School age;Schulalter
-work_perc_home_cat;Background Variable;Degree of telecommutability;Anteil der Arbeit
-up to 10%;Category;Up to 10%;Bis zu 10%
-10-90%;Category;Between 10% and 90%;Zwischen 10 % und 90 %
-more than 90%;Category;More than 90%;Mehr als 90%
+work_perc_home_cat;Background Variable;Degree of telecommutability;Anteil der Arbeit, der von zuhause getätigt werden kann
+up to 10%;Category;Up to 10%;Weniger als 10%
+10-90%;Category;Between 10% and 90%;Von 10% bis 90%
+more than 90%;Category;More than 90%;Größer 90%
 covid;Secondary Background Variable;Time period;Zeitabschnitt
 post;Category;Apr 2020;Apr 2020
 pre;Category;Before CoVid-19;Vor CoVid-19
