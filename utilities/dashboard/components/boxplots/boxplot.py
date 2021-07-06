@@ -111,8 +111,9 @@ def compute_quantities(data, bg_var_1, bg_var_2, outcome):
         data_res.append(out)
 
     # compute "upper" and "lower" extreme for boxplot stems
-    upper = data_res[2]["q75"] + 1.5*(data_res[2]["q75"] - data_res[0]["q25"])
-    lower = data_res[0]["q25"] - 1.5*(data_res[2]["q75"] - data_res[0]["q25"])
+    inter_quartile_range = data_res[2]["q75"] - data_res[0]["q25"]
+    upper = data_res[2]["q75"] + 1.5 * inter_quartile_range
+    lower = data_res[0]["q25"] - 1.5 * inter_quartile_range
 
     # add "upper" and "lower" to data. The result is a list of pd.DataFrames
     data_res.append(upper)
