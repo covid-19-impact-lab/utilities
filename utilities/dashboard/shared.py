@@ -38,7 +38,7 @@ def create_caption_for_variable_group(
 
 
 def create_general_variable_mappings(
-    data, language, data_name, data_desc=None, group_info=None, run_charts_desc=None
+    data, language, data_name, data_desc=None, group_info=None, run_charts_desc=None, boxplots_desc=None
 ):
     """Create a dict of dicts that allows to look up metadata of variables.
 
@@ -59,12 +59,14 @@ def create_general_variable_mappings(
         data (pd.DataFrame): The empirical dataset.
         language (str): One of ["english", "german"]
         data_name (str): "liss"
-        data_desc (pd.DataFrame): Description of variables displayed in the 
+        data_desc (pd.DataFrame): Description of variables displayed in the
         univariate distributions and labour supply dashboard tabs. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
             univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
+        boxplots_desc (pd.DataFrame): Description of variables displayed in
+            the boxplots dashboard tab. Default is None.
 
     Returns:
         dict: Dictionary which may contain the following entries:
@@ -76,8 +78,13 @@ def create_general_variable_mappings(
             - "variable_to_label": dict
             - "variable_to_nice_name": dict
             - "nice_name_to_variable": dict
+            - "sample_cat_to_nice_name": dict
+            - "nice_name_to_sample_cat": dict
             - "outcome_variables": list
             - "background_variables": list
+            - "secondary_background_variable": string
+            - "sample_variable": string
+            - "sample_categories": list
 
     """
     res = {}
@@ -149,6 +156,58 @@ def create_general_variable_mappings(
             v: k for k, v in background_variable_to_nice_name.items()
         }
 
+    if boxplots_desc is not None:
+        # description of data for boxplots
+        res["outcome_variables"] = boxplots_desc.query("type == 'Outcome Variable'")[
+            "new_name"].values.tolist()
+        res["background_variables"] = boxplots_desc.query(
+            "type == 'Background Variable'"
+        )["new_name"].values.tolist()
+        res["secondary_background_variable"] = boxplots_desc.query(
+            "type == 'Secondary Background Variable'"
+        )["new_name"].values[0]
+        res["sample_variable"] = boxplots_desc.query(
+            "type == 'Sample Variable'"
+        )["new_name"].values[0]
+        res["sample_categories"] = boxplots_desc.query(
+            "type == 'Sample Category'"
+        )["new_name"].values.tolist()
+
+        nice_names = boxplots_desc.set_index("new_name")[
+            f"nice_name_{language}"
+        ].to_dict()
+        res["nice_names_boxplots"] = nice_names
+
+        outcome_variable_to_nice_name = (
+            boxplots_desc.set_index("new_name")
+            .query("type == 'Outcome Variable'")[f"nice_name_{language}"]
+            .to_dict()
+        )
+        res["outcome_variable_to_nice_name"] = outcome_variable_to_nice_name
+        res["nice_name_to_outcome"] = {
+            v: k for k, v in outcome_variable_to_nice_name.items()
+        }
+
+        background_variable_to_nice_name = (
+            boxplots_desc.set_index("new_name")
+            .query("type == 'Background Variable'")[f"nice_name_{language}"]
+            .to_dict()
+        )
+        res["background_variable_to_nice_name"] = background_variable_to_nice_name
+        res["nice_name_to_background"] = {
+            v: k for k, v in background_variable_to_nice_name.items()
+        }
+
+        sample_cat_to_nice_name = (
+            boxplots_desc.set_index("new_name")
+            .query("type == 'Sample Category'")[f"nice_name_{language}"]
+            .to_dict()
+        )
+        res["sample_cat_to_nice_name"] = sample_cat_to_nice_name
+        res["nice_name_to_sample_cat"] = {
+            v: k for k, v in sample_cat_to_nice_name.items()
+        }
+
     return res
 
 
@@ -166,6 +225,8 @@ def get_menu_labels(language):
             "split_by": "Split By",
             "nothing_category": "Nothing",
             "question": "Question",
+            "outcome": "Outcome",
+            "sample": "Sample",
         }
     elif language == "german":
         res = {
@@ -174,6 +235,8 @@ def get_menu_labels(language):
             "split_by": "Gruppieren nach",
             "nothing_category": "Nichts",
             "question": "Frage",
+            "outcome": "Variable",
+            "sample": "Lohnarbeitsverteilung",
         }
 
     return res

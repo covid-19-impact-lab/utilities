@@ -16,7 +16,7 @@ and follow the CLI. The arguments required are:
 - `out_dir`, the path to the output directory.
 
 - `path/to/data`, the path to the Covid LISS datasets folder, which needs to
-contain four datasets: Three, `background_data_merged.pickle` and 
+contain four datasets: Three, `background_data_merged.pickle` and
 `covid_data_2020_03.pickle`,`covid_data_2020_04.pickle` for the Group Differences tabs, and one,
 `liss_all_waves_data.pickle`, for the Labor Supply tab.
 Note that the name "liss" must appear in `path/to/data`.

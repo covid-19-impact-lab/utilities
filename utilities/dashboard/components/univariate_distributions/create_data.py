@@ -44,13 +44,13 @@ def create_univariate_distributions_data(
     metadata_path = UNIVARIATE_DISTRIBUTIONS_DIR / "metadata"
     if april_wave == "yes":
         if language == "english":
-            with open(metadata_path / f"plot_intro_april_english.txt", "r") as f:
+            with open(metadata_path / f"plot_intro_april_english.txt", "r", encoding="utf-8") as f:
                 plot_data["plot_intro"] = f.read()
             plot_data[
             "title"
             ] = "How Does the CoVid-19 Pandemic Affect Different Groups?"
         elif language == "german":
-            with open(metadata_path / f"plot_intro_april_german.txt", "r") as f:
+            with open(metadata_path / f"plot_intro_april_german.txt", "r", encoding="utf-8") as f:
                 plot_data["plot_intro"] = f.read()
             plot_data[
             "title"
@@ -58,13 +58,13 @@ def create_univariate_distributions_data(
 
     else:
         if language == "english":
-            with open(metadata_path / f"plot_intro_english.txt", "r") as f:
+            with open(metadata_path / f"plot_intro_english.txt", "r", encoding="utf-8") as f:
                 plot_data["plot_intro"] = f.read()
             plot_data[
             "title"
             ] = "How Does the CoVid-19 Pandemic Affect Different Groups?"
         elif language == "german":
-            with open(metadata_path / f"plot_intro_german.txt", "r") as f:
+            with open(metadata_path / f"plot_intro_german.txt", "r", encoding="utf-8") as f:
                 plot_data["plot_intro"] = f.read()
             plot_data[
             "title"

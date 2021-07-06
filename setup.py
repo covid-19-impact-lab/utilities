@@ -6,7 +6,7 @@ print(p)
 
 setup(
     name="utilities",
-    version="0.4.1",
+    version="0.4.2",
     description=(
         "Package with code that has to be shared across repos of covid-19-impact-lab"
     ),
@@ -26,6 +26,7 @@ setup(
             "dashboard/*/*.py",
             "dashboard/components/intro_page/metadata/*/*.*",
             "dashboard/components/run_charts/metadata/*.*",
+            "dashboard/components/boxplots/metadata/*.*",
             "dashboard/components/univariate_distributions/metadata/*.*",
         ],
     },

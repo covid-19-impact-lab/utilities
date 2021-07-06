@@ -6,8 +6,8 @@ gender_male;Category;Male;Männlich
 edu;Background Variable;Education;Ausbildung
 edu_lower_secondary_and_lower;Category;Lower secondary and lower;Sekundarstufe I und II
 edu_upper_secondary;Category;Upper secondary;Obere Sekundarstufe
-edu_tertiary;Category;Tertiary;Tertiärbereich
-work_perc_home_cat;Background Variable;Degree of telecommutability;Grad der Telearbeitbarkeit
+edu_tertiary;Category;Tertiary;Universitätsausbildung
+work_perc_home_cat;Background Variable;Degree of telecommutability;Anteil der Arbeit, der von zuhause getätigt werden kann
 work_perc_home_cat_up to 10%;Category;Up to 10%;Bis zu 10%
 work_perc_home_cat_10-90%;Category;Between 10% and 90%;Zwischen 10% und 90%
 work_perc_home_cat_more than 90%;Category;More than 90%;Mehr als 90%
@@ -16,10 +16,10 @@ gross_income_groups_above 3500;Category;Above EUR 3500;Über EUR 3500
 gross_income_groups_bet. 2500 and 3500;Category;Between EUR 2500 and EUR 3500;Zwischen EUR 2500 and EUR 3500
 gross_income_groups_below 2500;Category;Below EUR 2500;Unter EUR 2500
 essential_worker_w2;Background Variable;Working status;Arbeitsstatus
-essential_worker_w2_essential_worker;Category;Essential worker;Wesentlicher Arbeitnehmer
-essential_worker_w2_not_essential_worker;Category;Not an essential worker;Nicht wesentlicher Arbeitnehmer
+essential_worker_w2_essential_worker;Category;Essential worker;Systemrelevante Arbeit
+essential_worker_w2_not_essential_worker;Category;Not an essential worker;Nicht systemrelevante Arbeit
 parttime_baseline_covid;Background Variable;Working time;Arbeitszeit
-parttime_baseline_covid_parttime;Category;Working part-time;Teilzeitarbeit
+parttime_baseline_covid_parttime;Category;Working part-time;Teilzeit
 parttime_baseline_covid_not_parttime;Category;Not working part-time;Nicht teilzeitbeschäftigt
 self_employed_baseline;Background Variable;Employment status;Status der Beschäftigung
 self_employed_baseline_self_employed;Category;Self-employed;Selbstständig

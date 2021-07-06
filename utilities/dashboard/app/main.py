@@ -12,6 +12,7 @@ from bokeh.plotting import curdoc
 
 from utilities.dashboard.components.intro_page.create_component import create_intro_page
 from utilities.dashboard.components.run_charts.create_component import create_run_charts
+from utilities.dashboard.components.boxplots.create_component import create_boxplots
 from utilities.dashboard.components.univariate_distributions.create_component import (
     create_univariate_distributions,
 )
@@ -25,6 +26,8 @@ def assemble_dashboard_components(
     shared_data_april,
     run_charts_data,
     run_charts_mapping,
+    boxplots_data,
+    boxplots_mapping,
 ):
     """Create the dashboard tabs.
 
@@ -38,6 +41,8 @@ def assemble_dashboard_components(
         shared_data_april (dict): Metadata of Group Differences: April tab.
         run_charts_data (dict): Data for Labor Supply tab.
         run_charts_mapping (dict): Metadata for Labor Supply tab.
+        boxplots_data (dict): Data for Childcare tab.
+        boxplots_mapping (dict): Metadata for Childcare tab.
 
     Returns:
         bokeh Column
@@ -55,7 +60,15 @@ def assemble_dashboard_components(
     run_charts_page = create_run_charts(
         data=run_charts_data,
         variable_mappings=run_charts_mapping["variable_mappings"],
-        language=language
+        language=language,
+        menu_labels=shared_data["menu_labels"],
+    )
+
+    boxplots_page = create_boxplots(
+        data=boxplots_data,
+        variable_mappings=boxplots_mapping["variable_mappings"],
+        language=shared_data["language"],
+        menu_labels=shared_data["menu_labels"],
     )
 
     univariate_distributions_april_page = create_univariate_distributions(
@@ -64,15 +77,17 @@ def assemble_dashboard_components(
         variable_mappings=shared_data_april["variable_mappings"],
     )
 
+
     if language == "german":
         tab_names = [
             "Einleitung",
             "Unterschiede zw. Gruppen: März 2020",
             "Unterschiede zw. Gruppen: April 2020",
             "Arbeitsangebot",
+            "Kinderbetreuung"
         ]
     elif language == "english":
-        tab_names = ["Introduction", "Group Differences: March 2020", "Group Differences: April 2020", "Labor Supply"]
+        tab_names = ["Introduction", "Group Differences: March 2020", "Group Differences: April 2020", "Labor Supply", "Childcare"]
 
     page = Tabs(
         tabs=[
@@ -80,6 +95,7 @@ def assemble_dashboard_components(
             Panel(child=univariate_distributions_page, title=tab_names[1]),
             Panel(child=univariate_distributions_april_page, title=tab_names[2]),
             Panel(child=run_charts_page, title=tab_names[3]),
+            Panel(child=boxplots_page, title=tab_names[4]),
         ]
     )
     return page
@@ -93,6 +109,7 @@ data_dir = Path(sys.argv[1]).resolve()
 dashboard_data_shared = pd.read_pickle(data_dir / "dashboard_data_single.pickle")
 dashboard_data_april = pd.read_pickle(data_dir / "dashboard_data_single_april.pickle")
 dashboard_data_waves = pd.read_pickle(data_dir / "dashboard_data_waves.pickle")
+dashboard_data_boxplot = pd.read_pickle(data_dir / "dashboard_data_boxplot.pickle")
 
 kwargs = {
     "intro_page_data": dashboard_data_shared["intro_page_data"],
@@ -106,6 +123,8 @@ kwargs = {
     "shared_data_april": dashboard_data_april["shared_data"],
     "run_charts_data": dashboard_data_waves["run_charts_data"],
     "run_charts_mapping": dashboard_data_waves["mapping"],
+    "boxplots_data": dashboard_data_boxplot["boxplots_data"],
+    "boxplots_mapping": dashboard_data_boxplot["mapping"],
 }
 
 

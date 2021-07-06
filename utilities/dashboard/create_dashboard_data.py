@@ -1,5 +1,6 @@
 from utilities.dashboard.components.intro_page.create_data import create_intro_page_data
 from utilities.dashboard.components.run_charts.create_data import create_run_charts_data
+from utilities.dashboard.components.boxplots.create_data import create_boxplots_data
 from utilities.dashboard.components.univariate_distributions.create_data import (
     create_univariate_distributions_data,
 )
@@ -14,6 +15,7 @@ def create_dashboard_data(
     data_desc=None,
     group_info=None,
     run_charts_desc=None,
+    boxplots_desc=None,
     kde_cutoff=7,
     april_wave=None
 ):
@@ -25,6 +27,8 @@ def create_dashboard_data(
             univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
+        boxplots_desc (pd.DataFrame): Description of variables displayed in
+            the boxplots dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
             univariate distributions dashboard tabs. Default is None.
         data_name (str): "liss".
@@ -40,6 +44,7 @@ def create_dashboard_data(
         data=data,
         data_desc=data_desc,
         run_charts_desc=run_charts_desc,
+        boxplots_desc=boxplots_desc,
         group_info=group_info,
         language=language,
         data_name=data_name,
@@ -79,6 +84,17 @@ def create_dashboard_data(
         res["mapping"] = shared_data
         res["run_charts_data"] = run_charts_data
 
+    if boxplots_desc is not None:
+        boxplots_data = create_boxplots_data(
+            data=data,
+            variable_mappings=variable_mappings,
+            nice_names=variable_mappings["nice_names_boxplots"],
+            language=language
+        )
+        res = {}
+        res["mapping"] = shared_data
+        res["boxplots_data"] = boxplots_data
+
     return res
 
 
@@ -101,7 +117,7 @@ def _get_groups(group_info, language):
 
 
 def _create_shared_dashboad_data(
-    data, data_desc, run_charts_desc, group_info, language, data_name
+    data, data_desc, run_charts_desc, boxplots_desc, group_info, language, data_name
 ):
     """Create dashboard data that will be used by all components.
 
@@ -111,6 +127,8 @@ def _create_shared_dashboad_data(
             univariate distributions dashboard tabs. Default is None.
         run_charts_desc (pd.DataFrame): Description of variables displayed in
             the run charts dashboard tab. Default is None.
+        boxplots_desc (pd.DataFrame): Description of variables displayed in
+            the boxplots dashboard tab. Default is None.
         group_info (pd.DataFrame): Description of groups, as defined for
             univariate distributions dashboard tabs. Default is None.
         language (str): One of ["english", "german"].
@@ -127,6 +145,7 @@ def _create_shared_dashboad_data(
         data=data,
         data_desc=data_desc,
         run_charts_desc=run_charts_desc,
+        boxplots_desc=boxplots_desc,
         group_info=group_info,
         language=language,
         data_name=data_name,

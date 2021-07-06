@@ -27,5 +27,6 @@ def create_intro_page(title, top_text, plot_intro, groupby_title, bottom_text, b
     )
     april_title =  Div(text=april_title, style=SUBTITLE_STYLE, margin=(5, 0, 10, 0))
 
-    intro_page = Column(title, intro, plot_title, plot_intro, labour_title, labour_intro, april_title, april_intro )
+
+    intro_page = Column(title, intro, plot_title, plot_intro, labour_title, labour_intro, april_title, april_intro)
     return intro_page

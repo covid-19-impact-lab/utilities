@@ -12,14 +12,15 @@ from utilities.dashboard.config import TITLE_STYLE
 from utilities.dashboard.shared import adjust_lower_level_selection_menu_to_higher_level
 
 
-def create_run_charts(data, variable_mappings, language):
+def create_run_charts(data, variable_mappings, language, menu_labels):
     """Create the labor supply tab, showing run charts for selected outcome and
     background variables..
 
     Args:
         data (dict): Dictionary of run charts data.
         variable_mappings (dict): Dictionary of maps metadata.
-        language (string): english or german
+        language (string): english or german.
+        menu_labels (dict): Dictionary of menu labels.
 
     Returns:
         bokeh Column
@@ -38,14 +39,14 @@ def create_run_charts(data, variable_mappings, language):
 
     selection_menus = [
         Select(
-            title="Outcome",
+            title=menu_labels["outcome"],
             options=[dict_var[var] for var in outcome_variables],
             value=dict_var[outcome_variable],
             name="outcome_variable_selector",
             width=220,
         ),
         Select(
-            title="Split By",
+            title=menu_labels["split_by"],
             options=[dict_bg_var[var] for var in background_variables],
             value=dict_bg_var[background_variable],
             name="background_variable_selector",

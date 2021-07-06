@@ -21,7 +21,7 @@ def prepare_liss_data(data, language, suffix=None):
         data = _bin_variables(data)
     if language == "german":
         cat_path = Path(__file__).resolve().parent / "cats_to_german.yaml"
-        with open(cat_path, "r") as f:
+        with open(cat_path, "r", encoding="utf-8") as f:
             cat_d = yaml.full_load(f)
         for col in data:
             if is_categorical(data[col]):
