@@ -2,6 +2,7 @@
 usage: bokeh server run_dashboard.py --show --args path/to/overview_tab_data_dict.pickle
 
 """
+
 import sys
 from pathlib import Path
 
@@ -10,9 +11,9 @@ from bokeh.models import Panel
 from bokeh.models import Tabs
 from bokeh.plotting import curdoc
 
+from utilities.dashboard.components.boxplots.create_component import create_boxplots
 from utilities.dashboard.components.intro_page.create_component import create_intro_page
 from utilities.dashboard.components.run_charts.create_component import create_run_charts
-from utilities.dashboard.components.boxplots.create_component import create_boxplots
 from utilities.dashboard.components.univariate_distributions.create_component import (
     create_univariate_distributions,
 )
@@ -77,17 +78,22 @@ def assemble_dashboard_components(
         variable_mappings=shared_data_april["variable_mappings"],
     )
 
-
     if language == "german":
         tab_names = [
             "Einleitung",
             "Unterschiede zw. Gruppen: März 2020",
             "Unterschiede zw. Gruppen: April 2020",
             "Arbeitsangebot",
-            "Kinderbetreuung"
+            "Kinderbetreuung",
         ]
     elif language == "english":
-        tab_names = ["Introduction", "Group Differences: March 2020", "Group Differences: April 2020", "Labor Supply", "Childcare"]
+        tab_names = [
+            "Introduction",
+            "Group Differences: March 2020",
+            "Group Differences: April 2020",
+            "Labor Supply",
+            "Childcare",
+        ]
 
     page = Tabs(
         tabs=[
