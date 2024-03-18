@@ -10,11 +10,14 @@ def create_intro_page_data(language, dataset_name):
         res["top_text"] = f.read()
     with open(metadata_path / f"plot_intro_{language}.txt", "r", encoding="utf-8") as f:
         res["plot_intro"] = f.read()
-    with open(metadata_path / f"bottom_text_{language}.txt", "r", encoding="utf-8") as f:
+    with open(
+        metadata_path / f"bottom_text_{language}.txt", "r", encoding="utf-8"
+    ) as f:
         res["bottom_text"] = f.read()
-    with open(metadata_path / f"intro_april_{language}.txt", "r", encoding="utf-8") as f:
+    with open(
+        metadata_path / f"intro_april_{language}.txt", "r", encoding="utf-8"
+    ) as f:
         res["april_intro"] = f.read()
-    
 
     if language == "english":
         res["title"] = "Explore What People Believe and Do in Response to CoViD-19"

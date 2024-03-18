@@ -103,7 +103,10 @@ def create_univariate_distributions(
     bg_info = Div(text="", margin=(10, 0, 10, 0), style=HEADER_STYLE)
 
     title = Div(
-        text=plot_data["title"], style=TITLE_STYLE, margin=(10, 0, 10, 0), width=PLOT_WIDTH
+        text=plot_data["title"],
+        style=TITLE_STYLE,
+        margin=(10, 0, 10, 0),
+        width=PLOT_WIDTH,
     )
     plot_intro = Div(
         text=plot_data["plot_intro"],
@@ -113,7 +116,8 @@ def create_univariate_distributions(
     )
 
     plot_page = Column(
-        title, plot_intro,
+        title,
+        plot_intro,
         Row(*plot_selectors),
         plot,
         plot_caption,
