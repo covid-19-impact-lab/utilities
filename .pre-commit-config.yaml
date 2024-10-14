@@ -1,17 +1,17 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.3.0
+    rev: v5.0.0
     hooks:
     -   id: check-merge-conflict
     -   id: debug-statements
     -   id: end-of-file-fixer
--   repo: https://github.com/asottile/reorder_python_imports
-    rev: v2.3.6
+-   repo: https://github.com/asottile/reorder-python-imports
+    rev: v3.14.0
     hooks:
     -   id: reorder-python-imports
         types: [python]
 -   repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 24.10.0
     hooks:
     -   id: black
         types: [python]
