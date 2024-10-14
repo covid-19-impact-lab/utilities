@@ -1,4 +1,5 @@
 """Build the data description table for creating the overview_tab data."""
+
 import pandas as pd
 
 # from utilities.dashboard.liss_data_functions import check_no_variables_lost

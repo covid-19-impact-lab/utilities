@@ -228,8 +228,8 @@ def _add_HoverTool(p, renderers, col, nice_names_dict, language):
             ("Datum der Umfrage", "@x"),
             (nice_names_dict.get(bg_var_name), "@cat"),
         ]
-        
-    else: 
+
+    else:
         TOOLTIPS = [
             (nice_names_dict.get(var_name), "@y"),
             ("Date of survey", "@x"),
