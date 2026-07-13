@@ -33,22 +33,26 @@ def create_run_charts_data(data, variable_mappings, nice_names, language):
         with open(metadata_path / f"top_text_english.txt", "r", encoding="utf-8") as f:
             run_charts_data["top_text"] = f.read()
 
-        with open(metadata_path / f"bottom_text_english.txt", "r", encoding="utf-8") as f:
+        with open(
+            metadata_path / f"bottom_text_english.txt", "r", encoding="utf-8"
+        ) as f:
             run_charts_data["bottom_text"] = f.read()
 
-        run_charts_data[
-            "title"
-        ] = "How Does the CoVid-19 Pandemic Affect Labor Market Outcomes?"
+        run_charts_data["title"] = (
+            "How Does the CoVid-19 Pandemic Affect Labor Market Outcomes?"
+        )
 
     elif language == "german":
         with open(metadata_path / f"top_text_german.txt", "r", encoding="utf-8") as f:
             run_charts_data["top_text"] = f.read()
 
-        with open(metadata_path / f"bottom_text_german.txt", "r", encoding="utf-8") as f:
+        with open(
+            metadata_path / f"bottom_text_german.txt", "r", encoding="utf-8"
+        ) as f:
             run_charts_data["bottom_text"] = f.read()
 
-        run_charts_data[
-            "title"
-        ] = "Wie wirkt sich die CoVid-19-Pandemie auf den Arbeitsmarkt aus?"
+        run_charts_data["title"] = (
+            "Wie wirkt sich die CoVid-19-Pandemie auf den Arbeitsmarkt aus?"
+        )
 
     return run_charts_data

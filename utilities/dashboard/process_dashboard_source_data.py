@@ -50,11 +50,18 @@ def process_dashboard_source_data(lang, data_path, out_dir):
         raw_data_single_april["id"] = raw_data_single_april.index.get_level_values(0)
         bg_data["id"] = bg_data.index
         raw_data_single = raw_data_single.merge(bg_data, how="left", on="id")
-        raw_data_single_april = raw_data_single_april.merge(bg_data, how="left", on="id")
+        raw_data_single_april = raw_data_single_april.merge(
+            bg_data, how="left", on="id"
+        )
 
     dashboard_path = Path(__file__).resolve().parent
 
-    dataDict = {"single": raw_data_single, "waves": raw_data_waves, "single_april": raw_data_single_april, "boxplot": raw_data_boxplot}
+    dataDict = {
+        "single": raw_data_single,
+        "waves": raw_data_waves,
+        "single_april": raw_data_single_april,
+        "boxplot": raw_data_boxplot,
+    }
 
     for suffix, raw_data in dataDict.items():
         if suffix == "waves":
@@ -80,7 +87,7 @@ def process_dashboard_source_data(lang, data_path, out_dir):
                 "data": raw_data,
                 "boxplots_desc": boxplots_desc,
                 "language": lang,
-                "data_name": "liss"
+                "data_name": "liss",
             }
 
         elif suffix == "single":
@@ -155,7 +162,7 @@ def process_dashboard_source_data(lang, data_path, out_dir):
                 "group_info": group_info,
                 "language": lang,
                 "data_name": "liss",
-                "april_wave": "yes"
+                "april_wave": "yes",
             }
 
         dashboard_data = create_dashboard_data(**kwargs)
