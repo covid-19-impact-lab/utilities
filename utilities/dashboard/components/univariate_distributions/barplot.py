@@ -10,5 +10,4 @@ from utilities.dashboard.components.univariate_distributions.general_barplot imp
     setup_plot,
 )
 
-
 prepare_data = partial(general_prepare_data, keep_last=False)
