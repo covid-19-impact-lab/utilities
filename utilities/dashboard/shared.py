@@ -38,7 +38,13 @@ def create_caption_for_variable_group(
 
 
 def create_general_variable_mappings(
-    data, language, data_name, data_desc=None, group_info=None, run_charts_desc=None, boxplots_desc=None
+    data,
+    language,
+    data_name,
+    data_desc=None,
+    group_info=None,
+    run_charts_desc=None,
+    boxplots_desc=None,
 ):
     """Create a dict of dicts that allows to look up metadata of variables.
 
@@ -159,19 +165,20 @@ def create_general_variable_mappings(
     if boxplots_desc is not None:
         # description of data for boxplots
         res["outcome_variables"] = boxplots_desc.query("type == 'Outcome Variable'")[
-            "new_name"].values.tolist()
+            "new_name"
+        ].values.tolist()
         res["background_variables"] = boxplots_desc.query(
             "type == 'Background Variable'"
         )["new_name"].values.tolist()
         res["secondary_background_variable"] = boxplots_desc.query(
             "type == 'Secondary Background Variable'"
         )["new_name"].values[0]
-        res["sample_variable"] = boxplots_desc.query(
-            "type == 'Sample Variable'"
-        )["new_name"].values[0]
-        res["sample_categories"] = boxplots_desc.query(
-            "type == 'Sample Category'"
-        )["new_name"].values.tolist()
+        res["sample_variable"] = boxplots_desc.query("type == 'Sample Variable'")[
+            "new_name"
+        ].values[0]
+        res["sample_categories"] = boxplots_desc.query("type == 'Sample Category'")[
+            "new_name"
+        ].values.tolist()
 
         nice_names = boxplots_desc.set_index("new_name")[
             f"nice_name_{language}"
