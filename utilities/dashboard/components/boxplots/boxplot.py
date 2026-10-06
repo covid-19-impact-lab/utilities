@@ -1,23 +1,32 @@
-import sys
-import io
-import textwrap
 import copy
+import io
+import itertools
+import sys
+import textwrap
+
 import numpy as np
 import pandas as pd
-from bokeh.models import ColumnDataSource, FactorRange
-from bokeh.transform import factor_cmap
-from bokeh.palettes import Spectral6
-from utilities.colors import get_colors, plot_colors
-from bokeh.models import Legend, LegendItem
+from bokeh.models import ColumnDataSource
 from bokeh.models import DatetimeTickFormatter
-from bokeh.models.ranges import Range1d, DataRange1d
-from bokeh.models import ColumnDataSource, HoverTool, GlyphRenderer, Line
-import itertools
+from bokeh.models import FactorRange
+from bokeh.models import GlyphRenderer
+from bokeh.models import HoverTool
+from bokeh.models import Legend
+from bokeh.models import LegendItem
+from bokeh.models import Line
 from bokeh.models import Span
-
+from bokeh.models.ranges import DataRange1d
+from bokeh.models.ranges import Range1d
+from bokeh.palettes import Spectral6
+from bokeh.plotting import figure
+from bokeh.plotting import output_notebook
+from bokeh.plotting import show
+from bokeh.transform import factor_cmap
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from pandas.core.common import flatten
-from bokeh.plotting import figure, output_notebook, show
+
+from utilities.colors import get_colors
+from utilities.colors import plot_colors
 
 
 def _preprocess_data(data, bg_vars_1, bg_var_2, outcomes, sample_var):
@@ -41,34 +50,61 @@ def _preprocess_data(data, bg_vars_1, bg_var_2, outcomes, sample_var):
     data_copy = data_copy[(data_copy["single_parent"] == 0)]
 
     data_copy["covid"] = np.select(
-            condlist=[data_copy["month"] <= "2020-02-29", data_copy["month"] > "2020-02-29"],
-            choicelist=["pre", "post"],
-             default=np.nan
-             )
+        condlist=[
+            data_copy["month"] <= "2020-02-29",
+            data_copy["month"] > "2020-02-29",
+        ],
+        choicelist=["pre", "post"],
+        default=np.nan,
+    )
 
     data_copy["work_perc_home_cat"] = np.select(
         condlist=[data_copy["gender"] == "female", data_copy["gender"] == "male"],
-        choicelist=[data_copy["work_perc_home_cat_mother"], data_copy["work_perc_home_cat_father"]],
+        choicelist=[
+            data_copy["work_perc_home_cat_mother"],
+            data_copy["work_perc_home_cat_father"],
+        ],
         default=np.nan,
     )
 
     data_copy["work_status_family"] = np.select(
         condlist=[
-        (np.logical_or(data_copy["labor_force_coarse_father"] == "full-time", data_copy["labor_force_coarse_father"] == "part-time") &
-        np.logical_or(data_copy["labor_force_coarse_mother"] == "full-time", data_copy["labor_force_coarse_mother"] == "part-time")),
-        (np.logical_or(data_copy["labor_force_coarse_father"] == "full-time", data_copy["labor_force_coarse_father"] == "part-time") &
-        (data_copy["labor_force_coarse_mother"] == "not working"))],
+            (
+                np.logical_or(
+                    data_copy["labor_force_coarse_father"] == "full-time",
+                    data_copy["labor_force_coarse_father"] == "part-time",
+                )
+                & np.logical_or(
+                    data_copy["labor_force_coarse_mother"] == "full-time",
+                    data_copy["labor_force_coarse_mother"] == "part-time",
+                )
+            ),
+            (
+                np.logical_or(
+                    data_copy["labor_force_coarse_father"] == "full-time",
+                    data_copy["labor_force_coarse_father"] == "part-time",
+                )
+                & (data_copy["labor_force_coarse_mother"] == "not working")
+            ),
+        ],
         choicelist=["both work", "father works"],
         default=np.nan,
     )
 
-    data_copy["essential_worker_w2"] = data_copy['essential_worker_w2'].replace({1.0: 'yes', 0.0: 'no'})
-    data_copy["net_income_2y_equiv_q3"] = data_copy['net_income_2y_equiv_q3'].replace({1.0: 'first', 2.0: 'second', 3.0: 'third'})
+    data_copy["essential_worker_w2"] = data_copy["essential_worker_w2"].replace(
+        {1.0: "yes", 0.0: "no"}
+    )
+    data_copy["net_income_2y_equiv_q3"] = data_copy["net_income_2y_equiv_q3"].replace(
+        {1.0: "first", 2.0: "second", 3.0: "third"}
+    )
 
+    data_copy["relative_cc_gap"] = data_copy["cc_gap"] / (
+        data_copy["hours_cc_female"] + data_copy["hours_cc_male"]
+    )
 
-    data_copy["relative_cc_gap"] = data_copy["cc_gap"] / (data_copy["hours_cc_female"] + data_copy["hours_cc_male"])
-
-    data_copy = data_copy[bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]]
+    data_copy = data_copy[
+        bg_vars_1 + [bg_var_2] + outcomes + [sample_var] + ["youngest_child"]
+    ]
 
     return data_copy
 
@@ -120,13 +156,15 @@ def compute_quantities(data, bg_var_1, bg_var_2, outcome):
     data_res.append(lower)
 
     # concatenate pd.DataFrames
-    data_res_fin = pd.concat(data_res, axis=1).rename(columns={0:"upper", 1:"lower"})
+    data_res_fin = pd.concat(data_res, axis=1).rename(columns={0: "upper", 1: "lower"})
 
     # delete the raws that contains nan values
     if data_res_fin.isnull().values.any():
         c = data_res_fin.index.names
         data_res_fin = data_res_fin.reset_index()
-        rows_with_nan = data_res_fin[data_res_fin.isna().any(axis=1)][bg_var_1].to_list()
+        rows_with_nan = data_res_fin[data_res_fin.isna().any(axis=1)][
+            bg_var_1
+        ].to_list()
         data_res_fin = data_res_fin[~data_res_fin[bg_var_1].isin(rows_with_nan)]
         data_res_fin = data_res_fin.set_index(c)
     else:
@@ -135,7 +173,13 @@ def compute_quantities(data, bg_var_1, bg_var_2, outcome):
     # convert result to dictionary of results
     key = (bg_var_1, bg_var_2)
     index = data_res_fin.index.tolist()
-    res = {key: {"cats": index, "data": data_res_fin.to_dict("list"), "order": [i[1] for i in index]}}
+    res = {
+        key: {
+            "cats": index,
+            "data": data_res_fin.to_dict("list"),
+            "order": [i[1] for i in index],
+        }
+    }
 
     return res
 
@@ -171,7 +215,6 @@ def process_data(data, bg_vars_1, bg_var_2, outcomes, sample_var, nice_names):
 
         out_res["all"] = all_res
 
-
         for s in data[sample_var]:
 
             s_res = {}
@@ -202,7 +245,9 @@ def _apply_styling(p, language):
     if language == "english":
         p.title.text = "Difference between mother's and father's childcare hours"
     elif language == "german":
-        p.title.text = "Unterschied zwischen den Kinderbetreuungszeiten von Mutter und Vater"
+        p.title.text = (
+            "Unterschied zwischen den Kinderbetreuungszeiten von Mutter und Vater"
+        )
     p.title.align = "center"
     p.title_location = "below"
     p.title.text_font_size = "12pt"
@@ -260,8 +305,8 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample, language):
     data = data_dict[outcome][sample][(bg_var_1, bg_var_2)]["data"]
     order = data_dict[outcome][sample][(bg_var_1, bg_var_2)]["order"]
 
-    #change names according to nice_names
-    cats = [(data_dict["nice_names"][s], data_dict["nice_names"][f]) for s,f in cats]
+    # change names according to nice_names
+    cats = [(data_dict["nice_names"][s], data_dict["nice_names"][f]) for s, f in cats]
     order = [data_dict["nice_names"][s] for s in order]
 
     # create figure
@@ -270,45 +315,64 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample, language):
         y_range=FactorRange(*cats, factor_padding=-0.42),
         plot_height=500,
         plot_width=800,
-        toolbar_location=None    )
-
-
+        toolbar_location=None,
+    )
 
     # create ColumnDataSource (see https://tinyurl.com/y46stcab)
-    source = ColumnDataSource(dict(
-        x=cats,
-        q25=data["q25"],
-        q50=data["q50"],
-        q75=data["q75"],
-        upper=data["upper"],
-        lower=data["lower"],
-        order=order,
-    ))
-
-
+    source = ColumnDataSource(
+        dict(
+            x=cats,
+            q25=data["q25"],
+            q50=data["q50"],
+            q75=data["q75"],
+            upper=data["upper"],
+            lower=data["lower"],
+            order=order,
+        )
+    )
 
     # get palette
-    palette=get_colors("categorical", number=2)*3
+    palette = get_colors("categorical", number=2) * 3
     palette.reverse()
-
 
     # this iterate the first color of the (reversed) palette every two rows
     # (we want the barplots to be grouped by CoVid-19 status)
-    mapper = factor_cmap(field_name='x', palette=palette, factors=order, start=1, end=2)
-
+    mapper = factor_cmap(field_name="x", palette=palette, factors=order, start=1, end=2)
 
     # stems
     r_75 = p.segment("upper", "x", "q75", "x", line_color="black", source=source)
     r_25 = p.segment("lower", "x", "q25", "x", line_color="black", source=source)
 
     # vertical line at 0
-    vline = Span(location=0, dimension='height', line_color='black', line_width=2, line_dash="dashed")
+    vline = Span(
+        location=0,
+        dimension="height",
+        line_color="black",
+        line_width=2,
+        line_dash="dashed",
+    )
     p.renderers.extend([vline])
 
-
     # boxes
-    r_box_1 = p.hbar("x", left="q25", right="q50", height=0.575, line_color="black", source=source, color=mapper, legend_field="order")
-    r_box_2 = p.hbar("x", left="q50", right="q75", height=0.575, line_color="black", source=source, color=mapper)
+    r_box_1 = p.hbar(
+        "x",
+        left="q25",
+        right="q50",
+        height=0.575,
+        line_color="black",
+        source=source,
+        color=mapper,
+        legend_field="order",
+    )
+    r_box_2 = p.hbar(
+        "x",
+        left="q50",
+        right="q75",
+        height=0.575,
+        line_color="black",
+        source=source,
+        color=mapper,
+    )
 
     # whiskers (almost-0 height rectangles, simpler than segments)
     r_lower = p.rect("lower", "x", 0.001, 0.3, line_color="black", source=source)
@@ -321,17 +385,18 @@ def setup_plot(data_dict, bg_var_1, bg_var_2, outcome, sample, language):
     p.legend.location = "center_right"
 
     TOOLTIPS = [
-    ("Maximum value", "@upper"),
-    ("75th quantile", "@q75"),
-    ("Median", "@q50"),
-    ("25th quantile", "@q25"),
-    ("Minimum value", "@lower")
+        ("Maximum value", "@upper"),
+        ("75th quantile", "@q75"),
+        ("Median", "@q50"),
+        ("25th quantile", "@q25"),
+        ("Minimum value", "@lower"),
     ]
 
     p.add_tools(
         HoverTool(
             renderers=[r_25, r_75, r_box_1, r_box_2, r_upper, r_lower],
             tooltips=TOOLTIPS,
-        ))
+        )
+    )
 
     return p

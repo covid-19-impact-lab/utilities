@@ -20,7 +20,6 @@ def create_boxplots_data(data, variable_mappings, nice_names, language):
     bg_var_2 = variable_mappings["secondary_background_variable"]
     sample_var = variable_mappings["sample_variable"]
 
-
     boxplots_data = process_data(
         data=data,
         bg_vars_1=bg_vars_1,
@@ -34,16 +33,16 @@ def create_boxplots_data(data, variable_mappings, nice_names, language):
     with open(metadata_path / f"top_text_{language}.txt", "r", encoding="utf-8") as f:
         boxplots_data["top_text"] = f.read()
 
-    with open(metadata_path / f"bottom_text_{language}.txt", "r", encoding="utf-8") as f:
+    with open(
+        metadata_path / f"bottom_text_{language}.txt", "r", encoding="utf-8"
+    ) as f:
         boxplots_data["bottom_text"] = f.read()
 
     if language == "english":
-        boxplots_data[
-            "title"
-        ] = "How Does the CoVid-19 Pandemic Affect Childcare?"
+        boxplots_data["title"] = "How Does the CoVid-19 Pandemic Affect Childcare?"
     elif language == "german":
-        boxplots_data[
-            "title"
-        ] = "Wie wirkt sich die CoVid-19-Pandemie auf die Kinderbetreuung aus?"
+        boxplots_data["title"] = (
+            "Wie wirkt sich die CoVid-19-Pandemie auf die Kinderbetreuung aus?"
+        )
 
     return boxplots_data
