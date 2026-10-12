@@ -1,4 +1,5 @@
 """Functions for LISS data preparation."""
+
 import pickle
 from pathlib import Path
 
@@ -113,7 +114,7 @@ def _fix_categories(data, suffix):
 
     if suffix == "single_april":
         data["duration_restrictions_general"] = data[
-        "duration_restrictions_general"
+            "duration_restrictions_general"
         ].cat.rename_categories(
             {
                 "until April 6": "until April 28",
@@ -135,57 +136,57 @@ def _fix_categories(data, suffix):
                 "btw. 8 and 12 months": "8 to 12 months",
                 "for more than 1 year": "more than 1 year",
             }
-         )
+        )
 
     if suffix == "single_april":
         pass
 
     else:
         data["trust_gov"] = data["trust_gov"].cat.rename_categories(
-           {
-               "1 no confidence at all": "1 <br> none at all",
-               "5 a lot of confidence": "5 <br> a lot",
-           }
+            {
+                "1 no confidence at all": "1 <br> none at all",
+                "5 a lot of confidence": "5 <br> a lot",
+            }
         )
 
     return data
 
 
 def _fix_numeric(data, suffix):
-     data = data.copy()
-     if suffix == "single_april":
-         convert_to_float = [
-             "p_2m_infected",
-             "p_2m_acquaintance_infected",
-             "p_2m_hospital_if_infect_self",
-             "p_2m_infected_and_pass_on",
-         ]
-         bins = [-np.inf, 20.0, 40.0, 60.0, 80.0, 100.0]
-         labels = ['0%-20%','20%-40%', '40%-60%', '60%-80%', '80%-100%']
-         for var in convert_to_float:
-             data[var] = pd.cut(data[var], bins=bins, labels=labels)
-
-     else:
-         convert_to_float = [
-        "p_2m_employee_keep",
-        "p_2m_employee_keep_gov",
-        "p_2m_employee_lost",
-        "p_2m_employee_other",
-        "eur_1k_basic_needs",
-        "eur_1k_expenses",
-        "eur_1k_durables",
-        "eur_1k_savings",
-        "eur_1k_support_others",
-        "p_3m_selfempl_normal",
-        "p_3m_selfempl_fewer",
-        "p_3m_selfempl_helped_by_gov",
-        "p_3m_selfempl_shutdown",
-        "p_3m_selfempl_other",
+    data = data.copy()
+    if suffix == "single_april":
+        convert_to_float = [
+            "p_2m_infected",
+            "p_2m_acquaintance_infected",
+            "p_2m_hospital_if_infect_self",
+            "p_2m_infected_and_pass_on",
         ]
-         for var in convert_to_float:
+        bins = [-np.inf, 20.0, 40.0, 60.0, 80.0, 100.0]
+        labels = ["0%-20%", "20%-40%", "40%-60%", "60%-80%", "80%-100%"]
+        for var in convert_to_float:
+            data[var] = pd.cut(data[var], bins=bins, labels=labels)
+
+    else:
+        convert_to_float = [
+            "p_2m_employee_keep",
+            "p_2m_employee_keep_gov",
+            "p_2m_employee_lost",
+            "p_2m_employee_other",
+            "eur_1k_basic_needs",
+            "eur_1k_expenses",
+            "eur_1k_durables",
+            "eur_1k_savings",
+            "eur_1k_support_others",
+            "p_3m_selfempl_normal",
+            "p_3m_selfempl_fewer",
+            "p_3m_selfempl_helped_by_gov",
+            "p_3m_selfempl_shutdown",
+            "p_3m_selfempl_other",
+        ]
+        for var in convert_to_float:
             data[var] = data[var].astype(float)
 
-     return data
+    return data
 
 
 def _bin_variables(data):
