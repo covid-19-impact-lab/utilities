@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 DASHBOARD_ROOT = Path(__file__).parent.resolve()
 
 INTRO_PAGE_DIR = DASHBOARD_ROOT / "components" / "intro_page"

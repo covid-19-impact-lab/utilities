@@ -1,4 +1,5 @@
 """Build the data description table for creating the overview_tab data."""
+
 import pandas as pd
 
 # from utilities.dashboard.liss_data_functions import check_no_variables_lost
@@ -78,10 +79,8 @@ def _keep_only_vars_in_the_data(desc, data):
     desc = desc.loc[keep_vars]
     len_after_var_drop = len(desc)
     if old_len - len_after_var_drop > 0:
-        print(
-            f"""{old_len - len_after_var_drop} variables dropped because no data.
-            Variablest lost: {dropped_vars}"""
-        )  # noqa
+        print(f"""{old_len - len_after_var_drop} variables dropped because no data.
+            Variablest lost: {dropped_vars}""")  # noqa
     return desc
 
 
